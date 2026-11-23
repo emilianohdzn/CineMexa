@@ -41,6 +41,17 @@ struct PosterView: View {
 
 // MARK: - Etiquetas
 
+private struct TagLabelStyle: LabelStyle {
+    let showIcon: Bool
+    @ViewBuilder func makeBody(configuration: Configuration) -> some View {
+        if showIcon {
+            HStack(spacing: 4) { configuration.icon; configuration.title }
+        } else {
+            configuration.title
+        }
+    }
+}
+
 /// Etiqueta impresa: texto + símbolo (el color nunca es el único indicador).
 struct TagLabel: View {
     let text: String
@@ -51,10 +62,14 @@ struct TagLabel: View {
 
     var body: some View {
         Label(text, systemImage: symbol)
-            // Con texto de accesibilidad el símbolo se queda (no sólo color) y el texto ocupa los renglones que necesite.
+            // Con texto de accesibilidad sólo el texto (el ícono le quita ancho y parte palabras como "IDENTIFICADO");
+            // hasta dos renglones y, si una palabra no cabe, se reduce antes de partirse.
+            .labelStyle(TagLabelStyle(showIcon: !typeSize.isAccessibilitySize))
             .font(CMFont.mono(11, weight: .semibold))
             .textCase(.uppercase)
-            .lineLimit(typeSize.isAccessibilitySize ? nil : 1)
+            .lineLimit(typeSize.isAccessibilitySize ? 2 : 1)
+            .minimumScaleFactor(typeSize.isAccessibilitySize ? 0.5 : 1)
+            .allowsTightening(true)
             .fixedSize(horizontal: false, vertical: typeSize.isAccessibilitySize)
             .padding(.horizontal, 8)
             .padding(.vertical, 4)

@@ -293,6 +293,8 @@ struct HeroCard: View {
                 .padding(.vertical, typeSize.isAccessibilitySize ? 10 : 0)
                 .frame(minHeight: 34)
                 .background(Capsule().fill(CM.projectorYellow))
+                // Que el carrusel no lo comprima: la cápsula crece con el texto.
+                .fixedSize(horizontal: false, vertical: true)
                 .padding(.top, 4)
         }
         .padding(14)
