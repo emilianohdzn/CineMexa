@@ -339,3 +339,38 @@ struct ImagePipelineCancellationTests {
         _ = await b.result
     }
 }
+
+@Suite("Mexa")
+struct MexaTests {
+    static let json = #"""
+    {"api_version":"mexa-a1","generated_at":"2026-11-23T15:00:00.000Z","intent":"festival_awards",
+     "text":"Premios verificados en San Sebastián: El jockey, Horizontes Latinos (2024).",
+     "items":[{"label":"El jockey · Horizontes Latinos","film_id":"f1"}],
+     "citations":[{"type":"festival_event","id":"e1","label":"Horizontes Latinos 2024","source":"wikidata","url":"https://example.org/premio","retrieved_at":"2026-11-23T13:00:00.000Z","verification":"automatic"},
+                  {"type":"film","id":"f1","label":"El jockey (2024)","source":"cinemexa","url":null,"retrieved_at":null,"verification":"automatic"}],
+     "unanswered":null}
+    """#
+
+    @Test func decodificaLaRespuestaConSusFuentes() throws {
+        let a = try CineJSON.decoder().decode(MexaAnswer.self, from: Data(Self.json.utf8))
+        #expect(a.intent == "festival_awards")
+        #expect(a.items.first?.filmId == "f1")
+        #expect(a.citations.count == 2)
+        #expect(a.citations[0].link?.absoluteString == "https://example.org/premio")
+        #expect(a.citations[1].link == nil, "sin URL no hay enlace")
+        #expect(a.options == nil)
+    }
+
+    @Test func preguntaPorPOSTALaFuncionMexa() async throws {
+        StubURLProtocol.responder = { _ in (200, Data(Self.json.utf8)) }
+        StubURLProtocol.requests = []
+        let config = URLSessionConfiguration.ephemeral
+        config.protocolClasses = [StubURLProtocol.self]
+        let client = MexaClient(config: LiveConfig(baseUrl: URL(string: "https://ejemplo.supabase.co")!, anonKey: "publica"),
+                                session: URLSession(configuration: config))
+        let a = try await client.ask("Premios en San Sebastián")
+        #expect(a.citations.first?.source == "wikidata")
+        #expect(StubURLProtocol.requests == ["POST"])
+        await #expect(throws: RepositoryError.liveNotConfigured) { try await MexaClient(config: nil).ask("hola") }
+    }
+}
