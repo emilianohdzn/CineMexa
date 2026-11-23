@@ -53,6 +53,7 @@ export function buildSnapshot(rows: CatalogRows, now: Date): Json {
       : canonical?.provider === "tmdb" ? `https://www.themoviedb.org/movie/${canonical.external_id}` : null;
     const status = classifyFilmStatus({
       now,
+      year: num(f.year),
       mxReleaseDate: f.mx_release_date,
       confirmedScreenings: (screeningsByFilm.get(f.id) ?? []).map((s) => ({ startsAt: iso(s.starts_at)! })),
       festivalEvents: (eventsByFilm.get(f.id) ?? []).filter((e) => e.occurs_at).map((e) => ({ date: iso(e.occurs_at)! })),
