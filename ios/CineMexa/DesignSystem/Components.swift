@@ -2,7 +2,7 @@ import SwiftUI
 
 // MARK: - Póster
 
-/// Póster vertical 2:3. Usa AsyncImage sobre URLCache (configurada en CineMexaApp)
+/// Póster vertical 2:3. Usa RemoteImage/ImagePipeline sobre URLCache (configurada en CineMexaApp)
 /// y nunca estira la imagen: la recorta con aspect fill dentro del marco 2:3.
 struct PosterView: View {
     let film: Film
@@ -10,28 +10,31 @@ struct PosterView: View {
     /// Sin texto en el placeholder: para miniaturas o cuando el título ya va encima.
     var compactPlaceholder = false
 
+    @Environment(\.displayScale) private var displayScale
+    @State private var width: CGFloat = 0
+
     var body: some View {
         Color.clear
             .aspectRatio(2.0 / 3.0, contentMode: .fit)
+            .onGeometryChange(for: CGFloat.self, of: { $0.size.width }) { width = $0 }
             .overlay {
-                if let url = film.poster?.url {
-                    AsyncImage(url: url, transaction: Transaction(animation: .easeOut(duration: 0.25))) { phase in
-                        switch phase {
-                        case .success(let image):
-                            image.resizable().scaledToFill()
-                        case .failure:
-                            PosterPlaceholder(title: film.title, year: film.year, compact: compactPlaceholder)
-                        default:
-                            SkeletonBlock()
-                        }
+                if let url = film.poster?.url, width > 0 {
+                    // Se pide el tamaño de TMDB que cubre el ancho real en píxeles y se decodifica a esa medida.
+                    let pixels = width * displayScale
+                    RemoteImage(url: url.tmdbResized(ImageSizing.posterSize(forPixelWidth: pixels)), maxPixel: (pixels * 1.5).rounded(.up)) {
+                        PosterPlaceholder(title: film.title, year: film.year, compact: compactPlaceholder)
+                    } loading: {
+                        SkeletonBlock()
                     }
-                } else {
+                } else if film.poster == nil {
                     PosterPlaceholder(title: film.title, year: film.year, compact: compactPlaceholder)
                 }
             }
             .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
             .overlay(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous).strokeBorder(CM.hairline))
-            .accessibilityLabel(Text("Póster de \(film.title)"))
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(Text(film.poster == nil ? "Sin póster disponible: \(film.title)" : "Póster de \(film.title)"))
+            .accessibilityAddTraits(.isImage)
     }
 }
 

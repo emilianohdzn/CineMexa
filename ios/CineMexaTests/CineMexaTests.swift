@@ -1,6 +1,7 @@
 import Testing
 import Foundation
 import MapKit
+import UIKit
 @testable import CineMexa
 
 /// Tests de la capa de datos y reglas. Se ejecutan con ⌘U en Xcode o con
@@ -205,5 +206,38 @@ struct LiveCatalogContractTests {
         #expect(snapshot.festivalEvents.contains { $0.occursAt == nil }, "sin fecha confirmada se conserva como nil")
         let catalog = Catalog(snapshot)
         #expect(!catalog.films(matching: .shorts).isEmpty)
+    }
+}
+
+@Suite("Imágenes")
+struct ImageTests {
+    @Test func tamanoDeTMDBSeReescribeSoloEnSuDominio() {
+        let tmdb = URL(string: "https://image.tmdb.org/t/p/w780/abc123.jpg")!
+        #expect(tmdb.tmdbResized(.w342).absoluteString == "https://image.tmdb.org/t/p/w342/abc123.jpg")
+        #expect(tmdb.tmdbResized(.original).absoluteString == "https://image.tmdb.org/t/p/original/abc123.jpg")
+        let oficial = URL(string: "https://festival.example/t/p/w780/poster.jpg")!
+        #expect(oficial.tmdbResized(.w185) == oficial)
+        let raro = URL(string: "https://image.tmdb.org/otra/ruta.jpg")!
+        #expect(raro.tmdbResized(.w185) == raro)
+    }
+
+    @Test func elTamanoPedidoCubreElAnchoSinExcederse() {
+        #expect(ImageSizing.posterSize(forPixelWidth: 120) == .w185)   // miniatura de 40 pt a 3x
+        #expect(ImageSizing.posterSize(forPixelWidth: 330) == .w342)   // tarjeta de 165 pt a 2x
+        #expect(ImageSizing.posterSize(forPixelWidth: 390) == .w500)   // ficha de 130 pt a 3x
+        #expect(ImageSizing.posterSize(forPixelWidth: 900) == .w780)   // portada
+        #expect(ImageSizing.backdropSize(forPixelWidth: 1179) == .w1280)
+    }
+
+    @Test func laMiniaturaSeDecodificaAlTamanoPedido() throws {
+        let renderer = UIGraphicsImageRenderer(size: CGSize(width: 600, height: 900), format: {
+            let f = UIGraphicsImageRendererFormat(); f.scale = 1; return f
+        }())
+        let data = try #require(renderer.image { ctx in
+            UIColor.orange.setFill(); ctx.fill(CGRect(x: 0, y: 0, width: 600, height: 900))
+        }.jpegData(compressionQuality: 0.8))
+        let thumb = try #require(ImagePipeline.downsample(data, maxPixel: 300))
+        #expect(max(thumb.size.width * thumb.scale, thumb.size.height * thumb.scale) == 300)
+        #expect(ImagePipeline.downsample(Data("no es imagen".utf8), maxPixel: 300) == nil)
     }
 }
