@@ -24,7 +24,8 @@ struct PosterView: View {
                     RemoteImage(url: url.tmdbResized(ImageSizing.posterSize(forPixelWidth: pixels)), maxPixel: (pixels * 1.5).rounded(.up)) {
                         PosterPlaceholder(title: film.title, year: film.year, compact: compactPlaceholder)
                     } loading: {
-                        SkeletonBlock()
+                        // Mientras llega la imagen se ve el título (no una tarjeta vacía); sin la X para no decir "sin póster".
+                        PosterLoadingPlaceholder(title: film.title, year: film.year, compact: compactPlaceholder)
                     }
                 } else if film.poster == nil {
                     PosterPlaceholder(title: film.title, year: film.year, compact: compactPlaceholder)
@@ -46,12 +47,15 @@ struct TagLabel: View {
     let symbol: String
     var tint: Color = CM.projectorYellow
     var filled = false
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
         Label(text, systemImage: symbol)
+            // Con texto de accesibilidad el símbolo se queda (no sólo color) pero el texto puede partirse en dos renglones.
             .font(CMFont.mono(11, weight: .semibold))
             .textCase(.uppercase)
-            .lineLimit(1)
+            .lineLimit(typeSize.isAccessibilitySize ? 2 : 1)
+            .fixedSize(horizontal: false, vertical: typeSize.isAccessibilitySize)
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
             .foregroundStyle(filled ? CM.ink : tint)

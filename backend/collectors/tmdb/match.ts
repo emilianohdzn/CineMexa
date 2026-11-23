@@ -22,11 +22,13 @@ interface SearchResponse { results: Array<{ id: number; title?: string; original
 interface CreditsResponse { crew: Array<{ job: string; name: string }> }
 
 export type MatchOutcome =
-  | { kind: "matched"; tmdbId: number; method: "imdb_find" | "title_year_director"; evidence: Record<string, unknown> }
+  | { kind: "matched"; tmdbId: number; label?: string; method: "imdb_find" | "title_year_director"; evidence: Record<string, unknown> }
   | { kind: "review"; candidates: Array<{ tmdbId: number; label: string; score: number; evidence: Record<string, unknown> }>; method: string }
   | { kind: "no_match"; method: string; evidence: Record<string, unknown> };
 
 const yearOf = (d?: string) => (d && /^\d{4}/.test(d) ? Number(d.slice(0, 4)) : null);
+const labelOf = (m: { title?: string; original_title?: string; release_date?: string }) =>
+  `${m.title ?? m.original_title ?? "sin título"} (${yearOf(m.release_date) ?? "s/f"})`;
 const yearOk = (a: number | null, b: number | null) => a == null || b == null || Math.abs(a - b) <= 1;
 
 export async function findTmdbMatch(t: MatchTarget, get: <T>(url: string) => Promise<T>, maxCandidates = 5): Promise<MatchOutcome> {
@@ -34,13 +36,13 @@ export async function findTmdbMatch(t: MatchTarget, get: <T>(url: string) => Pro
     const found = await get<FindResponse>(`${TMDB_API}/find/${t.imdb_id}?external_source=imdb_id`);
     const ok = found.movie_results.filter((m) => yearOk(t.year, yearOf(m.release_date)));
     if (ok.length === 1) {
-      return { kind: "matched", tmdbId: ok[0].id, method: "imdb_find", evidence: { imdb_id: t.imdb_id, tmdb_year: yearOf(ok[0].release_date) } };
+      return { kind: "matched", tmdbId: ok[0].id, label: labelOf(ok[0]), method: "imdb_find", evidence: { imdb_id: t.imdb_id, tmdb_year: yearOf(ok[0].release_date) } };
     }
     if (found.movie_results.length > 0) {
       return {
         kind: "review", method: "imdb_find",
         candidates: found.movie_results.slice(0, maxCandidates).map((m) => ({
-          tmdbId: m.id, label: `${m.title ?? m.original_title} (${yearOf(m.release_date) ?? "s/f"})`, score: 0.5,
+          tmdbId: m.id, label: labelOf(m), score: 0.5,
           evidence: { imdb_id: t.imdb_id, motivo: "IMDb devuelve un resultado con año incompatible o varios resultados" },
         })),
       };
@@ -70,14 +72,14 @@ export async function findTmdbMatch(t: MatchTarget, get: <T>(url: string) => Pro
   if (local.size > 0 && withDirector.length === 1) {
     const s = withDirector[0];
     return {
-      kind: "matched", tmdbId: s.r.id, method: "title_year_director",
+      kind: "matched", tmdbId: s.r.id, label: labelOf(s.r), method: "title_year_director",
       evidence: { titulo: s.r.title, anio_tmdb: yearOf(s.r.release_date), anio_local: t.year, directores_tmdb: s.directors },
     };
   }
   return {
     kind: "review", method: "title_year_director",
     candidates: scored.map((s) => ({
-      tmdbId: s.r.id, label: `${s.r.title ?? s.r.original_title} (${yearOf(s.r.release_date) ?? "s/f"})`,
+      tmdbId: s.r.id, label: labelOf(s.r),
       score: s.shared ? 0.8 : 0.4,
       evidence: {
         directores_tmdb: s.directors, directores_locales: t.directors,
@@ -120,6 +122,7 @@ async function upsertReview(db: Db, filmId: string, candidateId: string | null, 
     values ('film', $1, 'tmdb', $2, $3, $4, $5, $6, $7)
     on conflict (entity_type, entity_id, provider, candidate_id) do update
       set method = excluded.method, score = excluded.score, evidence = excluded.evidence, updated_at = now(),
+          candidate_label = coalesce(excluded.candidate_label, match_reviews.candidate_label),
           status = case when match_reviews.status in ('accepted', 'rejected') then match_reviews.status else excluded.status end`,
     [filmId, candidateId, label, method, status, score, JSON.stringify(evidence)]);
 }
@@ -130,14 +133,14 @@ export async function applyMatch(db: Db, t: MatchTarget, outcome: MatchOutcome):
     const { rows: owner } = await db.query<{ film_id: string }>(
       "select film_id::text from film_external_ids where provider = 'tmdb' and external_id = $1", [String(outcome.tmdbId)]);
     if (owner.length > 0 && owner[0].film_id !== t.film_id) {
-      await upsertReview(db, t.film_id, String(outcome.tmdbId), null, outcome.method, "pending", 0.9,
+      await upsertReview(db, t.film_id, String(outcome.tmdbId), outcome.label ?? null, outcome.method, "pending", 0.9,
         { ...outcome.evidence, motivo: "El id de TMDB ya pertenece a otra película: posible duplicado", otra_pelicula: owner[0].film_id });
       return "review";
     }
     await db.query(
       `insert into film_external_ids (film_id, provider, external_id, source_id) values ($1, 'tmdb', $2, 'tmdb')
        on conflict do nothing`, [t.film_id, String(outcome.tmdbId)]);
-    await upsertReview(db, t.film_id, String(outcome.tmdbId), null, outcome.method, "auto_matched", 1, outcome.evidence);
+    await upsertReview(db, t.film_id, String(outcome.tmdbId), outcome.label ?? null, outcome.method, "auto_matched", 1, outcome.evidence);
     return "matched";
   }
   if (outcome.kind === "review") {

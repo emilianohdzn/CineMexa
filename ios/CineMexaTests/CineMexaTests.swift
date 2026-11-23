@@ -301,3 +301,41 @@ struct ImageTests {
         #expect(ImagePipeline.downsample(Data("no es imagen".utf8), maxPixel: 300) == nil)
     }
 }
+
+/// Servidor que nunca responde: sirve para comprobar que una descarga abandonada se cancela.
+final class HangingURLProtocol: URLProtocol, @unchecked Sendable {
+    nonisolated(unsafe) static var started = 0
+    nonisolated(unsafe) static var stopped = 0
+    override class func canInit(with request: URLRequest) -> Bool { true }
+    override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
+    override func startLoading() { Self.started += 1 }
+    override func stopLoading() { Self.stopped += 1 }
+}
+
+@Suite("Descargas de imágenes")
+struct ImagePipelineCancellationTests {
+    @Test func unaDescargaQueNadieEsperaSeCancela() async throws {
+        HangingURLProtocol.started = 0
+        HangingURLProtocol.stopped = 0
+        let config = URLSessionConfiguration.ephemeral
+        config.protocolClasses = [HangingURLProtocol.self]
+        let pipeline = ImagePipeline(session: URLSession(configuration: config), retries: 0)
+        let url = URL(string: "https://image.tmdb.org/t/p/w185/lenta.jpg")!
+        // Dos celdas piden la misma imagen: una sola descarga.
+        let a = Task { try await pipeline.image(for: url, maxPixel: 200) }
+        let b = Task { try await pipeline.image(for: url, maxPixel: 200) }
+        for _ in 0..<100 where HangingURLProtocol.started == 0 { try await Task.sleep(nanoseconds: 20_000_000) }
+        #expect(HangingURLProtocol.started == 1)
+        // Sale una de pantalla: la descarga sigue para la otra.
+        a.cancel()
+        try await Task.sleep(nanoseconds: 100_000_000)
+        #expect(HangingURLProtocol.stopped == 0)
+        #expect(await pipeline.inflightCount == 1)
+        // Sale la otra: ya nadie la espera y se libera la conexión.
+        b.cancel()
+        for _ in 0..<100 where HangingURLProtocol.stopped == 0 { try await Task.sleep(nanoseconds: 20_000_000) }
+        #expect(HangingURLProtocol.stopped == 1)
+        #expect(await pipeline.inflightCount == 0)
+        _ = await b.result
+    }
+}

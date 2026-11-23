@@ -78,10 +78,12 @@ private struct FilmHeader: View {
                         .fixedSize(horizontal: false, vertical: true)
                     if let original = film.originalTitle, original != film.title {
                         Text(original).font(.subheadline.italic()).foregroundStyle(CM.secondaryText)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                     if !film.altTitles.isEmpty {
                         Text("También: \(film.altTitles.joined(separator: ", "))")
                             .font(.caption).foregroundStyle(CM.secondaryText)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                     Text(meta)
                         .font(CMFont.mono(12))

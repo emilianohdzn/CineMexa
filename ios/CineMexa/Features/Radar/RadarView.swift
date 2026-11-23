@@ -279,10 +279,18 @@ struct HeroCard: View {
                 .font(CMFont.mono(12))
                 .foregroundStyle(CM.paperCream.opacity(0.85))
                 .fixedSize(horizontal: false, vertical: true)
-            Label("Ver ficha", systemImage: "arrow.up.right")
+            // En tamaños de accesibilidad sólo el texto, que puede ocupar dos renglones: el ícono no cabe junto a él.
+            Group {
+                if typeSize.isAccessibilitySize {
+                    Text("Ver ficha").lineLimit(2).fixedSize(horizontal: false, vertical: true)
+                } else {
+                    Label("Ver ficha", systemImage: "arrow.up.right")
+                }
+            }
                 .font(.footnote.weight(.bold))
                 .foregroundStyle(CM.ink)
                 .padding(.horizontal, 12)
+                .padding(.vertical, typeSize.isAccessibilitySize ? 6 : 0)
                 .frame(minHeight: 34)
                 .background(Capsule().fill(CM.projectorYellow))
                 .padding(.top, 4)

@@ -29,12 +29,13 @@ enum ImageLoadError: Error, Equatable {
 /// - Caché en memoria por URL y tamaño (NSCache con límite de costo) sobre URLCache en disco.
 /// - Una sola descarga por URL aunque varias celdas la pidan a la vez.
 /// - Reintentos con espera ante errores transitorios (red, 5xx, 429); un 404 no se reintenta.
-/// - La cancelación (celda que sale de pantalla) no se guarda como fallo: al volver, se reintenta.
+/// - La cancelación (celda que sale de pantalla) no se guarda como fallo: al volver, se reintenta. Si ninguna celda
+///   espera ya una descarga, se cancela: en un desplazamiento rápido las conexiones quedan para lo visible.
 actor ImagePipeline {
     static let shared = ImagePipeline()
 
     private let memory = NSCache<NSString, UIImage>()
-    private var inflight: [String: Task<Data, Error>] = [:]
+    private var inflight: [String: Shared] = [:]
     private let session: URLSession
     private let retries: Int
 
@@ -69,11 +70,48 @@ actor ImagePipeline {
         return image
     }
 
+    /// Una descarga compartida por URL. Cada celda que la espera deja una ficha; si todas se cancelan (salieron de
+    /// pantalla en un desplazamiento rápido) la descarga se cancela y libera la conexión para las celdas visibles.
+    private struct Shared {
+        let task: Task<Data, Error>
+        var waiters: Set<UUID>
+    }
+
     private func data(for url: URL) async throws -> Data {
         let id = url.absoluteString
-        if let running = inflight[id] { return try await running.value }
-        let session = self.session, retries = self.retries
-        let task = Task<Data, Error> {
+        let token = UUID()
+        let task: Task<Data, Error>
+        if var running = inflight[id] {
+            running.waiters.insert(token)
+            inflight[id] = running
+            task = running.task
+        } else {
+            task = Self.download(url, session: session, retries: retries)
+            inflight[id] = Shared(task: task, waiters: [token])
+        }
+        defer { leave(id, token: token, cancelIfAbandoned: false) }
+        return try await withTaskCancellationHandler {
+            try await task.value
+        } onCancel: {
+            Task { await self.leave(id, token: token, cancelIfAbandoned: true) }
+        }
+    }
+
+    private func leave(_ id: String, token: UUID, cancelIfAbandoned: Bool) {
+        guard var shared = inflight[id], shared.waiters.remove(token) != nil else { return }
+        if shared.waiters.isEmpty {
+            inflight[id] = nil
+            if cancelIfAbandoned { shared.task.cancel() }
+        } else {
+            inflight[id] = shared
+        }
+    }
+
+    /// Número de descargas en curso (para pruebas).
+    var inflightCount: Int { inflight.count }
+
+    private static func download(_ url: URL, session: URLSession, retries: Int) -> Task<Data, Error> {
+        Task<Data, Error> {
             var attempt = 0
             while true {
                 do {
@@ -93,9 +131,6 @@ actor ImagePipeline {
                 }
             }
         }
-        inflight[id] = task
-        defer { inflight[id] = nil }
-        return try await task.value
     }
 
     private static func key(_ url: URL, _ maxPixel: CGFloat) -> NSString {

@@ -61,7 +61,11 @@ struct FilmsView: View {
 
     private var criticismEntry: some View {
         NavigationLink(value: Route.criticism) {
-            HStack(alignment: .center, spacing: 14) {
+            // Con texto de accesibilidad el círculo se come el ancho y "Crítica" se parte: el ícono va arriba.
+            let layout = typeSize.isAccessibilitySize
+                ? AnyLayout(VStackLayout(alignment: .leading, spacing: 10))
+                : AnyLayout(HStackLayout(alignment: .center, spacing: 14))
+            layout {
                 Image(systemName: "text.quote")
                     .font(.title2.weight(.bold))
                     .foregroundStyle(CM.ink)
@@ -75,10 +79,14 @@ struct FilmsView: View {
                     Text("\(catalog.recentReviews.count) reseñas enlazadas a su publicación original")
                         .font(.footnote)
                         .foregroundStyle(CM.creamSecondary)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
-                Spacer()
-                Image(systemName: "chevron.right").foregroundStyle(CM.ink)
+                if !typeSize.isAccessibilitySize {
+                    Spacer()
+                    Image(systemName: "chevron.right").foregroundStyle(CM.ink)
+                }
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
             .padding(16)
             .ticketBackground(CM.paperCream)
         }
