@@ -36,3 +36,11 @@ test("el mapa nunca muestra eventos sin fecha confirmada", () => {
   assert.equal(inMapPeriod(d(-200), "upcoming", now), false);
   assert.equal(inMapPeriod(d(5), "historic", now), false);
 });
+
+test("una obra de un año futuro sin estreno identificado es próxima, no archivo", () => {
+  const now = new Date("2026-11-23T12:00:00Z");
+  assert.equal(classifyFilmStatus({ now, confirmedScreenings: [], festivalEvents: [], year: 2027 }), "upcoming");
+  assert.equal(classifyFilmStatus({ now, confirmedScreenings: [], festivalEvents: [], year: 2026 }), "archive");
+  assert.equal(classifyFilmStatus({ now, mxReleaseDate: "2025-01-10", confirmedScreenings: [], festivalEvents: [], year: 2027 }), "archive",
+    "si hay estreno identificado pasado, manda la fecha");
+});

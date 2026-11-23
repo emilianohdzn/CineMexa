@@ -1,0 +1,53 @@
+# Collectors de Cine Mexa en GitHub Actions (entorno remoto donde corren los scripts Node).
+# Secretos necesarios (los guarda scripts/configurar.sh con gh): DATABASE_URL (Session pooler),
+# TMDB_API_READ_TOKEN, YOUTUBE_API_KEY; variable WIKIDATA_USER_AGENT.
+# Por ahora sólo se ejecuta a mano (workflow_dispatch). La programación automática se activa
+# descomentando `schedule` cuando se autorice.
+name: Collectors
+
+on:
+  workflow_dispatch:
+    inputs:
+      job:
+        description: "Qué ejecutar"
+        type: choice
+        options: [wikidata, tmdb, youtube-y-tendencias, todo]
+        default: todo
+  # schedule:
+  #   - cron: "30 3 * * *"    # Wikidata + TMDB, diario
+  #   - cron: "15 */6 * * *"  # YouTube + tendencias, cada 6 h
+
+concurrency:
+  group: collectors
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      TMDB_API_READ_TOKEN: ${{ secrets.TMDB_API_READ_TOKEN }}
+      YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+      WIKIDATA_USER_AGENT: ${{ vars.WIKIDATA_USER_AGENT }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.18"
+      - run: npm ci
+      - name: Wikidata
+        if: inputs.job == 'wikidata' || inputs.job == 'todo' || github.event.schedule == '30 3 * * *'
+        run: npm run collect:wikidata -- --from-year 2018
+      - name: TMDB
+        if: inputs.job == 'tmdb' || inputs.job == 'todo' || github.event.schedule == '30 3 * * *'
+        run: npm run collect:tmdb -- --limit 300
+      - name: YouTube
+        if: inputs.job == 'youtube-y-tendencias' || inputs.job == 'todo' || github.event.schedule == '15 */6 * * *'
+        run: npm run collect:youtube
+      - name: Tendencias
+        if: inputs.job == 'youtube-y-tendencias' || inputs.job == 'todo' || github.event.schedule == '15 */6 * * *'
+        run: npm run job:trends

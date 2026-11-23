@@ -53,12 +53,21 @@ final class Catalog: @unchecked Sendable {
     }
 
     /// Películas para el hero: lo que está pasando ahora, sin repetir.
+    /// Portada: primero lo que está pasando (salas, estreno, festival, próximo). Si con datos reales hay
+    /// menos de tres, se completa con las películas más recientes con póster, sin cambiar su estado.
     var heroFilms: [Film] {
         let order: [FilmStatus] = [.inTheaters, .releaseIdentified, .festival, .upcoming]
-        return snapshot.films
+        var result = snapshot.films
             .filter { $0.status != .archive }
             .sorted { (order.firstIndex(of: $0.status) ?? 9, $0.title) < (order.firstIndex(of: $1.status) ?? 9, $1.title) }
-            .prefix(6).map { $0 }
+        if result.count < 3 {
+            let taken = Set(result.map(\.id))
+            let recent = snapshot.films
+                .filter { !taken.contains($0.id) && $0.poster != nil }
+                .sorted { ($0.mxReleaseDate ?? "\($0.year ?? 0)", $0.title) > ($1.mxReleaseDate ?? "\($1.year ?? 0)", $1.title) }
+            result += recent.prefix(6 - result.count)
+        }
+        return Array(result.prefix(6))
     }
 
     var billboardFilms: [Film] {

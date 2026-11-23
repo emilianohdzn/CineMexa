@@ -1,0 +1,23 @@
+# Pruebas del core, los datos demo y el backend (Postgres embebido, sin secretos ni red externa).
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  node:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.18"
+      - run: npm ci
+        working-directory: backend
+      - run: npm test
+      - name: Empaqueta la Edge Function
+        run: npm run build:catalog
+        working-directory: backend

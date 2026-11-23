@@ -1,0 +1,19 @@
+{
+  "_comment": "Festivales de referencia (datos públicos de identidad). Coordenadas a nivel ciudad (coordinate_precision = city). Sin ediciones ni fechas: esas se capturan cuando el festival las publica.",
+  "festivals": [
+    { "slug": "ficg", "name": "Festival Internacional de Cine en Guadalajara", "short_name": "FICG", "city": "Guadalajara", "country": "MX", "website_url": "https://www.ficg.mx", "lat": 20.6597, "lon": -103.3496 },
+    { "slug": "ficm", "name": "Festival Internacional de Cine de Morelia", "short_name": "FICM", "city": "Morelia", "country": "MX", "website_url": "https://moreliafilmfest.com", "lat": 19.7008, "lon": -101.1844 },
+    { "slug": "giff", "name": "Festival Internacional de Cine de Guanajuato", "short_name": "GIFF", "city": "Guanajuato", "country": "MX", "website_url": "https://www.giff.mx", "lat": 21.0190, "lon": -101.2574 },
+    { "slug": "ficunam", "name": "Festival Internacional de Cine UNAM", "short_name": "FICUNAM", "city": "Ciudad de México", "country": "MX", "website_url": "https://ficunam.unam.mx", "lat": 19.3186, "lon": -99.1846 },
+    { "slug": "ambulante", "name": "Ambulante Gira de Documentales", "short_name": "Ambulante", "city": "Ciudad de México", "country": "MX", "website_url": "https://www.ambulante.org", "lat": 19.4326, "lon": -99.1332, "focus": ["documentary"] },
+    { "slug": "docsmx", "name": "DocsMX Festival Internacional de Cine Documental de la Ciudad de México", "short_name": "DocsMX", "city": "Ciudad de México", "country": "MX", "website_url": "https://docsmx.org", "lat": 19.4120, "lon": -99.1640, "focus": ["documentary"] },
+    { "slug": "los-cabos", "name": "Festival Internacional de Cine de Los Cabos", "short_name": "Los Cabos", "city": "San José del Cabo", "country": "MX", "website_url": "https://www.cabosfilmfestival.com", "lat": 23.0610, "lon": -109.6970 },
+    { "slug": "berlinale", "name": "Berlinale · Festival Internacional de Cine de Berlín", "short_name": "Berlinale", "city": "Berlín", "country": "DE", "website_url": "https://www.berlinale.de", "lat": 52.5096, "lon": 13.3736 },
+    { "slug": "cannes", "name": "Festival de Cannes", "short_name": "Cannes", "city": "Cannes", "country": "FR", "website_url": "https://www.festival-cannes.com", "lat": 43.5513, "lon": 7.0175 },
+    { "slug": "sundance", "name": "Sundance Film Festival", "short_name": "Sundance", "city": "Park City", "country": "US", "website_url": "https://festival.sundance.org", "lat": 40.6461, "lon": -111.4980 },
+    { "slug": "san-sebastian", "name": "Festival de San Sebastián", "short_name": "San Sebastián", "city": "San Sebastián", "country": "ES", "website_url": "https://www.sansebastianfestival.com", "lat": 43.3183, "lon": -1.9812 },
+    { "slug": "locarno", "name": "Locarno Film Festival", "short_name": "Locarno", "city": "Locarno", "country": "CH", "website_url": "https://www.locarnofestival.ch", "lat": 46.1709, "lon": 8.7995 },
+    { "slug": "venecia", "name": "Mostra Internacional de Arte Cinematográfico de Venecia", "short_name": "Venecia", "city": "Venecia", "country": "IT", "website_url": "https://www.labiennale.org/en/cinema", "lat": 45.4060, "lon": 12.3680 },
+    { "slug": "clermont-ferrand", "name": "Festival du Court Métrage de Clermont-Ferrand", "short_name": "Clermont-Ferrand", "city": "Clermont-Ferrand", "country": "FR", "website_url": "https://www.clermont-filmfest.org", "lat": 45.7772, "lon": 3.0870, "focus": ["shorts"] }
+  ]
+}

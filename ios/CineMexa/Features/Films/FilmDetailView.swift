@@ -51,8 +51,12 @@ private struct FilmHeader: View {
 
     var body: some View {
         ZStack(alignment: .bottomLeading) {
-            backdrop
+            // El backdrop va como overlay de un marco fijo: con scaledToFill su ancho ideal (16:9)
+            // supera la pantalla y empujaría toda la ficha hacia los lados.
+            Color.clear
+                .frame(maxWidth: .infinity)
                 .frame(height: 260)
+                .overlay { backdrop }
                 .clipped()
                 .overlay(LinearGradient(colors: [.clear, CM.cinemaBlack], startPoint: .center, endPoint: .bottom))
             HStack(alignment: .bottom, spacing: 16) {

@@ -8,6 +8,7 @@ export interface AvailabilityInput {
   mxReleaseDate?: string | null; // fecha de estreno identificada en la base
   confirmedScreenings: { startsAt: string }[]; // funciones confirmadas por una sala
   festivalEvents: { date: string }[]; // proyecciones o selecciones con fecha confirmada
+  year?: number | null; // año de la obra; si es posterior al actual, aún no se ha estrenado
 }
 
 const DAY = 86_400_000;
@@ -30,6 +31,8 @@ export function classifyFilmStatus(i: AvailabilityInput): FilmStatus {
     if (now - r <= 28 * DAY) return "release_identified";
   }
   if (i.festivalEvents.some((e) => Math.abs(Date.parse(e.date) - now) <= 30 * DAY)) return "festival";
+  // Sin fecha de estreno identificada, una obra fechada en un año futuro está por estrenarse.
+  if (!i.mxReleaseDate && i.year && i.year > i.now.getUTCFullYear()) return "upcoming";
   return "archive";
 }
 

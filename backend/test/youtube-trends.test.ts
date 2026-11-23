@@ -64,7 +64,7 @@ test("de visualizaciones a ranking publicado, sin rellenar sin evidencia", async
   const day = body.trends.find((t: any) => t.window === "24h");
   assert.equal(day.entries[0].film_id, films[0]);
   assert.match(day.entries[0].explanation, /^YouTube: visualizaciones \+/);
-  assert.equal(body.meta.sources.find((s: any) => s.id === "youtube").status, "not_configured", "la fuente sigue deshabilitada hasta configurarla");
+  assert.equal(body.meta.sources.find((s: any) => s.id === "youtube").status, "ok", "una corrida exitosa habilita la fuente");
 });
 
 test("un error no expone la clave", async () => {

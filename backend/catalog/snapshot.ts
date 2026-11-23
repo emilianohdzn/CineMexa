@@ -53,6 +53,7 @@ export function buildSnapshot(rows: CatalogRows, now: Date): Json {
       : canonical?.provider === "tmdb" ? `https://www.themoviedb.org/movie/${canonical.external_id}` : null;
     const status = classifyFilmStatus({
       now,
+      year: num(f.year),
       mxReleaseDate: f.mx_release_date,
       confirmedScreenings: (screeningsByFilm.get(f.id) ?? []).map((s) => ({ startsAt: iso(s.starts_at)! })),
       festivalEvents: (eventsByFilm.get(f.id) ?? []).filter((e) => e.occurs_at).map((e) => ({ date: iso(e.occurs_at)! })),
@@ -92,6 +93,9 @@ export function buildSnapshot(rows: CatalogRows, now: Date): Json {
   }
   timeline.sort((a, b) => String(a.date).localeCompare(String(b.date)));
 
+  // Defensa ante jsonb guardado como texto (doble serialización): se lee igual.
+  const asArray = (v: unknown): Row[] => (typeof v === "string" ? JSON.parse(v) : (v as Row[]) ?? []);
+  for (const t of rows.trends) t.entries = asArray(t.entries);
   const trendsByWindow = groupBy(rows.trends, "window_key");
   const trends = ["24h", "7d", "30d"].flatMap((w) => {
     const list = trendsByWindow.get(w) ?? [];

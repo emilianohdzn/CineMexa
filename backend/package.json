@@ -5,13 +5,18 @@
   "type": "module",
   "scripts": {
     "test": "node --test \"test/**/*.test.ts\"",
-    "collect:wikidata": "node collectors/wikidata/run.ts",
-    "collect:tmdb": "node collectors/tmdb/run.ts",
-    "collect:youtube": "node collectors/youtube/run.ts",
-    "job:trends": "node jobs/trends.ts"
+    "collect:wikidata": "node --env-file-if-exists=.env.local collectors/wikidata/run.ts",
+    "collect:tmdb": "node --env-file-if-exists=.env.local collectors/tmdb/run.ts",
+    "collect:youtube": "node --env-file-if-exists=.env.local collectors/youtube/run.ts",
+    "job:trends": "node --env-file-if-exists=.env.local jobs/trends.ts",
+    "verificar": "node scripts/verificar-conexiones.ts",
+    "build:catalog": "node scripts/build-catalog.ts",
+    "estado": "node scripts/estado-ingesta.ts",
+    "seed:festivals": "node --env-file-if-exists=.env.local seed/seed.ts"
   },
   "devDependencies": {
-    "@electric-sql/pglite": "0.4.6"
+    "@electric-sql/pglite": "0.4.6",
+    "esbuild": "0.24.2"
   },
   "dependencies": {
     "postgres": "3.4.5"

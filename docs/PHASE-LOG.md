@@ -46,3 +46,23 @@
 - Proyecto Supabase y claves (TMDB, YouTube) para la Fase 3.
 
 **Próximo bloque**: compilar en Xcode y corregir; luego Fase 3 empezando por Wikidata y la Edge Function `catalog`.
+
+## Fase 3 · Backend y sincronización (23 nov 2026)
+
+- Colectores: Wikidata (SPARQL, P495 = Q96), TMDB (sinopsis, estreno MX tipo 3 o 2, póster con atribución, tráiler, créditos sin pisar curaduría) y YouTube (visualizaciones con presupuesto de cuota). Job de tendencias (`trend_snapshots`).
+- Edge Function `catalog`: snapshot v1 leído como `anon` bajo RLS, ETag/304, caché, 503 honesto. `public_source_status()`.
+- Verificación: 33 pruebas de backend sobre PGlite con respuestas sintéticas; la app decodifica la respuesta (prueba en Swift).
+
+## Fase 4 · Integración con datos reales (23 nov 2026)
+
+- `scripts/configurar.sh`: entradas ocultas, validación de formato, `git check-ignore` antes de escribir `backend/.env.local` (600) y `LiveConfig.json` (solo URL y Publishable Key).
+- `backend/scripts/`: verificación de conexiones, ejecutor con secretos redactados, estado de la ingesta, empaquetado de `catalog`. Siembra de 14 festivales (ciudad, sin fechas).
+- Verificado en la Mac: 5/5 conexiones reales; migraciones aplicadas tras corrida en seco; `catalog` publicada y respondiendo; Wikidata 217 películas (corrida parcial), TMDB 40, 28 tráilers medidos; app en vivo en el simulador y en el iPhone 17.
+- Correcciones de la primera corrida real: jsonb doblemente serializado (`openPostgres`), backdrop desbordado, fuente habilitada tras corrida exitosa.
+
+## Fase 5 · Calidad (en curso)
+
+- CI en GitHub Actions (core, demo, backend). Workflow de colectores solo manual hasta que se autorice el horario.
+- Wikidata en paralelo (4 conexiones, reintento ante choque de unicidad).
+- Fechas relativas: "hace un momento" ante desfase de reloj y sin "dentro de 0 segundos" (17/17 pruebas de Swift en la Mac).
+- Pendiente: accesibilidad XXXL y VoiceOver, UI tests, `CineMexaKit`, horario de colectores.

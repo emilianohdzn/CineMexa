@@ -22,6 +22,11 @@ export async function finishRun(
        error = $5, meta = meta || $6::jsonb where id = $1`,
     [runId, result.status, result.seen, result.upserted, result.error ?? null, JSON.stringify(result.meta ?? {})],
   );
+  // Una corrida que funcionó demuestra que la fuente está configurada: se marca habilitada.
+  if (result.status !== "failed") {
+    await db.query(
+      "update sources set enabled = true where not enabled and id = (select source_id from ingestion_runs where id = $1)", [runId]);
+  }
 }
 
 /** Hash estable del contenido (claves ordenadas) para detectar cambios entre consultas. */

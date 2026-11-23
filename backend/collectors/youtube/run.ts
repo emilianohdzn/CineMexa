@@ -4,7 +4,7 @@
 // Uso: YOUTUBE_API_KEY=... DATABASE_URL=... node backend/collectors/youtube/run.ts
 import { fileURLToPath } from "node:url";
 import { fetchJson, type FetchOptions } from "../lib/http.ts";
-import type { Db } from "../lib/db.ts";
+import { openPostgres, type Db } from "../lib/db.ts";
 import { finishRun, recordSource, startRun, type RunStatus } from "../lib/runs.ts";
 
 export const YOUTUBE_API = "https://www.googleapis.com/youtube/v3";
@@ -92,9 +92,7 @@ export async function runYoutubeViews(db: Db, opts: YoutubeRunOptions) {
 if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   const url = process.env.DATABASE_URL;
   if (!url) throw new Error("Falta DATABASE_URL (conexión del rol de servicio).");
-  const { default: postgres } = await import("postgres");
-  const sql = postgres(url, { max: 1 });
-  const db: Db = { query: async (q, params = []) => ({ rows: await sql.unsafe(q, params as never[]) as never[] }) };
+  const { db, end } = await openPostgres(url);
   console.log(JSON.stringify(await runYoutubeViews(db, { apiKey: process.env.YOUTUBE_API_KEY ?? "" }), null, 2));
-  await sql.end();
+  await end();
 }

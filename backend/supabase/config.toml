@@ -1,0 +1,8 @@
+# Configuración mínima de Supabase CLI para Cine Mexa (se ejecuta con --workdir backend).
+# El vínculo con el proyecto remoto lo hace scripts/configurar.sh (supabase link); no hay secretos aquí.
+project_id = "cinemexa"
+
+[functions.catalog]
+# Lectura pública del catálogo. Las Publishable Keys (sb_publishable_…) no son JWT, así que la
+# función no exige JWT; los datos que devuelve ya están filtrados por RLS como rol anon.
+verify_jwt = false
