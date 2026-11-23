@@ -60,6 +60,9 @@ fi
 
 read_secret DATABASE_URL "Conexión PostgreSQL (URI)" '^postgres(ql)?://[^:/@]+:[^@]+@[^/]+:[0-9]+/[A-Za-z0-9_]+' \
   "Debe ser postgresql://usuario:contraseña@host:puerto/postgres (botón Connect del proyecto)."
+if [[ "$DATABASE_URL" == *"YOUR-PASSWORD"* || "$DATABASE_URL" == *"%5BYOUR"* ]]; then
+  fail "La URI todavía tiene el marcador [YOUR-PASSWORD]. Vuelve a correr el asistente y reemplázalo por la contraseña de la base."
+fi
 DB_HOST="$(DATABASE_URL="$DATABASE_URL" node -e 'process.stdout.write(new URL(process.env.DATABASE_URL).hostname)')"
 DB_USER="$(DATABASE_URL="$DATABASE_URL" node -e 'process.stdout.write(decodeURIComponent(new URL(process.env.DATABASE_URL).username))')"
 if [[ "$DB_HOST" == *pooler.supabase.com ]]; then
