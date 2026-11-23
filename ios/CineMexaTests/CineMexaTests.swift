@@ -154,15 +154,31 @@ struct LiveRepositoryTests {
 struct MapFramingTests {
     let now = ISO8601DateFormatter().date(from: "2026-11-23T18:00:00Z")!
 
-    @Test func elEncuadreContieneTodasLasSedesYRespetaLaProporcion() async throws {
+    func historicItems() async throws -> [Catalog.MapItem] {
         let catalog = Catalog(try await DemoRepository(bundle: Bundle(for: AppModel.self), now: { [now] in now }).fetchSnapshot())
-        let items = catalog.mapItems(period: .historic, kinds: Set(FestivalEventKind.allCases), filmKind: nil, query: "", now: now)
-        #expect(!items.isEmpty)
-        let size = CGSize(width: 402, height: 780)
-        let rect = FestivalMapView.fittingRect(items, viewSize: size)
-        for item in items {
-            #expect(rect.contains(MKMapPoint(item.coordinate)), "Falta \(item.festival.name)")
+        return catalog.mapItems(period: .historic, kinds: Set(FestivalEventKind.allCases), filmKind: nil, query: "", now: now)
+    }
+
+    @Test func separaAmericaDeEuropa() async throws {
+        let items = try await historicItems()
+        let groups = MapRegionGroup.groups(items)
+        #expect(groups.map(\.items.count).reduce(0, +) == items.count)
+        for group in groups {
+            let lons = group.items.map(\.coordinate.longitude)
+            #expect(lons.max()! - lons.min()! < 85, "Cada región cabe en lo que MapKit deja alejar")
         }
-        #expect(abs(rect.height / rect.width - Double(size.height / size.width)) < 0.01)
+        let all = MapRegionGroup.groups(try await historicItems().filter { $0.festival.country == "MX" })
+        #expect(all.count == 1 && all[0].name == "México")
+    }
+
+    @Test func elEncuadreContieneLaRegionYRespetaLaProporcion() async throws {
+        let size = CGSize(width: 402, height: 675)
+        for group in MapRegionGroup.groups(try await historicItems()) {
+            let rect = FestivalMapView.fittingRect(group.items, viewSize: size)
+            for item in group.items {
+                #expect(rect.contains(MKMapPoint(item.coordinate)), "Falta \(item.festival.name)")
+            }
+            #expect(abs(rect.height / rect.width - Double(size.height / size.width)) < 0.01)
+        }
     }
 }
