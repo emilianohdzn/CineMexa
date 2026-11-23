@@ -1,0 +1,267 @@
+{
+  "meta": {
+    "mode": "live",
+    "api_version": "1",
+    "generated_at": "2026-11-23T18:00:00.000Z",
+    "notice": null,
+    "sources": [
+      {
+        "id": "google_trends",
+        "name": "Google Trends API",
+        "attribution": "Datos de Google Trends",
+        "last_sync_at": null,
+        "status": "not_configured"
+      },
+      {
+        "id": "tmdb",
+        "name": "The Movie Database (TMDB)",
+        "attribution": "This product uses the TMDB API but is not endorsed or certified by TMDB.",
+        "last_sync_at": null,
+        "status": "not_configured"
+      },
+      {
+        "id": "wikidata",
+        "name": "Wikidata",
+        "attribution": "Datos de Wikidata (CC0)",
+        "last_sync_at": "2026-11-23T06:09:00.566Z",
+        "status": "ok"
+      },
+      {
+        "id": "youtube",
+        "name": "YouTube Data API",
+        "attribution": "Datos de YouTube",
+        "last_sync_at": null,
+        "status": "not_configured"
+      }
+    ]
+  },
+  "films": [
+    {
+      "id": "film-2",
+      "slug": "salt-water-2025",
+      "title": "Salt Water",
+      "original_title": null,
+      "alt_titles": [],
+      "year": 2025,
+      "kind": "short",
+      "runtime_minutes": 18,
+      "countries": [
+        "MX"
+      ],
+      "mx_participation": "unknown",
+      "genres": [],
+      "is_documentary": true,
+      "is_animation": false,
+      "synopsis": null,
+      "poster": null,
+      "backdrop": null,
+      "directors": [],
+      "writers": [],
+      "cinematographers": [],
+      "cast": [],
+      "trailer_url": null,
+      "status": "archive",
+      "mx_release_date": null,
+      "provenance": {
+        "source": "wikidata",
+        "source_url": "https://www.wikidata.org/wiki/Q900000002",
+        "retrieved_at": "2026-11-23T06:09:00.558Z",
+        "published_at": null,
+        "verification": "automatic",
+        "confidence": null
+      }
+    },
+    {
+      "id": "film-1",
+      "slug": "la-sombra-del-mezquite-2024",
+      "title": "La sombra del mezquite",
+      "original_title": null,
+      "alt_titles": [
+        "The Mesquite Shadow"
+      ],
+      "year": 2024,
+      "kind": "feature",
+      "runtime_minutes": 97,
+      "countries": [
+        "ES",
+        "MX"
+      ],
+      "mx_participation": "coproduction",
+      "genres": [
+        "Drama"
+      ],
+      "is_documentary": false,
+      "is_animation": false,
+      "synopsis": null,
+      "poster": null,
+      "backdrop": null,
+      "directors": [
+        "Ana Prueba Ficticia",
+        "Luis Ejemplo"
+      ],
+      "writers": [],
+      "cinematographers": [],
+      "cast": [],
+      "trailer_url": null,
+      "status": "festival",
+      "mx_release_date": null,
+      "provenance": {
+        "source": "wikidata",
+        "source_url": "https://www.wikidata.org/wiki/Q900000001",
+        "retrieved_at": "2026-11-23T06:09:00.536Z",
+        "published_at": null,
+        "verification": "automatic",
+        "confidence": null
+      }
+    }
+  ],
+  "screenings": [],
+  "streaming": [],
+  "reviews": [],
+  "timeline": [
+    {
+      "id": "ev-id-deb7d325",
+      "film_id": "film-1",
+      "kind": "festival_screening",
+      "date": "2026-11-25T02:00:00.000Z",
+      "label": "Función · FP",
+      "place": "Morelia, MX",
+      "provenance": {
+        "source": "editorial",
+        "source_url": null,
+        "retrieved_at": "2026-11-23T06:09:00.571Z",
+        "published_at": null,
+        "verification": "editorial",
+        "confidence": null
+      }
+    }
+  ],
+  "festivals": [
+    {
+      "id": "id-9315b30f",
+      "slug": "fest-prueba",
+      "name": "Festival de Prueba",
+      "short_name": "FP",
+      "city": "Morelia",
+      "country": "MX",
+      "website_url": null,
+      "focus": [],
+      "venue": {
+        "name": "Sede prueba",
+        "city": "Morelia",
+        "country": "MX",
+        "latitude": 19.7,
+        "longitude": -101.19,
+        "coordinate_precision": "city"
+      },
+      "editions": [
+        {
+          "id": "id-ee43ec08",
+          "label": "2026",
+          "year": 2026,
+          "starts_on": "2026-11-20",
+          "ends_on": "2026-11-29",
+          "timezone": "America/Mexico_City",
+          "program_url": null,
+          "call_url": null,
+          "call_deadline": null,
+          "is_cancelled": false,
+          "provenance": {
+            "source": "editorial",
+            "source_url": null,
+            "retrieved_at": "2026-11-23T06:09:00.570Z",
+            "published_at": null,
+            "verification": "editorial",
+            "confidence": null
+          }
+        }
+      ],
+      "provenance": {
+        "source": "editorial",
+        "source_url": null,
+        "retrieved_at": "2026-11-23T06:09:00.568Z",
+        "published_at": null,
+        "verification": "editorial",
+        "confidence": null
+      }
+    }
+  ],
+  "festival_events": [
+    {
+      "id": "id-deb7d325",
+      "edition_id": "id-ee43ec08",
+      "festival_id": "id-9315b30f",
+      "film_id": "film-1",
+      "kind": "screening",
+      "section": "Competencia",
+      "award_name": null,
+      "occurs_at": "2026-11-25T02:00:00.000Z",
+      "announced_at": null,
+      "provenance": {
+        "source": "editorial",
+        "source_url": null,
+        "retrieved_at": "2026-11-23T06:09:00.571Z",
+        "published_at": null,
+        "verification": "editorial",
+        "confidence": null
+      }
+    },
+    {
+      "id": "id-c4ddfc84",
+      "edition_id": "id-ee43ec08",
+      "festival_id": "id-9315b30f",
+      "film_id": "film-2",
+      "kind": "selection",
+      "section": "Cortometraje",
+      "award_name": null,
+      "occurs_at": null,
+      "announced_at": null,
+      "provenance": {
+        "source": "editorial",
+        "source_url": null,
+        "retrieved_at": "2026-11-23T06:09:00.571Z",
+        "published_at": null,
+        "verification": "editorial",
+        "confidence": null
+      }
+    }
+  ],
+  "news": [],
+  "trends": [
+    {
+      "window": "7d",
+      "computed_at": "2026-11-23T12:00:00.000Z",
+      "label": "Tendencias digitales",
+      "sources_used": [
+        "youtube"
+      ],
+      "methodology_version": "trend_score/1.0",
+      "is_demo": false,
+      "entries": [
+        {
+          "film_id": "film-1",
+          "rank": 1,
+          "previous_rank": null,
+          "score": 80,
+          "explanation": "YouTube: +40%.",
+          "signals": [
+            {
+              "source": "youtube",
+              "metric": "views_delta",
+              "current": 140,
+              "baseline": 100,
+              "growth_pct": 40
+            }
+          ]
+        }
+      ],
+      "history": [
+        {
+          "date": "2026-11-23T12:00:00.000Z",
+          "film_id": "film-1",
+          "score": 80
+        }
+      ]
+    }
+  ]
+}
