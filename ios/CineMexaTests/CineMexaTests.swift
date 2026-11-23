@@ -362,15 +362,31 @@ struct MexaTests {
     }
 
     @Test func preguntaPorPOSTALaFuncionMexa() async throws {
-        StubURLProtocol.responder = { _ in (200, Data(Self.json.utf8)) }
-        StubURLProtocol.requests = []
+        MexaStubURLProtocol.body = Data(Self.json.utf8)
+        MexaStubURLProtocol.methods = []
         let config = URLSessionConfiguration.ephemeral
-        config.protocolClasses = [StubURLProtocol.self]
+        config.protocolClasses = [MexaStubURLProtocol.self]
         let client = MexaClient(config: LiveConfig(baseUrl: URL(string: "https://ejemplo.supabase.co")!, anonKey: "publica"),
                                 session: URLSession(configuration: config))
         let a = try await client.ask("Premios en San Sebastián")
         #expect(a.citations.first?.source == "wikidata")
-        #expect(StubURLProtocol.requests == ["POST"])
+        #expect(MexaStubURLProtocol.methods == ["POST"])
         await #expect(throws: RepositoryError.liveNotConfigured) { try await MexaClient(config: nil).ask("hola") }
     }
+}
+
+/// Servidor simulado propio de Mexa (las suites corren en paralelo: no comparte estado con StubURLProtocol).
+final class MexaStubURLProtocol: URLProtocol, @unchecked Sendable {
+    nonisolated(unsafe) static var body = Data()
+    nonisolated(unsafe) static var methods: [String] = []
+    override class func canInit(with request: URLRequest) -> Bool { true }
+    override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
+    override func startLoading() {
+        Self.methods.append(request.httpMethod ?? "GET")
+        let response = HTTPURLResponse(url: request.url!, statusCode: 200, httpVersion: "HTTP/1.1", headerFields: ["Content-Type": "application/json"])!
+        client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+        client?.urlProtocol(self, didLoad: Self.body)
+        client?.urlProtocolDidFinishLoading(self)
+    }
+    override func stopLoading() {}
 }
