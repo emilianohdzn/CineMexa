@@ -1,0 +1,45 @@
+{
+  "_comment": "Respuesta SPARQL sintética para pruebas. Q-ids y títulos ficticios (Q9000000xx); no son datos reales.",
+  "head": { "vars": [] },
+  "results": { "bindings": [
+    {
+      "film": { "type": "uri", "value": "http://www.wikidata.org/entity/Q900000001" },
+      "filmLabel": { "type": "literal", "value": "La sombra del mezquite", "xml:lang": "es" },
+      "filmLabelEn": { "type": "literal", "value": "The Mesquite Shadow", "xml:lang": "en" },
+      "original": { "type": "literal", "value": "La sombra del mezquite" },
+      "published": { "type": "literal", "value": "2024-09-14T00:00:00Z" },
+      "runtime": { "type": "literal", "value": "97" },
+      "imdbId": { "type": "literal", "value": "tt90000001" },
+      "tmdbId": { "type": "literal", "value": "9000001" },
+      "countries": { "type": "literal", "value": "MX|ES" },
+      "directors": { "type": "literal", "value": "Q900000101~Ana Prueba Ficticia|Q900000101~Ana Test Fictional|Q900000102~Luis Ejemplo" },
+      "classes": { "type": "literal", "value": "Q11424" },
+      "genres": { "type": "literal", "value": "Q130232|Q99999999" }
+    },
+    {
+      "film": { "type": "uri", "value": "http://www.wikidata.org/entity/Q900000002" },
+      "filmLabelEn": { "type": "literal", "value": "Salt Water", "xml:lang": "en" },
+      "published": { "type": "literal", "value": "2025-02-01T00:00:00Z" },
+      "runtime": { "type": "literal", "value": "18" },
+      "countries": { "type": "literal", "value": "MX" },
+      "directors": { "type": "literal", "value": "" },
+      "classes": { "type": "literal", "value": "Q11424|Q93204" },
+      "genres": { "type": "literal", "value": "" }
+    },
+    {
+      "film": { "type": "uri", "value": "http://www.wikidata.org/entity/Q900000003" },
+      "filmLabel": { "type": "literal", "value": "Q900000003", "xml:lang": "es" },
+      "published": { "type": "literal", "value": "2023-01-01T00:00:00Z" },
+      "countries": { "type": "literal", "value": "MX" },
+      "classes": { "type": "literal", "value": "Q24862" }
+    },
+    {
+      "film": { "type": "uri", "value": "http://www.wikidata.org/entity/Q900000004" },
+      "filmLabel": { "type": "literal", "value": "Corto animado de prueba", "xml:lang": "es" },
+      "published": { "type": "literal", "value": "2022" },
+      "runtime": { "type": "literal", "value": "12" },
+      "countries": { "type": "literal", "value": "MX|FR|XX1" },
+      "classes": { "type": "literal", "value": "Q24862|Q202866" }
+    }
+  ] }
+}

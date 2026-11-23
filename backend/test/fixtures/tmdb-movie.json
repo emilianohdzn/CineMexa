@@ -1,0 +1,37 @@
+{
+  "_comment": "Respuesta sintética de TMDB para pruebas; ids, nombres y rutas ficticios.",
+  "id": 9000001,
+  "title": "La sombra del mezquite",
+  "original_title": "La sombra del mezquite",
+  "overview": "Sinopsis ficticia de prueba.",
+  "runtime": 98,
+  "imdb_id": "tt90000001",
+  "poster_path": "/pruebaPoster.jpg",
+  "backdrop_path": "/pruebaFondo.jpg",
+  "release_date": "2024-09-14",
+  "release_dates": { "results": [
+    { "iso_3166_1": "ES", "release_dates": [ { "type": 3, "release_date": "2024-10-01T00:00:00.000Z" } ] },
+    { "iso_3166_1": "MX", "release_dates": [
+      { "type": 1, "release_date": "2024-10-20T00:00:00.000Z", "note": "Festival" },
+      { "type": 3, "release_date": "2025-03-06T00:00:00.000Z" }
+    ] }
+  ] },
+  "credits": {
+    "cast": [
+      { "id": 9101, "name": "Actriz Prueba Uno", "character": "Rosa", "order": 0 },
+      { "id": 9102, "name": "Actor Prueba Dos", "character": "", "order": 1 }
+    ],
+    "crew": [
+      { "id": 9201, "name": "Ana Prueba Ficticia", "job": "Director", "department": "Directing" },
+      { "id": 9202, "name": "Fotógrafa Prueba", "job": "Director of Photography", "department": "Camera" },
+      { "id": 9203, "name": "Guionista Prueba", "job": "Screenplay", "department": "Writing" },
+      { "id": 9203, "name": "Guionista Prueba", "job": "Writer", "department": "Writing" },
+      { "id": 9204, "name": "Maquillista Prueba", "job": "Makeup Artist", "department": "Crew" }
+    ]
+  },
+  "videos": { "results": [
+    { "site": "YouTube", "key": "tráilerEN", "type": "Trailer", "official": true, "iso_639_1": "en" },
+    { "site": "YouTube", "key": "trailerES1", "type": "Trailer", "official": true, "iso_639_1": "es" },
+    { "site": "Vimeo", "key": "x", "type": "Trailer" }
+  ] }
+}

@@ -182,3 +182,21 @@ struct MapFramingTests {
         }
     }
 }
+
+/// Marca para ubicar el bundle de pruebas (los recursos de Fixtures/ viven ahí).
+private final class TestBundleMarker {}
+
+@Suite("Catálogo del backend")
+struct LiveCatalogContractTests {
+    /// Muestra generada por backend/test/catalog.test.ts (CINEMEXA_WRITE_SAMPLE=1 npm test).
+    @Test func decodificaLaRespuestaDeLaEdgeFunction() throws {
+        let url = try #require(Bundle(for: TestBundleMarker.self).url(forResource: "live-catalog-sample", withExtension: "json"))
+        let snapshot = try CineJSON.decoder().decode(CatalogSnapshot.self, from: Data(contentsOf: url))
+        #expect(snapshot.meta.mode == .live)
+        #expect(snapshot.films.count == 2)
+        #expect(snapshot.films.allSatisfy { $0.provenance.verification == .automatic })
+        #expect(snapshot.festivalEvents.contains { $0.occursAt == nil }, "sin fecha confirmada se conserva como nil")
+        let catalog = Catalog(snapshot)
+        #expect(!catalog.films(matching: .shorts).isEmpty)
+    }
+}

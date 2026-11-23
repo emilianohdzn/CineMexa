@@ -1,6 +1,11 @@
 # Hoja de ruta
 
 ## Fase 3 · Backend y sincronización real
+**Hecho (probado con PGlite y respuestas sintéticas; falta correrlo contra los servicios reales):**
+collector Wikidata, collector TMDB, collector YouTube + job de tendencias, Edge Function `catalog`
+(contrato v1, RLS como anon, ETag) y `public_source_status()`. La app decodifica la respuesta (prueba en Swift).
+
+**Plan original:**
 - Collector Wikidata (SPARQL): películas con país de origen México (Q96), directores, coproducciones, ids externos.
 - Collector TMDB aislado: metadatos, imágenes autorizadas, `release_dates` para MX, proveedores de streaming si los términos lo permiten.
 - Collector YouTube con caché y presupuesto de cuota; escritura en `trend_signals` y job de `trend_snapshots`.
