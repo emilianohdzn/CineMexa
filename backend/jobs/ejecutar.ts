@@ -135,6 +135,7 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
         console.log(JSON.stringify(r));
         if (r.status === "failed") break; // tendencias sólo después de una medición que funcionó
         if (job === "youtube" && r.status === "skipped") break;
+        if (job === "wikidata" && r.status === "skipped") break; // festivales depende del enlace de Wikidata
       }
     });
   } catch (error) {

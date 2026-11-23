@@ -3,7 +3,7 @@ import { test, before } from "node:test";
 import assert from "node:assert/strict";
 import { freshDb, type TestDb } from "./helpers/db.ts";
 import { seedFestivals, seedFestivalEditions } from "../seed/seed.ts";
-import { handleMexa } from "../mexa/handler.ts";
+import { handleMexa, resetMexaState } from "../mexa/handler.ts";
 
 const NOW = new Date("2026-11-23T15:00:00Z");
 let db: TestDb;
@@ -38,7 +38,7 @@ before(async () => {
 });
 
 async function ask(question: string) {
-  const res = await handleMexa(new Request("https://x.test/mexa", { method: "POST", body: JSON.stringify({ question }) }), { db, now: () => NOW });
+  const res = await handleMexa(new Request("https://x.test/mexa", { method: "POST", body: JSON.stringify({ question }) }), { db, now: () => NOW, cacheSeconds: 0, perMinute: 0 });
   assert.equal(res.status, 200);
   return res.json() as Promise<any>;
 }
@@ -76,7 +76,7 @@ test("premios en un festival, con la URL de la fuente", async () => {
 test("fechas de festival: la próxima edición con fuente, o lo dice si no hay", async () => {
   const b = await ask("¿Cuándo es la Berlinale?");
   assert.equal(b.intent, "festival_dates");
-  assert.match(b.text, /2027-02-10 al 2027-02-21/);
+  assert.match(b.text, /del 10 al 21 de febrero de 2027/);
   assert.match(b.citations[0].url, /^https:\/\//);
   const g = await ask("¿cuándo es el GIFF?");
   assert.equal(g.unanswered, "sin_fecha");
@@ -93,6 +93,28 @@ test("tendencias sin evidencia: lo dice, no simula", async () => {
   const a = await ask("¿Qué está en tendencia?");
   assert.equal(a.unanswered, "sin_evidencia");
   assert.deepEqual(a.items, []);
+  assert.doesNotMatch(a.text, /dos mediciones/);
+});
+
+test("límite por cliente: 429 con retry-after y otro cliente sigue pasando", async () => {
+  resetMexaState();
+  const call = (ip: string) => handleMexa(new Request("https://x.test/mexa?q=pr%C3%B3ximos%20estrenos", { headers: { "x-forwarded-for": `${ip}, 10.0.0.1` } }),
+    { db, now: () => NOW, perMinute: 2 });
+  assert.equal((await call("1.1.1.1")).status, 200);
+  assert.equal((await call("1.1.1.1")).status, 200);
+  const third = await call("1.1.1.1");
+  assert.equal(third.status, 429);
+  assert.equal(third.headers.get("retry-after"), "60");
+  assert.equal((await call("2.2.2.2")).status, 200);
+  resetMexaState();
+});
+
+test("fechas en español de México", async () => {
+  const { fecha, rango } = await import("../mexa/answer.ts");
+  assert.equal(fecha("2026-12-04"), "4 de diciembre de 2026");
+  assert.equal(rango("2027-02-10", "2027-02-21"), "del 10 al 21 de febrero de 2027");
+  assert.equal(rango("2026-10-28", "2026-11-03"), "del 28 de octubre al 3 de noviembre de 2026");
+  assert.equal(rango("2026-12-28", "2027-01-03"), "del 28 de diciembre de 2026 al 3 de enero de 2027");
 });
 
 test("fuera de alcance o pregunta inválida", async () => {

@@ -1,7 +1,7 @@
 // Mexa, Fase A: responde preguntas sobre el catálogo SIN modelo de lenguaje. Reglas cerradas sobre los mismos datos
 // publicables que el catálogo (leídos como `anon`, con RLS). Cada respuesta cita los registros que la sostienen; si no
 // hay datos, lo dice. Nunca predice funciones, fechas ni premios.
-import { normalizePersonName, normalizeTitle } from "../../packages/core/src/index.ts";
+import { DEFAULT_SOURCES, normalizePersonName, normalizeTitle } from "../../packages/core/src/index.ts";
 import { textKey } from "../collectors/feeds/match.ts";
 import type { CatalogRows } from "../catalog/queries.ts";
 
@@ -30,6 +30,18 @@ export interface MexaAnswer {
 
 const iso = (v: unknown) => (v == null ? null : v instanceof Date ? v.toISOString() : String(v));
 const has = (q: string, re: RegExp) => re.test(q);
+const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+/** "2027-02-10" → "10 de febrero de 2027". */
+export const fecha = (d: string) => { const [y, m, day] = d.split("-").map(Number); return `${day} de ${MESES[m - 1]} de ${y}`; };
+/** Rango legible: "del 10 al 21 de febrero de 2027", "del 28 de septiembre al 4 de octubre de 2026". */
+export function rango(a: string, b: string | null): string {
+  if (!b || b === a) return `el ${fecha(a)}`;
+  const [ya, ma] = a.split("-").map(Number), [yb, mb] = b.split("-").map(Number);
+  const da = Number(a.slice(8)), db = Number(b.slice(8));
+  if (ya === yb && ma === mb) return `del ${da} al ${db} de ${MESES[mb - 1]} de ${yb}`;
+  if (ya === yb) return `del ${da} de ${MESES[ma - 1]} al ${db} de ${MESES[mb - 1]} de ${yb}`;
+  return `del ${fecha(a)} al ${fecha(b)}`;
+}
 const SUGERENCIAS = "Puedo responder, por ejemplo: «¿Quién dirigió …?», «Películas de 2025», «Próximos estrenos», «¿Cuándo es el FICM?», «Premios en Berlinale» o «¿Qué está en tendencia?».";
 
 export function answerQuestion(question: string, rows: CatalogRows, now: Date): MexaAnswer {
@@ -67,8 +79,18 @@ export function answerQuestion(question: string, rows: CatalogRows, now: Date): 
   // ── Tendencias ──
   if (has(q, /\s(tendencia|tendencias|trending|mas visto|mas vistas|populares?)\s/)) {
     const snap = rows.trends.find((t) => t.window_key === "7d") ?? rows.trends[0];
-    if (!snap || !Array.isArray(snap.entries) || snap.entries.length === 0) {
-      return { intent: "trends", text: "Todavía no hay evidencia suficiente para un ranking de tendencias: hacen falta al menos dos mediciones de vistas de tráilers por película. No se simula ninguno.", items: [], citations: [], unanswered: "sin_evidencia" };
+    if (!snap) {
+      return { intent: "trends", text: "Todavía no se ha calculado ningún ranking de tendencias.", items: [], citations: [], unanswered: "sin_evidencia" };
+    }
+    if (!Array.isArray(snap.entries) || snap.entries.length === 0) {
+      const min = DEFAULT_SOURCES.youtube.minEvidence;
+      return {
+        intent: "trends",
+        text: `Por ahora no hay ranking: ningún tráiler alcanza la evidencia mínima de la metodología (${min.toLocaleString("es-MX")} vistas nuevas de YouTube en la ventana). No se rellena con puntuaciones simuladas.`,
+        items: [],
+        citations: [{ type: "trend_snapshot", id: `${snap.window_key}@${iso(snap.computed_at)}`, label: snap.label, source: (snap.sources_used ?? []).join(","), url: null, retrieved_at: iso(snap.computed_at), verification: "automatic" }],
+        unanswered: "sin_evidencia",
+      };
     }
     const top = snap.entries.slice(0, 5).flatMap((e: any) => (films.has(e.filmId) ? [{ e, f: films.get(e.filmId)! }] : []));
     return {
@@ -103,7 +125,7 @@ export function answerQuestion(question: string, rows: CatalogRows, now: Date): 
     }
     return {
       intent: "festival_dates",
-      text: `${fest.short_name ?? fest.name} (${next.edition_label}) es del ${next.starts_on} al ${next.ends_on ?? next.starts_on} en ${fest.city}.`,
+      text: `${fest.short_name ?? fest.name} (${next.edition_label}) es ${rango(next.starts_on, next.ends_on)} en ${fest.city}.`,
       items: [{ label: fest.name, festival_id: fest.id }],
       citations: [{ type: "festival_edition", id: next.id, label: `${fest.name} ${next.edition_label}`, source: next.source_id, url: next.source_url ?? null, retrieved_at: iso(next.retrieved_at), verification: next.verification }],
       unanswered: null,
@@ -157,7 +179,7 @@ export function answerQuestion(question: string, rows: CatalogRows, now: Date): 
       .sort((a, b) => a.mx_release_date.localeCompare(b.mx_release_date)).slice(0, 10);
     return {
       intent: "upcoming",
-      text: list.length === 0 ? "No tengo estrenos próximos con fecha identificada." : `Próximos estrenos con fecha identificada (no implica funciones confirmadas): ${list.map((f) => `${f.title} (${f.mx_release_date})`).join("; ")}.`,
+      text: list.length === 0 ? "No tengo estrenos próximos con fecha identificada." : `Próximos estrenos con fecha identificada (no implica funciones confirmadas): ${list.map((f) => `${f.title} (${fecha(f.mx_release_date)})`).join("; ")}.`,
       items: list.map((f) => ({ label: filmLabel(f), film_id: String(f.id) })),
       citations: list.map(filmCite), unanswered: list.length ? null : "sin_datos",
     };
@@ -167,7 +189,7 @@ export function answerQuestion(question: string, rows: CatalogRows, now: Date): 
     const ds = directors.get(film.id) ?? [];
     const evs = rows.events.filter((e) => e.film_id === film.id);
     const revs = rows.reviews.filter((r) => r.film_id === film.id);
-    const parts = [ds.length ? `dirigida por ${ds.join(" y ")}` : null, film.mx_release_date ? `estreno identificado: ${film.mx_release_date}` : null,
+    const parts = [ds.length ? `dirigida por ${ds.join(" y ")}` : null, film.mx_release_date ? `estreno identificado: ${fecha(film.mx_release_date)}` : null,
       evs.length ? `${evs.length} ${evs.length === 1 ? "registro" : "registros"} en festivales` : null, revs.length ? `${revs.length} ${revs.length === 1 ? "reseña" : "reseñas"} enlazadas` : null].filter(Boolean);
     return {
       intent: "film_info", text: `${filmLabel(film)}${parts.length ? `: ${parts.join("; ")}` : ""}.`,

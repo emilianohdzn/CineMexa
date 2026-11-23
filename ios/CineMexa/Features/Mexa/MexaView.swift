@@ -18,7 +18,7 @@ struct MexaView: View {
         List {
             Section {
                 HStack(alignment: .firstTextBaseline) {
-                    TextField("Pregunta sobre el cine mexicano", text: $question, axis: .vertical)
+                    TextField("Pregunta sobre el cine mexicano", text: $question)
                         .focused($focused)
                         .submitLabel(.send)
                         .onSubmit { Task { await ask() } }
@@ -91,7 +91,7 @@ struct MexaView: View {
                         } else {
                             Text(c.label).foregroundStyle(CM.paperCream)
                         }
-                        Text([c.source, c.verification].joined(separator: " · "))
+                        Text([c.source, VerificationStatus(rawValue: c.verification)?.label ?? c.verification].joined(separator: " · "))
                             .font(CMFont.mono(10)).foregroundStyle(CM.secondaryText)
                     }
                 }
