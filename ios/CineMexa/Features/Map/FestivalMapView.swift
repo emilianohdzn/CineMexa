@@ -69,7 +69,10 @@ struct FestivalMapView: View {
                     .frame(minHeight: CM.minTap)
                     .background(Capsule().fill(CM.projectorYellow))
             }
-            .padding(16)
+            .padding(.horizontal, 16)
+            .padding(.top, 16)
+            // Deja libre la atribución de Apple Mapas (logo y «Aviso legal»).
+            .padding(.bottom, 44)
             .accessibilityLabel("Ver festivales del mapa en lista")
         }
         .sheet(item: $selected) { item in
@@ -118,19 +121,20 @@ struct FestivalMapView: View {
         let points = items.map { MKMapPoint($0.coordinate) }
         let minX = points.map(\.x).min()!, maxX = points.map(\.x).max()!
         let minY = points.map(\.y).min()!, maxY = points.map(\.y).max()!
-        let minSide = world.width * 6 / 360   // nunca más cerca que ~6°
+        let minSide = world.width * 12 / 360   // nunca más cerca que ~12°
         var w = max((maxX - minX) * 1.3, minSide)
         var h = max((maxY - minY) * 1.3, minSide)
-        // La franja de filtros tapa la parte superior: se añade ese espacio al norte.
-        let topExtra = h * 0.3
-        h += topExtra
+        // La franja de filtros tapa la parte superior y los controles la inferior: se añade ese espacio.
+        let topExtra = h * 0.45
+        let bottomExtra = h * 0.3
+        h += topExtra + bottomExtra
         // Respeta la proporción alto/ancho de la vista: crece la dimensión que falta.
         let aspect = viewSize.width > 0 && viewSize.height > 0 ? Double(viewSize.height / viewSize.width) : 2.0
         if h / w < aspect { h = w * aspect } else { w = h / aspect }
         if h > world.height { w *= world.height / h; h = world.height }
         w = min(w, world.width)
         let midX = (minX + maxX) / 2
-        let midY = (minY + maxY) / 2 - topExtra / 2
+        let midY = (minY + maxY) / 2 - (topExtra - bottomExtra) / 2
         let originY = min(max(midY - h / 2, 0), world.height - h)
         return MKMapRect(x: midX - w / 2, y: originY, width: w, height: h)
     }
@@ -167,7 +171,9 @@ struct FestivalMapView: View {
                 .accessibilityAddTraits(isOn ? .isSelected : [])
             }
         }
-        .padding(16)
+        .padding(.horizontal, 16)
+        .padding(.top, 16)
+        .padding(.bottom, 44)
     }
 
     private func zoom(into cluster: MapCluster) {
@@ -196,12 +202,17 @@ struct FestivalMapView: View {
             .frame(minHeight: CM.minTap)
             .background(RoundedRectangle(cornerRadius: 12).fill(CM.deepSurface))
 
+            // Fila 1: periodo (selección única). Fila 2: tipo de actividad y de película (interruptores).
             ScrollView(.horizontal) {
                 HStack(spacing: 8) {
                     ForEach(MapPeriod.allCases) { p in
                         FilterChip(title: p.label, isSelected: period == p) { period = p }
                     }
-                    Divider().frame(height: 24)
+                }
+            }
+            .scrollIndicators(.hidden)
+            ScrollView(.horizontal) {
+                HStack(spacing: 8) {
                     ForEach([FestivalEventKind.selection, .screening, .award], id: \.self) { k in
                         FilterChip(title: k.label, symbol: k.symbol, isSelected: kinds.contains(k)) {
                             if kinds.contains(k) { kinds.remove(k) } else { kinds.insert(k) }
