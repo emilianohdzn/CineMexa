@@ -64,6 +64,13 @@ struct DateLogicTests {
     }
     let now = ISO8601DateFormatter().date(from: "2026-11-23T18:00:00Z")!
 
+    @Test func tiempoRelativoNuncaDiceDentroDeCeroSegundos() {
+        #expect(CineFormat.relative(now, now: now) == "hace un momento")
+        #expect(CineFormat.relative(now.addingTimeInterval(30), now: now) == "hace un momento")
+        #expect(CineFormat.relative(now.addingTimeInterval(-20), now: now) == "hace un momento")
+        #expect(CineFormat.relative(now.addingTimeInterval(-3 * 3600), now: now).hasPrefix("hace"))
+    }
+
     @Test func estadoDeEdicionEsInclusivoYEnLaZonaDelFestival() {
         #expect(DateLogic.status(of: edition("2026-11-20", "2026-11-23"), now: now) == .active)
         #expect(DateLogic.status(of: edition("2026-11-24", "2026-11-30"), now: now) == .upcoming)
