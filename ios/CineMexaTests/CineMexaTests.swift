@@ -180,6 +180,9 @@ struct MapFramingTests {
             }
             #expect(abs(rect.height / rect.width - Double(size.height / size.width)) < 0.01)
         }
+    }
+}
+
 /// Marca para ubicar el bundle de pruebas (los recursos de Fixtures/ viven ahí).
 private final class TestBundleMarker {}
 
