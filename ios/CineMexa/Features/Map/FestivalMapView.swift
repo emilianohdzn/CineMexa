@@ -7,7 +7,7 @@ struct FestivalMapView: View {
     let catalog: Catalog
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-    @State private var position: MapCameraPosition = .region(Self.worldRegion)
+    @State private var position: MapCameraPosition = .automatic
     @State private var visibleRegion: MKCoordinateRegion = Self.worldRegion
     @State private var period: MapPeriod = .month
     @State private var kinds: Set<FestivalEventKind> = Set(FestivalEventKind.allCases)
@@ -78,6 +78,10 @@ struct FestivalMapView: View {
                 .navigationBarTitleDisplayMode(.inline)
             }
             .presentationDetents([.medium, .large])
+        }
+        .onChange(of: items.map(\.id)) { _, _ in
+            // Al cambiar filtros, encuadra las sedes resultantes.
+            withAnimation(.cm(reduceMotion)) { position = .automatic }
         }
         .navigationTitle("Mapa festivalero")
         .navigationBarTitleDisplayMode(.inline)
@@ -209,17 +213,26 @@ struct MapCluster: Identifiable {
     }
 }
 
-/// Agrupación por cuadrícula según el área visible: evita marcadores encimados sin consultas extra.
+/// Agrupación por distancia según el área visible: une sedes a menos de ~1/12 del ancho
+/// visible para evitar marcadores encimados, sin consultas extra a la red.
 enum MapClusterer {
-    static func cluster(_ items: [Catalog.MapItem], region: MKCoordinateRegion, cellsAcross: Double = 9) -> [MapCluster] {
-        let cellLon = max(region.span.longitudeDelta / cellsAcross, 0.0001)
-        let cellLat = max(region.span.latitudeDelta / (cellsAcross * 1.6), 0.0001)
-        var buckets: [String: [Catalog.MapItem]] = [:]
-        for item in items {
-            let key = "\(Int(floor(item.coordinate.latitude / cellLat)))|\(Int(floor(item.coordinate.longitude / cellLon)))"
-            buckets[key, default: []].append(item)
+    static func cluster(_ items: [Catalog.MapItem], region: MKCoordinateRegion, fraction: Double = 1.0 / 12.0) -> [MapCluster] {
+        let thresholdLon = max(region.span.longitudeDelta * fraction, 0.0001)
+        let thresholdLat = max(region.span.latitudeDelta * fraction, 0.0001)
+        var groups: [[Catalog.MapItem]] = []
+        for item in items.sorted(by: { $0.id < $1.id }) {
+            if let index = groups.firstIndex(where: { group in
+                group.contains { other in
+                    abs(other.coordinate.latitude - item.coordinate.latitude) < thresholdLat &&
+                    abs(other.coordinate.longitude - item.coordinate.longitude) < thresholdLon
+                }
+            }) {
+                groups[index].append(item)
+            } else {
+                groups.append([item])
+            }
         }
-        return buckets.values.map { MapCluster(items: $0) }.sorted { $0.id < $1.id }
+        return groups.map { MapCluster(items: $0) }.sorted { $0.id < $1.id }
     }
 }
 

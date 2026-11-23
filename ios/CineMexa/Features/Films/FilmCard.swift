@@ -13,7 +13,7 @@ struct FilmCard: View {
     var body: some View {
         NavigationLink(value: Route.film(id: film.id, transitionID: transitionID)) {
             VStack(alignment: .leading, spacing: 8) {
-                PosterView(film: film)
+                PosterView(film: film, compactPlaceholder: true)
                     .heroSource(transitionID)
                 VStack(alignment: .leading, spacing: 3) {
                     Text(film.title)

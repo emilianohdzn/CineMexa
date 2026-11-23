@@ -56,7 +56,7 @@ private struct FilmHeader: View {
                 .clipped()
                 .overlay(LinearGradient(colors: [.clear, CM.cinemaBlack], startPoint: .center, endPoint: .bottom))
             HStack(alignment: .bottom, spacing: 16) {
-                PosterView(film: film)
+                PosterView(film: film, compactPlaceholder: true)
                     .frame(width: 130)
                     .shadow(color: .black.opacity(0.5), radius: 18, y: 10)
                 VStack(alignment: .leading, spacing: 6) {
