@@ -12,6 +12,8 @@ await build({
   platform: "neutral",
   target: "es2022",
   legalComments: "none",
+  // openPostgres (db.ts) importa postgres.js de forma diferida; la función usa npm:postgres por su cuenta.
+  external: ["postgres"],
   banner: { js: "// Generado por backend/scripts/build-catalog.ts. No editar." },
 });
 console.log("catalog empaquetado en supabase/functions/catalog/_bundle/handler.js");

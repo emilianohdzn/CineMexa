@@ -3,7 +3,7 @@
 // Uso: DATABASE_URL=... node backend/jobs/trends.ts
 import { fileURLToPath } from "node:url";
 import { computeTrendRanking, WINDOW_HOURS, type TrendObservation, type TrendWindow } from "../../packages/core/src/index.ts";
-import type { Db } from "../collectors/lib/db.ts";
+import { openPostgres, type Db } from "../collectors/lib/db.ts";
 
 const HOUR = 3_600_000;
 
@@ -49,9 +49,7 @@ export async function runTrendSnapshots(db: Db, now: Date, windows: TrendWindow[
 if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   const url = process.env.DATABASE_URL;
   if (!url) throw new Error("Falta DATABASE_URL (conexión del rol de servicio).");
-  const { default: postgres } = await import("postgres");
-  const sql = postgres(url, { max: 1 });
-  const db: Db = { query: async (q, params = []) => ({ rows: await sql.unsafe(q, params as never[]) as never[] }) };
+  const { db, end } = await openPostgres(url);
   console.log(JSON.stringify(await runTrendSnapshots(db, new Date()), null, 2));
-  await sql.end();
+  await end();
 }

@@ -4,7 +4,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { inTransaction, type Db } from "../collectors/lib/db.ts";
+import { inTransaction, openPostgres, type Db } from "../collectors/lib/db.ts";
 
 interface SeedFestival { slug: string; name: string; short_name: string; city: string; country: string; website_url: string; lat: number; lon: number; focus?: string[] }
 
@@ -31,9 +31,7 @@ export async function seedFestivals(db: Db): Promise<{ inserted: number; existin
 if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   const url = process.env.DATABASE_URL;
   if (!url) throw new Error("Falta DATABASE_URL.");
-  const { default: postgres } = await import("postgres");
-  const sql = postgres(url, { max: 1, prepare: false });
-  const db: Db = { query: async (q, params = []) => ({ rows: await sql.unsafe(q, params as never[]) as never[] }) };
+  const { db, end } = await openPostgres(url);
   console.log(JSON.stringify(await seedFestivals(db)));
-  await sql.end();
+  await end();
 }

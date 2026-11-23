@@ -2,7 +2,7 @@
 // Uso: node backend/collectors/wikidata/run.ts --from-year 2020 [--dry-run]
 // En producción corre como tarea programada con DATABASE_URL (rol de servicio). Nunca en la app.
 import { fetchJson, type FetchOptions } from "../lib/http.ts";
-import type { Db } from "../lib/db.ts";
+import { openPostgres, type Db } from "../lib/db.ts";
 import { finishRun, startRun, type RunStatus } from "../lib/runs.ts";
 import { discoverUrl } from "./sparql.ts";
 import { parseDiscoverResponse, type SparqlResponse, type WikidataFilm } from "./parse.ts";
@@ -82,10 +82,8 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   } else {
     const url = process.env.DATABASE_URL;
     if (!url) throw new Error("Falta DATABASE_URL (conexión del rol de servicio).");
-    const { default: postgres } = await import("postgres");
-    const sql = postgres(url, { max: 1 });
-    const db: Db = { query: async (q, params = []) => ({ rows: await sql.unsafe(q, params as never[]) }) };
+    const { db, end } = await openPostgres(url);
     console.log(JSON.stringify(await runWikidataDiscover(db, { fromYear, userAgent }), null, 2));
-    await sql.end();
+    await end();
   }
 }

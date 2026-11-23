@@ -3,7 +3,7 @@
 // Sin token el conector queda deshabilitado y la app sigue funcionando.
 import { fileURLToPath } from "node:url";
 import { fetchJson, type FetchOptions } from "../lib/http.ts";
-import type { Db } from "../lib/db.ts";
+import { openPostgres, type Db } from "../lib/db.ts";
 import { finishRun, startRun, type RunStatus } from "../lib/runs.ts";
 import { movieUrl, parseMovie, type TmdbMovie } from "./parse.ts";
 import { applyTmdb } from "./upsert.ts";
@@ -50,9 +50,7 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   const limit = args.includes("--limit") ? Number(args[args.indexOf("--limit") + 1]) : 200;
   const url = process.env.DATABASE_URL;
   if (!url) throw new Error("Falta DATABASE_URL (conexión del rol de servicio).");
-  const { default: postgres } = await import("postgres");
-  const sql = postgres(url, { max: 1 });
-  const db: Db = { query: async (q, params = []) => ({ rows: await sql.unsafe(q, params as never[]) as never[] }) };
+  const { db, end } = await openPostgres(url);
   console.log(JSON.stringify(await runTmdbEnrich(db, { token: process.env.TMDB_API_READ_TOKEN ?? "", limit }), null, 2));
-  await sql.end();
+  await end();
 }

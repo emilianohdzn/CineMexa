@@ -93,6 +93,9 @@ export function buildSnapshot(rows: CatalogRows, now: Date): Json {
   }
   timeline.sort((a, b) => String(a.date).localeCompare(String(b.date)));
 
+  // Defensa ante jsonb guardado como texto (doble serialización): se lee igual.
+  const asArray = (v: unknown): Row[] => (typeof v === "string" ? JSON.parse(v) : (v as Row[]) ?? []);
+  for (const t of rows.trends) t.entries = asArray(t.entries);
   const trendsByWindow = groupBy(rows.trends, "window_key");
   const trends = ["24h", "7d", "30d"].flatMap((w) => {
     const list = trendsByWindow.get(w) ?? [];
