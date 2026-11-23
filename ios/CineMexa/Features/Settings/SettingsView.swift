@@ -91,6 +91,13 @@ struct SourcesView: View {
                     .padding(.vertical, 4)
                 }
             }
+            // Atribución fija de TMDB (exigida por sus términos), aunque el catálogo no la traiga.
+            Section("The Movie Database (TMDB)") {
+                Text("Este producto usa la API de TMDB pero no está avalado ni certificado por TMDB.")
+                    .font(.footnote).foregroundStyle(CM.paperCream)
+                Link("themoviedb.org", destination: URL(string: "https://www.themoviedb.org")!)
+                    .font(.footnote)
+            }
             Section("Estados de los datos") {
                 ForEach([VerificationStatus.verified, .editorial, .automatic, .demo], id: \.self) { v in
                     Label(v.label, systemImage: v.symbol)
