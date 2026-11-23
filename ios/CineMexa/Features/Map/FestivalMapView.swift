@@ -9,6 +9,7 @@ struct FestivalMapView: View {
 
     @State private var position: MapCameraPosition = .region(Self.worldRegion)
     @State private var didFrameInitially = false
+    @State private var mapSize: CGSize = .zero
     @State private var visibleRegion: MKCoordinateRegion = Self.worldRegion
     @State private var period: MapPeriod = .month
     @State private var kinds: Set<FestivalEventKind> = Set(FestivalEventKind.allCases)
@@ -46,6 +47,15 @@ struct FestivalMapView: View {
             visibleRegion = context.region
         }
         .safeAreaInset(edge: .top) { filters(count: items.count) }
+        .onGeometryChange(for: CGSize.self) { $0.size } action: { size in
+            mapSize = size
+            // El primer encuadre espera a conocer el tamaño real: MapKit recorta la longitud
+            // si la región no respeta la proporción de la vista.
+            if !didFrameInitially, size.width > 0, size.height > 0 {
+                didFrameInitially = true
+                position = .rect(Self.fittingRect(items, viewSize: size))
+            }
+        }
         .overlay(alignment: .bottomTrailing) {
             Button { showsList = true } label: {
                 Label("Lista", systemImage: "list.bullet")
@@ -82,13 +92,7 @@ struct FestivalMapView: View {
         }
         .onChange(of: items.map(\.id)) { _, _ in
             // Al cambiar filtros, encuadra las sedes resultantes.
-            withAnimation(.cm(reduceMotion)) { position = .region(Self.fittingRegion(items)) }
-        }
-        .onAppear {
-            if !didFrameInitially {
-                didFrameInitially = true
-                position = .region(Self.fittingRegion(items))
-            }
+            withAnimation(.cm(reduceMotion)) { position = .rect(Self.fittingRect(items, viewSize: mapSize)) }
         }
         .onDisappear { selected = nil; showsList = false }
         .navigationTitle("Mapa festivalero")
@@ -96,17 +100,34 @@ struct FestivalMapView: View {
         .animation(.cm(reduceMotion), value: clusters.map(\.id))
     }
 
-    /// Región que contiene todas las sedes con margen, y espacio extra arriba para la franja de filtros.
-    static func fittingRegion(_ items: [Catalog.MapItem]) -> MKCoordinateRegion {
-        guard !items.isEmpty else { return worldRegion }
-        let lats = items.map(\.coordinate.latitude)
-        let lons = items.map(\.coordinate.longitude)
-        let minLat = lats.min()!, maxLat = lats.max()!, minLon = lons.min()!, maxLon = lons.max()!
-        let lonDelta = min(max((maxLon - minLon) * 1.5, 6), 300)
-        let latDelta = min(max((maxLat - minLat) * 1.6, 6) + 8, 150)
-        let center = CLLocationCoordinate2D(latitude: min((minLat + maxLat) / 2 + latDelta * 0.12, 80),
-                                            longitude: (minLon + maxLon) / 2)
-        return MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: latDelta, longitudeDelta: lonDelta))
+    /// Rectángulo (en puntos Mercator, lineales en pantalla) que contiene todas las sedes con margen,
+    /// ajustado a la proporción de la vista y con espacio extra arriba para la franja de filtros.
+    static func fittingRect(_ items: [Catalog.MapItem], viewSize: CGSize) -> MKMapRect {
+        let world = MKMapRect.world
+        guard !items.isEmpty else {
+            // Sin sedes: de América a Europa.
+            let a = MKMapPoint(CLLocationCoordinate2D(latitude: 65, longitude: -120))
+            let b = MKMapPoint(CLLocationCoordinate2D(latitude: -10, longitude: 30))
+            return MKMapRect(x: a.x, y: a.y, width: b.x - a.x, height: b.y - a.y)
+        }
+        let points = items.map { MKMapPoint($0.coordinate) }
+        let minX = points.map(\.x).min()!, maxX = points.map(\.x).max()!
+        let minY = points.map(\.y).min()!, maxY = points.map(\.y).max()!
+        let minSide = world.width * 6 / 360   // nunca más cerca que ~6°
+        var w = max((maxX - minX) * 1.3, minSide)
+        var h = max((maxY - minY) * 1.3, minSide)
+        // Respeta la proporción alto/ancho de la vista: crece la dimensión que falta.
+        let aspect = viewSize.width > 0 && viewSize.height > 0 ? Double(viewSize.height / viewSize.width) : 2.0
+        if h / w < aspect { h = w * aspect } else { w = h / aspect }
+        // La franja de filtros tapa ~una cuarta parte superior: se añade ese espacio al norte.
+        let topExtra = h * 0.3
+        h += topExtra
+        if h > world.height { w *= world.height / h; h = world.height }
+        w = min(w, world.width)
+        let midX = (minX + maxX) / 2
+        let midY = (minY + maxY) / 2 - topExtra / 2
+        let originY = min(max(midY - h / 2, 0), world.height - h)
+        return MKMapRect(x: midX - w / 2, y: originY, width: w, height: h)
     }
 
     private func zoom(into cluster: MapCluster) {

@@ -1,5 +1,6 @@
 import Testing
 import Foundation
+import MapKit
 @testable import CineMexa
 
 /// Tests de la capa de datos y reglas. Se ejecutan con ⌘U en Xcode o con
@@ -146,5 +147,22 @@ struct LiveRepositoryTests {
         } else {
             #expect(model.isShowingCachedData)
         }
+    }
+}
+
+@Suite("Encuadre del mapa")
+struct MapFramingTests {
+    let now = ISO8601DateFormatter().date(from: "2026-11-23T18:00:00Z")!
+
+    @Test func elEncuadreContieneTodasLasSedesYRespetaLaProporcion() async throws {
+        let catalog = Catalog(try await DemoRepository(bundle: Bundle(for: AppModel.self), now: { [now] in now }).fetchSnapshot())
+        let items = catalog.mapItems(period: .historic, kinds: Set(FestivalEventKind.allCases), filmKind: nil, query: "", now: now)
+        #expect(!items.isEmpty)
+        let size = CGSize(width: 402, height: 780)
+        let rect = FestivalMapView.fittingRect(items, viewSize: size)
+        for item in items {
+            #expect(rect.contains(MKMapPoint(item.coordinate)), "Falta \(item.festival.name)")
+        }
+        #expect(abs(rect.height / rect.width - Double(size.height / size.width)) < 0.01)
     }
 }
