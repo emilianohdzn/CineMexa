@@ -1,0 +1,3683 @@
+{
+  "meta": {
+    "mode": "demo",
+    "api_version": "1",
+    "generated_at": "rel:+0d",
+    "notice": "Datos de demostración: películas, personas, medios, reseñas, funciones, fechas y métricas son ficticios.",
+    "sources": [
+      {
+        "id": "demo",
+        "name": "Datos de demostración",
+        "attribution": "Contenido ficticio generado para probar la app.",
+        "last_sync_at": "rel:+0d",
+        "status": "ok"
+      },
+      {
+        "id": "wikidata",
+        "name": "Wikidata",
+        "attribution": "Datos de Wikidata (CC0)",
+        "last_sync_at": null,
+        "status": "not_configured"
+      },
+      {
+        "id": "tmdb",
+        "name": "TMDB",
+        "attribution": "This product uses the TMDB API but is not endorsed or certified by TMDB.",
+        "last_sync_at": null,
+        "status": "not_configured"
+      },
+      {
+        "id": "youtube",
+        "name": "YouTube Data API",
+        "attribution": "Datos de YouTube",
+        "last_sync_at": null,
+        "status": "not_configured"
+      }
+    ]
+  },
+  "films": [
+    {
+      "id": "film-01",
+      "slug": "la-sal-del-desierto",
+      "title": "La sal del desierto",
+      "original_title": "La sal del desierto",
+      "alt_titles": [
+        "Desert Salt"
+      ],
+      "year": 2026,
+      "kind": "feature",
+      "runtime_minutes": 104,
+      "countries": [
+        "MX"
+      ],
+      "mx_participation": "majority",
+      "genres": [
+        "Drama"
+      ],
+      "is_documentary": false,
+      "is_animation": false,
+      "synopsis": "Una salinera de Baja California Sur decide quedarse en el pueblo que todos abandonan. (Sinopsis ficticia de demostración.)",
+      "poster": null,
+      "backdrop": null,
+      "directors": [
+        "Mariana Olvera Téllez"
+      ],
+      "writers": [
+        "Mariana Olvera Téllez",
+        "Iván Cárdenas"
+      ],
+      "cinematographers": [
+        "Rocío Benavides"
+      ],
+      "cast": [
+        "Luz Arreola",
+        "Tomás Quiroga",
+        "Celia Ruvalcaba"
+      ],
+      "trailer_url": null,
+      "status": "in_theaters",
+      "mx_release_date": "day:-6d",
+      "provenance": {
+        "source": "demo",
+        "source_url": null,
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "film-02",
+      "slug": "ruido-blanco",
+      "title": "Ruido blanco",
+      "original_title": "Ruido blanco",
+      "alt_titles": [],
+      "year": 2026,
+      "kind": "feature",
+      "runtime_minutes": 88,
+      "countries": [
+        "MX",
+        "FR"
+      ],
+      "mx_participation": "coproduction",
+      "genres": [
+        "Documental"
+      ],
+      "is_documentary": true,
+      "is_animation": false,
+      "synopsis": "Un sonidista recorre mercados de la Ciudad de México grabando lo que nadie escucha. (Demo.)",
+      "poster": null,
+      "backdrop": null,
+      "directors": [
+        "Ernesto Lugo"
+      ],
+      "writers": [
+        "Ernesto Lugo"
+      ],
+      "cinematographers": [
+        "Paula Esquivel"
+      ],
+      "cast": [],
+      "trailer_url": null,
+      "status": "festival",
+      "mx_release_date": null,
+      "provenance": {
+        "source": "demo",
+        "source_url": null,
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "film-03",
+      "slug": "los-ultimos-cometas",
+      "title": "Los últimos cometas",
+      "original_title": "Los últimos cometas",
+      "alt_titles": [],
+      "year": 2026,
+      "kind": "feature",
+      "runtime_minutes": 92,
+      "countries": [
+        "MX"
+      ],
+      "mx_participation": "majority",
+      "genres": [
+        "Animación",
+        "Aventura"
+      ],
+      "is_documentary": false,
+      "is_animation": true,
+      "synopsis": "Dos hermanos construyen un telescopio con chatarra para ver el último cometa del siglo. (Demo.)",
+      "poster": null,
+      "backdrop": null,
+      "directors": [
+        "Sofía Arce",
+        "Bruno Malpica"
+      ],
+      "writers": [
+        "Sofía Arce"
+      ],
+      "cinematographers": [],
+      "cast": [
+        "Voz: Regina Solís",
+        "Voz: Abel Ochoa"
+      ],
+      "trailer_url": null,
+      "status": "upcoming",
+      "mx_release_date": "day:+18d",
+      "provenance": {
+        "source": "demo",
+        "source_url": null,
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "film-04",
+      "slug": "marea-de-papel",
+      "title": "Marea de papel",
+      "original_title": "Marea de papel",
+      "alt_titles": [],
+      "year": 2026,
+      "kind": "short",
+      "runtime_minutes": 14,
+      "countries": [
+        "MX"
+      ],
+      "mx_participation": "majority",
+      "genres": [
+        "Drama"
+      ],
+      "is_documentary": false,
+      "is_animation": false,
+      "synopsis": "Una niña dobla barcos con los avisos de desalojo de su edificio. (Demo.)",
+      "poster": null,
+      "backdrop": null,
+      "directors": [
+        "Daniela Ponce"
+      ],
+      "writers": [
+        "Daniela Ponce"
+      ],
+      "cinematographers": [
+        "Hugo Sandoval"
+      ],
+      "cast": [
+        "Mía Herrera"
+      ],
+      "trailer_url": null,
+      "status": "festival",
+      "mx_release_date": null,
+      "provenance": {
+        "source": "demo",
+        "source_url": null,
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "film-05",
+      "slug": "tierra-que-habla",
+      "title": "Tierra que habla",
+      "original_title": "Tierra que habla",
+      "alt_titles": [],
+      "year": 2025,
+      "kind": "short",
+      "runtime_minutes": 22,
+      "countries": [
+        "MX"
+      ],
+      "mx_participation": "majority",
+      "genres": [
+        "Documental"
+      ],
+      "is_documentary": true,
+      "is_animation": false,
+      "synopsis": "Una comunidad mixteca registra en su lengua la historia de su territorio. (Demo.)",
+      "poster": null,
+      "backdrop": null,
+      "directors": [
+        "Yolotl Mendoza"
+      ],
+      "writers": [
+        "Yolotl Mendoza"
+      ],
+      "cinematographers": [
+        "Yolotl Mendoza"
+      ],
+      "cast": [],
+      "trailer_url": null,
+      "status": "festival",
+      "mx_release_date": null,
+      "provenance": {
+        "source": "demo",
+        "source_url": null,
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "film-06",
+      "slug": "domingo-siete",
+      "title": "Domingo siete",
+      "original_title": "Domingo siete",
+      "alt_titles": [],
+      "year": 2026,
+      "kind": "feature",
+      "runtime_minutes": 97,
+      "countries": [
+        "MX"
+      ],
+      "mx_participation": "majority",
+      "genres": [
+        "Comedia"
+      ],
+      "is_documentary": false,
+      "is_animation": false,
+      "synopsis": "Una boda en Guadalajara se complica cuando aparece un invitado que nadie recuerda haber invitado. (Demo.)",
+      "poster": null,
+      "backdrop": null,
+      "directors": [
+        "Rafael Anaya"
+      ],
+      "writers": [
+        "Rafael Anaya",
+        "Lorena Villa"
+      ],
+      "cinematographers": [
+        "Martín Ugalde"
+      ],
+      "cast": [
+        "Gael Montiel",
+        "Ximena Lara",
+        "Pedro Cota"
+      ],
+      "trailer_url": null,
+      "status": "release_identified",
+      "mx_release_date": "day:-2d",
+      "provenance": {
+        "source": "demo",
+        "source_url": null,
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "film-07",
+      "slug": "el-eco-de-la-presa",
+      "title": "El eco de la presa",
+      "original_title": "El eco de la presa",
+      "alt_titles": [
+        "The Dam's Echo"
+      ],
+      "year": 2026,
+      "kind": "feature",
+      "runtime_minutes": 111,
+      "countries": [
+        "MX",
+        "ES"
+      ],
+      "mx_participation": "coproduction",
+      "genres": [
+        "Thriller"
+      ],
+      "is_documentary": false,
+      "is_animation": false,
+      "synopsis": "Una ingeniera investiga desapariciones alrededor de una presa en la Sierra Madre. (Demo.)",
+      "poster": null,
+      "backdrop": null,
+      "directors": [
+        "Andrés Villalobos"
+      ],
+      "writers": [
+        "Andrés Villalobos",
+        "Nuria Sáez"
+      ],
+      "cinematographers": [
+        "Lucía Garmendia"
+      ],
+      "cast": [
+        "Diego Zamudio",
+        "Elena Ortiz"
+      ],
+      "trailer_url": null,
+      "status": "festival",
+      "mx_release_date": "day:+40d",
+      "provenance": {
+        "source": "demo",
+        "source_url": null,
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "film-08",
+      "slug": "nopalera",
+      "title": "Nopalera",
+      "original_title": "Nopalera",
+      "alt_titles": [],
+      "year": 2026,
+      "kind": "short",
+      "runtime_minutes": 9,
+      "countries": [
+        "MX"
+      ],
+      "mx_participation": "majority",
+      "genres": [
+        "Animación"
+      ],
+      "is_documentary": false,
+      "is_animation": true,
+      "synopsis": "Un nopal decide caminar hasta el mar. Animación cuadro por cuadro. (Demo.)",
+      "poster": null,
+      "backdrop": null,
+      "directors": [
+        "Carla Ibarra"
+      ],
+      "writers": [
+        "Carla Ibarra"
+      ],
+      "cinematographers": [],
+      "cast": [],
+      "trailer_url": null,
+      "status": "festival",
+      "mx_release_date": null,
+      "provenance": {
+        "source": "demo",
+        "source_url": null,
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "film-09",
+      "slug": "hija-del-volcan",
+      "title": "Hija del volcán",
+      "original_title": "Hija del volcán",
+      "alt_titles": [],
+      "year": 2025,
+      "kind": "feature",
+      "runtime_minutes": 101,
+      "countries": [
+        "MX",
+        "AR"
+      ],
+      "mx_participation": "coproduction",
+      "genres": [
+        "Drama"
+      ],
+      "is_documentary": false,
+      "is_animation": false,
+      "synopsis": "Tras la erupción, una adolescente vuelve sola a buscar la casa familiar. (Demo.)",
+      "poster": null,
+      "backdrop": null,
+      "directors": [
+        "Fernanda Lomelí"
+      ],
+      "writers": [
+        "Fernanda Lomelí"
+      ],
+      "cinematographers": [
+        "Joaquín Peralta"
+      ],
+      "cast": [
+        "Renata Gil",
+        "Aurelio Bravo"
+      ],
+      "trailer_url": null,
+      "status": "archive",
+      "mx_release_date": "day:-240d",
+      "provenance": {
+        "source": "demo",
+        "source_url": null,
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "film-10",
+      "slug": "cuarto-oscuro",
+      "title": "Cuarto oscuro",
+      "original_title": "Cuarto oscuro",
+      "alt_titles": [],
+      "year": 2026,
+      "kind": "feature",
+      "runtime_minutes": 86,
+      "countries": [
+        "MX"
+      ],
+      "mx_participation": "majority",
+      "genres": [
+        "Terror"
+      ],
+      "is_documentary": false,
+      "is_animation": false,
+      "synopsis": "Un fotógrafo de bodas descubre que sus negativos revelan a alguien más. (Demo.)",
+      "poster": null,
+      "backdrop": null,
+      "directors": [
+        "Óscar Medrano"
+      ],
+      "writers": [
+        "Óscar Medrano"
+      ],
+      "cinematographers": [
+        "Valeria Kuri"
+      ],
+      "cast": [
+        "Itzel Paredes",
+        "Samuel Rangel"
+      ],
+      "trailer_url": null,
+      "status": "upcoming",
+      "mx_release_date": "day:+33d",
+      "provenance": {
+        "source": "demo",
+        "source_url": null,
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    }
+  ],
+  "screenings": [
+    {
+      "id": "scr-1",
+      "film_id": "film-01",
+      "venue": {
+        "name": "Sala Demo Centro",
+        "city": "Ciudad de México",
+        "country": "MX",
+        "latitude": 19.4326,
+        "longitude": -99.1332,
+        "coordinate_precision": "city"
+      },
+      "kind": "commercial",
+      "starts_at": "rel:+0d@18:30",
+      "ticket_url": "https://example.com/demo/boletos",
+      "provenance": {
+        "source": "demo",
+        "source_url": null,
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "scr-2",
+      "film_id": "film-01",
+      "venue": {
+        "name": "Sala Demo Centro",
+        "city": "Ciudad de México",
+        "country": "MX",
+        "latitude": 19.4326,
+        "longitude": -99.1332,
+        "coordinate_precision": "city"
+      },
+      "kind": "commercial",
+      "starts_at": "rel:+1d@21:00",
+      "ticket_url": "https://example.com/demo/boletos",
+      "provenance": {
+        "source": "demo",
+        "source_url": null,
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "scr-3",
+      "film_id": "film-01",
+      "venue": {
+        "name": "Cineteca Demo Norte",
+        "city": "Monterrey",
+        "country": "MX",
+        "latitude": 25.6866,
+        "longitude": -100.3161,
+        "coordinate_precision": "city"
+      },
+      "kind": "cineteca",
+      "starts_at": "rel:+2d@17:00",
+      "ticket_url": "https://example.com/demo/boletos",
+      "provenance": {
+        "source": "demo",
+        "source_url": null,
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "scr-4",
+      "film_id": "film-01",
+      "venue": {
+        "name": "Cineclub Demo Tlaquepaque",
+        "city": "Guadalajara",
+        "country": "MX",
+        "latitude": 20.6408,
+        "longitude": -103.3117,
+        "coordinate_precision": "city"
+      },
+      "kind": "cineclub",
+      "starts_at": "rel:+4d@20:00",
+      "ticket_url": "https://example.com/demo/boletos",
+      "provenance": {
+        "source": "demo",
+        "source_url": null,
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "scr-5",
+      "film_id": "film-05",
+      "venue": {
+        "name": "Cineclub Demo Tlaquepaque",
+        "city": "Guadalajara",
+        "country": "MX",
+        "latitude": 20.6408,
+        "longitude": -103.3117,
+        "coordinate_precision": "city"
+      },
+      "kind": "cineclub",
+      "starts_at": "rel:+3d@19:30",
+      "ticket_url": "https://example.com/demo/boletos",
+      "provenance": {
+        "source": "demo",
+        "source_url": null,
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    }
+  ],
+  "streaming": [
+    {
+      "film_id": "film-09",
+      "provider": "Plataforma Demo",
+      "offer_type": "subscription",
+      "url": "https://example.com/demo/streaming",
+      "provenance": {
+        "source": "demo",
+        "source_url": null,
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    }
+  ],
+  "reviews": [
+    {
+      "id": "rev-1",
+      "film_id": "film-01",
+      "outlet": "Encuadre (revista demo)",
+      "critic_name": "Paulina Reyes",
+      "title": "Quedarse también es un acto político",
+      "url": "https://example.com/demo/critica/la-sal-del-desierto-1",
+      "published_at": "rel:-3d@09:00",
+      "score": null,
+      "score_scale": null,
+      "excerpt": "Extracto autorizado de demostración: «una película que respira con el viento del desierto».",
+      "is_automated_summary": false,
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://example.com/demo/critica/la-sal-del-desierto-1",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "rev-2",
+      "film_id": "film-01",
+      "outlet": "Butaca Demo",
+      "critic_name": null,
+      "title": "La sal del desierto: paisaje y resistencia",
+      "url": "https://example.com/demo/critica/la-sal-del-desierto-2",
+      "published_at": "rel:-5d@09:00",
+      "score": null,
+      "score_scale": null,
+      "excerpt": null,
+      "is_automated_summary": false,
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://example.com/demo/critica/la-sal-del-desierto-2",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "rev-3",
+      "film_id": "film-01",
+      "outlet": "Alianza editorial demo",
+      "critic_name": "Jorge Salinas",
+      "title": "Una ópera prima contenida y precisa",
+      "url": "https://example.com/demo/critica/la-sal-del-desierto-3",
+      "published_at": "rel:-1d@09:00",
+      "score": 8.5,
+      "score_scale": 10,
+      "excerpt": null,
+      "is_automated_summary": false,
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://example.com/demo/critica/la-sal-del-desierto-3",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "rev-4",
+      "film_id": "film-02",
+      "outlet": "Crítica Independiente (demo)",
+      "critic_name": "Ana Lucía Garza",
+      "title": "Escuchar la ciudad",
+      "url": "https://example.com/demo/critica/ruido-blanco-4",
+      "published_at": "rel:-7d@09:00",
+      "score": null,
+      "score_scale": null,
+      "excerpt": null,
+      "is_automated_summary": false,
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://example.com/demo/critica/ruido-blanco-4",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "rev-5",
+      "film_id": "film-07",
+      "outlet": "Encuadre (revista demo)",
+      "critic_name": "Paulina Reyes",
+      "title": "Thriller con agua al cuello",
+      "url": "https://example.com/demo/critica/el-eco-de-la-presa-5",
+      "published_at": "rel:-55d@09:00",
+      "score": null,
+      "score_scale": null,
+      "excerpt": null,
+      "is_automated_summary": false,
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://example.com/demo/critica/el-eco-de-la-presa-5",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "rev-6",
+      "film_id": "film-06",
+      "outlet": "Butaca Demo",
+      "critic_name": null,
+      "title": "Domingo siete y la comedia de enredos",
+      "url": "https://example.com/demo/critica/domingo-siete-6",
+      "published_at": "rel:-1d@09:00",
+      "score": null,
+      "score_scale": null,
+      "excerpt": null,
+      "is_automated_summary": false,
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://example.com/demo/critica/domingo-siete-6",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "rev-7",
+      "film_id": "film-09",
+      "outlet": "Crítica Independiente (demo)",
+      "critic_name": "Rubén Aldana",
+      "title": "Ceniza y memoria",
+      "url": "https://example.com/demo/critica/hija-del-volcan-7",
+      "published_at": "rel:-230d@09:00",
+      "score": null,
+      "score_scale": null,
+      "excerpt": null,
+      "is_automated_summary": false,
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://example.com/demo/critica/hija-del-volcan-7",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "rev-8",
+      "film_id": "film-04",
+      "outlet": "Cortos en foco (demo)",
+      "critic_name": "Itzel Navarro",
+      "title": "Catorce minutos que no se olvidan",
+      "url": "https://example.com/demo/critica/marea-de-papel-8",
+      "published_at": "rel:-12d@09:00",
+      "score": null,
+      "score_scale": null,
+      "excerpt": null,
+      "is_automated_summary": false,
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://example.com/demo/critica/marea-de-papel-8",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "rev-summary-1",
+      "film_id": "film-01",
+      "outlet": "Cine Mexa",
+      "critic_name": null,
+      "title": "Resumen automatizado de la crítica",
+      "url": "https://example.com/demo/critica/la-sal-del-desierto-1",
+      "published_at": "rel:+0d@08:00",
+      "score": null,
+      "score_scale": null,
+      "excerpt": "Resumen automatizado (demo): las reseñas enlazadas destacan el paisaje y la contención de la puesta en escena.",
+      "is_automated_summary": true,
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://example.com/demo/critica/la-sal-del-desierto-1",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    }
+  ],
+  "timeline": [
+    {
+      "id": "tl-1",
+      "film_id": "film-02",
+      "kind": "festival_selection",
+      "date": "rel:-32d",
+      "label": "Selección oficial · FICG",
+      "place": "Guadalajara, MX",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://www.ficg.mx",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "tl-2",
+      "film_id": "film-02",
+      "kind": "festival_screening",
+      "date": "rel:+0d@19:00",
+      "label": "Proyección · FICG",
+      "place": "Guadalajara, MX",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://www.ficg.mx",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "tl-3",
+      "film_id": "film-02",
+      "kind": "festival_screening",
+      "date": "rel:+3d@19:00",
+      "label": "Proyección · FICG",
+      "place": "Guadalajara, MX",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://www.ficg.mx",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "tl-4",
+      "film_id": "film-02",
+      "kind": "award",
+      "date": "rel:-63d@19:00",
+      "label": "Premio del público (demo) · DocsMX",
+      "place": "Ciudad de México, MX",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://docsmx.org",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "tl-5",
+      "film_id": "film-04",
+      "kind": "festival_selection",
+      "date": "rel:-27d",
+      "label": "Selección oficial · Clermont-Ferrand",
+      "place": "Clermont-Ferrand, FR",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://clermont-filmfest.org",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "tl-6",
+      "film_id": "film-04",
+      "kind": "festival_screening",
+      "date": "rel:+5d@19:00",
+      "label": "Proyección · Clermont-Ferrand",
+      "place": "Clermont-Ferrand, FR",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://clermont-filmfest.org",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "tl-7",
+      "film_id": "film-04",
+      "kind": "festival_selection",
+      "date": "rel:-18d",
+      "label": "Selección oficial · FICM",
+      "place": "Morelia, MX",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://moreliafilmfest.com",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "tl-8",
+      "film_id": "film-04",
+      "kind": "award",
+      "date": "rel:-34d@19:00",
+      "label": "Mejor cortometraje (demo) · GIFF",
+      "place": "Guanajuato, MX",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://giff.mx",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "tl-9",
+      "film_id": "film-05",
+      "kind": "festival_screening",
+      "date": "rel:+15d@19:00",
+      "label": "Proyección · FICM",
+      "place": "Morelia, MX",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://moreliafilmfest.com",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "tl-10",
+      "film_id": "film-05",
+      "kind": "festival_selection",
+      "date": "rel:+40d",
+      "label": "Selección oficial · Ambulante",
+      "place": "Ciudad de México, MX",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://www.ambulante.org",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "tl-11",
+      "film_id": "film-07",
+      "kind": "premiere",
+      "date": "rel:-59d@19:00",
+      "label": "Estreno mundial · San Sebastián",
+      "place": "San Sebastián, ES",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://www.sansebastianfestival.com",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "tl-12",
+      "film_id": "film-07",
+      "kind": "award",
+      "date": "rel:-52d@19:00",
+      "label": "Mención especial (demo) · San Sebastián",
+      "place": "San Sebastián, ES",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://www.sansebastianfestival.com",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "tl-13",
+      "film_id": "film-07",
+      "kind": "festival_screening",
+      "date": "rel:+27d@19:00",
+      "label": "Proyección · Los Cabos",
+      "place": "San José del Cabo, MX",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://cabosfilmfest.com",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "tl-14",
+      "film_id": "film-08",
+      "kind": "festival_screening",
+      "date": "rel:+7d@19:00",
+      "label": "Proyección · Clermont-Ferrand",
+      "place": "Clermont-Ferrand, FR",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://clermont-filmfest.org",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "tl-15",
+      "film_id": "film-08",
+      "kind": "festival_selection",
+      "date": "rel:+50d",
+      "label": "Selección oficial · Berlinale",
+      "place": "Berlín, DE",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://www.berlinale.de",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "tl-16",
+      "film_id": "film-01",
+      "kind": "premiere",
+      "date": "rel:-186d@19:00",
+      "label": "Estreno mundial · Cannes",
+      "place": "Cannes, FR",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://www.festival-cannes.com",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "tl-17",
+      "film_id": "film-01",
+      "kind": "festival_screening",
+      "date": "rel:-107d@19:00",
+      "label": "Proyección · Locarno",
+      "place": "Locarno, CH",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://www.locarnofestival.ch",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "tl-18",
+      "film_id": "film-01",
+      "kind": "festival_screening",
+      "date": "rel:-1d@19:00",
+      "label": "Proyección · FICG",
+      "place": "Guadalajara, MX",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://www.ficg.mx",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "tl-19",
+      "film_id": "film-03",
+      "kind": "festival_selection",
+      "date": "rel:+15d",
+      "label": "Selección oficial · FICUNAM",
+      "place": "Ciudad de México, MX",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://ficunam.unam.mx",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "tl-20",
+      "film_id": "film-09",
+      "kind": "festival_selection",
+      "date": "rel:-115d",
+      "label": "Selección oficial · Venecia",
+      "place": "Venecia (Lido), IT",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://www.labiennale.org/en/cinema",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "tl-21",
+      "film_id": "film-09",
+      "kind": "festival_screening",
+      "date": "rel:-80d@19:00",
+      "label": "Proyección · Venecia",
+      "place": "Venecia (Lido), IT",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://www.labiennale.org/en/cinema",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "tl-22",
+      "film_id": "film-10",
+      "kind": "festival_selection",
+      "date": "rel:+25d",
+      "label": "Selección oficial · Sundance",
+      "place": "Park City, US",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://festival.sundance.org",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "tl-23",
+      "film_id": "film-01",
+      "kind": "theatrical_release",
+      "date": "rel:-6d",
+      "label": "Estreno en salas de México",
+      "place": "México",
+      "provenance": {
+        "source": "demo",
+        "source_url": null,
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "tl-24",
+      "film_id": "film-03",
+      "kind": "theatrical_release",
+      "date": "rel:+18d",
+      "label": "Estreno en salas de México",
+      "place": "México",
+      "provenance": {
+        "source": "demo",
+        "source_url": null,
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "tl-25",
+      "film_id": "film-06",
+      "kind": "theatrical_release",
+      "date": "rel:-2d",
+      "label": "Estreno en salas de México",
+      "place": "México",
+      "provenance": {
+        "source": "demo",
+        "source_url": null,
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "tl-26",
+      "film_id": "film-07",
+      "kind": "theatrical_release",
+      "date": "rel:+40d",
+      "label": "Estreno en salas de México",
+      "place": "México",
+      "provenance": {
+        "source": "demo",
+        "source_url": null,
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "tl-27",
+      "film_id": "film-09",
+      "kind": "theatrical_release",
+      "date": "rel:-240d",
+      "label": "Estreno en salas de México",
+      "place": "México",
+      "provenance": {
+        "source": "demo",
+        "source_url": null,
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "tl-28",
+      "film_id": "film-10",
+      "kind": "theatrical_release",
+      "date": "rel:+33d",
+      "label": "Estreno en salas de México",
+      "place": "México",
+      "provenance": {
+        "source": "demo",
+        "source_url": null,
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "tl-29",
+      "film_id": "film-09",
+      "kind": "streaming",
+      "date": "rel:-120d",
+      "label": "Llega a streaming en México",
+      "place": "Plataforma Demo",
+      "provenance": {
+        "source": "demo",
+        "source_url": null,
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    }
+  ],
+  "festivals": [
+    {
+      "id": "fest-01",
+      "slug": "ficg",
+      "name": "Festival Internacional de Cine en Guadalajara",
+      "short_name": "FICG",
+      "city": "Guadalajara",
+      "country": "MX",
+      "website_url": "https://www.ficg.mx",
+      "focus": [],
+      "venue": {
+        "name": "FICG",
+        "city": "Guadalajara",
+        "country": "MX",
+        "latitude": 20.6597,
+        "longitude": -103.3496,
+        "coordinate_precision": "city"
+      },
+      "editions": [
+        {
+          "id": "ed-01",
+          "label": "Edición demo",
+          "year": 2026,
+          "starts_on": "day:-2d",
+          "ends_on": "day:+6d",
+          "timezone": "America/Mexico_City",
+          "program_url": "https://www.ficg.mx",
+          "call_url": null,
+          "call_deadline": null,
+          "is_cancelled": false,
+          "provenance": {
+            "source": "demo",
+            "source_url": "https://www.ficg.mx",
+            "retrieved_at": "rel:+0d",
+            "published_at": null,
+            "verification": "demo",
+            "confidence": null
+          }
+        }
+      ],
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://www.ficg.mx",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "fest-02",
+      "slug": "ficm",
+      "name": "Festival Internacional de Cine de Morelia",
+      "short_name": "FICM",
+      "city": "Morelia",
+      "country": "MX",
+      "website_url": "https://moreliafilmfest.com",
+      "focus": [
+        "shorts",
+        "documentary"
+      ],
+      "venue": {
+        "name": "FICM",
+        "city": "Morelia",
+        "country": "MX",
+        "latitude": 19.7027,
+        "longitude": -101.1923,
+        "coordinate_precision": "city"
+      },
+      "editions": [
+        {
+          "id": "ed-02",
+          "label": "Edición demo",
+          "year": 2026,
+          "starts_on": "day:+12d",
+          "ends_on": "day:+21d",
+          "timezone": "America/Mexico_City",
+          "program_url": "https://moreliafilmfest.com",
+          "call_url": "https://moreliafilmfest.com",
+          "call_deadline": "rel:+5d@23:59",
+          "is_cancelled": false,
+          "provenance": {
+            "source": "demo",
+            "source_url": "https://moreliafilmfest.com",
+            "retrieved_at": "rel:+0d",
+            "published_at": null,
+            "verification": "demo",
+            "confidence": null
+          }
+        }
+      ],
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://moreliafilmfest.com",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "fest-03",
+      "slug": "giff",
+      "name": "Festival Internacional de Cine de Guanajuato",
+      "short_name": "GIFF",
+      "city": "Guanajuato",
+      "country": "MX",
+      "website_url": "https://giff.mx",
+      "focus": [
+        "shorts"
+      ],
+      "venue": {
+        "name": "GIFF",
+        "city": "Guanajuato",
+        "country": "MX",
+        "latitude": 21.019,
+        "longitude": -101.2574,
+        "coordinate_precision": "city"
+      },
+      "editions": [
+        {
+          "id": "ed-03",
+          "label": "Edición demo",
+          "year": 2026,
+          "starts_on": "day:-40d",
+          "ends_on": "day:-33d",
+          "timezone": "America/Mexico_City",
+          "program_url": "https://giff.mx",
+          "call_url": "https://giff.mx",
+          "call_deadline": "rel:+60d@23:59",
+          "is_cancelled": false,
+          "provenance": {
+            "source": "demo",
+            "source_url": "https://giff.mx",
+            "retrieved_at": "rel:+0d",
+            "published_at": null,
+            "verification": "demo",
+            "confidence": null
+          }
+        }
+      ],
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://giff.mx",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "fest-04",
+      "slug": "ficunam",
+      "name": "Festival Internacional de Cine UNAM",
+      "short_name": "FICUNAM",
+      "city": "Ciudad de México",
+      "country": "MX",
+      "website_url": "https://ficunam.unam.mx",
+      "focus": [],
+      "venue": {
+        "name": "FICUNAM",
+        "city": "Ciudad de México",
+        "country": "MX",
+        "latitude": 19.3142,
+        "longitude": -99.1846,
+        "coordinate_precision": "city"
+      },
+      "editions": [
+        {
+          "id": "ed-04",
+          "label": "Edición demo",
+          "year": 2026,
+          "starts_on": "day:+45d",
+          "ends_on": "day:+54d",
+          "timezone": "America/Mexico_City",
+          "program_url": "https://ficunam.unam.mx",
+          "call_url": "https://ficunam.unam.mx",
+          "call_deadline": "rel:+9d@23:59",
+          "is_cancelled": false,
+          "provenance": {
+            "source": "demo",
+            "source_url": "https://ficunam.unam.mx",
+            "retrieved_at": "rel:+0d",
+            "published_at": null,
+            "verification": "demo",
+            "confidence": null
+          }
+        }
+      ],
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://ficunam.unam.mx",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "fest-05",
+      "slug": "ambulante",
+      "name": "Ambulante Gira de Documentales",
+      "short_name": "Ambulante",
+      "city": "Ciudad de México",
+      "country": "MX",
+      "website_url": "https://www.ambulante.org",
+      "focus": [
+        "documentary"
+      ],
+      "venue": {
+        "name": "Ambulante",
+        "city": "Ciudad de México",
+        "country": "MX",
+        "latitude": 19.4326,
+        "longitude": -99.1332,
+        "coordinate_precision": "city"
+      },
+      "editions": [
+        {
+          "id": "ed-05",
+          "label": "Edición demo",
+          "year": 2026,
+          "starts_on": "day:+70d",
+          "ends_on": "day:+99d",
+          "timezone": "America/Mexico_City",
+          "program_url": "https://www.ambulante.org",
+          "call_url": "https://www.ambulante.org",
+          "call_deadline": "rel:+21d@23:59",
+          "is_cancelled": false,
+          "provenance": {
+            "source": "demo",
+            "source_url": "https://www.ambulante.org",
+            "retrieved_at": "rel:+0d",
+            "published_at": null,
+            "verification": "demo",
+            "confidence": null
+          }
+        }
+      ],
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://www.ambulante.org",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "fest-06",
+      "slug": "docsmx",
+      "name": "DocsMX Festival Internacional de Cine Documental",
+      "short_name": "DocsMX",
+      "city": "Ciudad de México",
+      "country": "MX",
+      "website_url": "https://docsmx.org",
+      "focus": [
+        "documentary"
+      ],
+      "venue": {
+        "name": "DocsMX",
+        "city": "Ciudad de México",
+        "country": "MX",
+        "latitude": 19.36,
+        "longitude": -99.164,
+        "coordinate_precision": "city"
+      },
+      "editions": [
+        {
+          "id": "ed-06",
+          "label": "Edición demo",
+          "year": 2026,
+          "starts_on": "day:-70d",
+          "ends_on": "day:-62d",
+          "timezone": "America/Mexico_City",
+          "program_url": "https://docsmx.org",
+          "call_url": null,
+          "call_deadline": null,
+          "is_cancelled": false,
+          "provenance": {
+            "source": "demo",
+            "source_url": "https://docsmx.org",
+            "retrieved_at": "rel:+0d",
+            "published_at": null,
+            "verification": "demo",
+            "confidence": null
+          }
+        }
+      ],
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://docsmx.org",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "fest-07",
+      "slug": "los-cabos",
+      "name": "Festival Internacional de Cine de Los Cabos",
+      "short_name": "Los Cabos",
+      "city": "San José del Cabo",
+      "country": "MX",
+      "website_url": "https://cabosfilmfest.com",
+      "focus": [],
+      "venue": {
+        "name": "Los Cabos",
+        "city": "San José del Cabo",
+        "country": "MX",
+        "latitude": 23.061,
+        "longitude": -109.697,
+        "coordinate_precision": "city"
+      },
+      "editions": [
+        {
+          "id": "ed-07",
+          "label": "Edición demo",
+          "year": 2026,
+          "starts_on": "day:+25d",
+          "ends_on": "day:+29d",
+          "timezone": "America/Mazatlan",
+          "program_url": "https://cabosfilmfest.com",
+          "call_url": null,
+          "call_deadline": null,
+          "is_cancelled": false,
+          "provenance": {
+            "source": "demo",
+            "source_url": "https://cabosfilmfest.com",
+            "retrieved_at": "rel:+0d",
+            "published_at": null,
+            "verification": "demo",
+            "confidence": null
+          }
+        }
+      ],
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://cabosfilmfest.com",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "fest-08",
+      "slug": "berlinale",
+      "name": "Berlinale",
+      "short_name": "Berlinale",
+      "city": "Berlín",
+      "country": "DE",
+      "website_url": "https://www.berlinale.de",
+      "focus": [],
+      "venue": {
+        "name": "Berlinale",
+        "city": "Berlín",
+        "country": "DE",
+        "latitude": 52.5096,
+        "longitude": 13.3736,
+        "coordinate_precision": "city"
+      },
+      "editions": [
+        {
+          "id": "ed-08",
+          "label": "Edición demo",
+          "year": 2026,
+          "starts_on": "day:+80d",
+          "ends_on": "day:+90d",
+          "timezone": "Europe/Berlin",
+          "program_url": "https://www.berlinale.de",
+          "call_url": "https://www.berlinale.de",
+          "call_deadline": "rel:+14d@23:59",
+          "is_cancelled": false,
+          "provenance": {
+            "source": "demo",
+            "source_url": "https://www.berlinale.de",
+            "retrieved_at": "rel:+0d",
+            "published_at": null,
+            "verification": "demo",
+            "confidence": null
+          }
+        }
+      ],
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://www.berlinale.de",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "fest-09",
+      "slug": "cannes",
+      "name": "Festival de Cannes",
+      "short_name": "Cannes",
+      "city": "Cannes",
+      "country": "FR",
+      "website_url": "https://www.festival-cannes.com",
+      "focus": [],
+      "venue": {
+        "name": "Cannes",
+        "city": "Cannes",
+        "country": "FR",
+        "latitude": 43.5513,
+        "longitude": 7.0175,
+        "coordinate_precision": "city"
+      },
+      "editions": [
+        {
+          "id": "ed-09",
+          "label": "Edición demo",
+          "year": 2026,
+          "starts_on": "day:-190d",
+          "ends_on": "day:-179d",
+          "timezone": "Europe/Paris",
+          "program_url": "https://www.festival-cannes.com",
+          "call_url": null,
+          "call_deadline": null,
+          "is_cancelled": false,
+          "provenance": {
+            "source": "demo",
+            "source_url": "https://www.festival-cannes.com",
+            "retrieved_at": "rel:+0d",
+            "published_at": null,
+            "verification": "demo",
+            "confidence": null
+          }
+        }
+      ],
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://www.festival-cannes.com",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "fest-10",
+      "slug": "sundance",
+      "name": "Sundance Film Festival",
+      "short_name": "Sundance",
+      "city": "Park City",
+      "country": "US",
+      "website_url": "https://festival.sundance.org",
+      "focus": [],
+      "venue": {
+        "name": "Sundance",
+        "city": "Park City",
+        "country": "US",
+        "latitude": 40.6461,
+        "longitude": -111.498,
+        "coordinate_precision": "city"
+      },
+      "editions": [
+        {
+          "id": "ed-10",
+          "label": "Edición demo",
+          "year": 2026,
+          "starts_on": "day:+55d",
+          "ends_on": "day:+65d",
+          "timezone": "America/Denver",
+          "program_url": "https://festival.sundance.org",
+          "call_url": null,
+          "call_deadline": null,
+          "is_cancelled": false,
+          "provenance": {
+            "source": "demo",
+            "source_url": "https://festival.sundance.org",
+            "retrieved_at": "rel:+0d",
+            "published_at": null,
+            "verification": "demo",
+            "confidence": null
+          }
+        }
+      ],
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://festival.sundance.org",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "fest-11",
+      "slug": "san-sebastian",
+      "name": "Festival de San Sebastián",
+      "short_name": "San Sebastián",
+      "city": "San Sebastián",
+      "country": "ES",
+      "website_url": "https://www.sansebastianfestival.com",
+      "focus": [],
+      "venue": {
+        "name": "San Sebastián",
+        "city": "San Sebastián",
+        "country": "ES",
+        "latitude": 43.3243,
+        "longitude": -1.9783,
+        "coordinate_precision": "city"
+      },
+      "editions": [
+        {
+          "id": "ed-11",
+          "label": "Edición demo",
+          "year": 2026,
+          "starts_on": "day:-60d",
+          "ends_on": "day:-51d",
+          "timezone": "Europe/Madrid",
+          "program_url": "https://www.sansebastianfestival.com",
+          "call_url": null,
+          "call_deadline": null,
+          "is_cancelled": false,
+          "provenance": {
+            "source": "demo",
+            "source_url": "https://www.sansebastianfestival.com",
+            "retrieved_at": "rel:+0d",
+            "published_at": null,
+            "verification": "demo",
+            "confidence": null
+          }
+        }
+      ],
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://www.sansebastianfestival.com",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "fest-12",
+      "slug": "locarno",
+      "name": "Locarno Film Festival",
+      "short_name": "Locarno",
+      "city": "Locarno",
+      "country": "CH",
+      "website_url": "https://www.locarnofestival.ch",
+      "focus": [],
+      "venue": {
+        "name": "Locarno",
+        "city": "Locarno",
+        "country": "CH",
+        "latitude": 46.169,
+        "longitude": 8.7955,
+        "coordinate_precision": "city"
+      },
+      "editions": [
+        {
+          "id": "ed-12",
+          "label": "Edición demo",
+          "year": 2026,
+          "starts_on": "day:-110d",
+          "ends_on": "day:-100d",
+          "timezone": "Europe/Zurich",
+          "program_url": "https://www.locarnofestival.ch",
+          "call_url": null,
+          "call_deadline": null,
+          "is_cancelled": false,
+          "provenance": {
+            "source": "demo",
+            "source_url": "https://www.locarnofestival.ch",
+            "retrieved_at": "rel:+0d",
+            "published_at": null,
+            "verification": "demo",
+            "confidence": null
+          }
+        }
+      ],
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://www.locarnofestival.ch",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "fest-13",
+      "slug": "venecia",
+      "name": "Mostra Internacional de Arte Cinematográfico de Venecia",
+      "short_name": "Venecia",
+      "city": "Venecia (Lido)",
+      "country": "IT",
+      "website_url": "https://www.labiennale.org/en/cinema",
+      "focus": [],
+      "venue": {
+        "name": "Venecia",
+        "city": "Venecia (Lido)",
+        "country": "IT",
+        "latitude": 45.406,
+        "longitude": 12.368,
+        "coordinate_precision": "city"
+      },
+      "editions": [
+        {
+          "id": "ed-13",
+          "label": "Edición demo",
+          "year": 2026,
+          "starts_on": "day:-85d",
+          "ends_on": "day:-75d",
+          "timezone": "Europe/Rome",
+          "program_url": "https://www.labiennale.org/en/cinema",
+          "call_url": null,
+          "call_deadline": null,
+          "is_cancelled": false,
+          "provenance": {
+            "source": "demo",
+            "source_url": "https://www.labiennale.org/en/cinema",
+            "retrieved_at": "rel:+0d",
+            "published_at": null,
+            "verification": "demo",
+            "confidence": null
+          }
+        }
+      ],
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://www.labiennale.org/en/cinema",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "fest-14",
+      "slug": "clermont-ferrand",
+      "name": "Festival du Court Métrage de Clermont-Ferrand",
+      "short_name": "Clermont-Ferrand",
+      "city": "Clermont-Ferrand",
+      "country": "FR",
+      "website_url": "https://clermont-filmfest.org",
+      "focus": [
+        "shorts"
+      ],
+      "venue": {
+        "name": "Clermont-Ferrand",
+        "city": "Clermont-Ferrand",
+        "country": "FR",
+        "latitude": 45.7772,
+        "longitude": 3.087,
+        "coordinate_precision": "city"
+      },
+      "editions": [
+        {
+          "id": "ed-14",
+          "label": "Edición demo",
+          "year": 2026,
+          "starts_on": "day:+3d",
+          "ends_on": "day:+11d",
+          "timezone": "Europe/Paris",
+          "program_url": "https://clermont-filmfest.org",
+          "call_url": "https://clermont-filmfest.org",
+          "call_deadline": "rel:+30d@23:59",
+          "is_cancelled": false,
+          "provenance": {
+            "source": "demo",
+            "source_url": "https://clermont-filmfest.org",
+            "retrieved_at": "rel:+0d",
+            "published_at": null,
+            "verification": "demo",
+            "confidence": null
+          }
+        }
+      ],
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://clermont-filmfest.org",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    }
+  ],
+  "festival_events": [
+    {
+      "id": "fev-01",
+      "edition_id": "ed-01",
+      "festival_id": "fest-01",
+      "film_id": "film-02",
+      "kind": "selection",
+      "section": "Largometraje documental",
+      "award_name": null,
+      "occurs_at": null,
+      "announced_at": "rel:-32d",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://www.ficg.mx",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "fev-02",
+      "edition_id": "ed-01",
+      "festival_id": "fest-01",
+      "film_id": "film-02",
+      "kind": "screening",
+      "section": "Largometraje documental",
+      "award_name": null,
+      "occurs_at": "rel:+0d@19:00",
+      "announced_at": "rel:-32d",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://www.ficg.mx",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "fev-03",
+      "edition_id": "ed-01",
+      "festival_id": "fest-01",
+      "film_id": "film-02",
+      "kind": "screening",
+      "section": "Largometraje documental",
+      "award_name": null,
+      "occurs_at": "rel:+3d@19:00",
+      "announced_at": "rel:-32d",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://www.ficg.mx",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "fev-04",
+      "edition_id": "ed-06",
+      "festival_id": "fest-06",
+      "film_id": "film-02",
+      "kind": "award",
+      "section": "Competencia mexicana",
+      "award_name": "Premio del público (demo)",
+      "occurs_at": "rel:-63d@19:00",
+      "announced_at": "rel:-100d",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://docsmx.org",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "fev-05",
+      "edition_id": "ed-14",
+      "festival_id": "fest-14",
+      "film_id": "film-04",
+      "kind": "selection",
+      "section": "Competencia internacional",
+      "award_name": null,
+      "occurs_at": null,
+      "announced_at": "rel:-27d",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://clermont-filmfest.org",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "fev-06",
+      "edition_id": "ed-14",
+      "festival_id": "fest-14",
+      "film_id": "film-04",
+      "kind": "screening",
+      "section": "Competencia internacional",
+      "award_name": null,
+      "occurs_at": "rel:+5d@19:00",
+      "announced_at": "rel:-27d",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://clermont-filmfest.org",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "fev-07",
+      "edition_id": "ed-02",
+      "festival_id": "fest-02",
+      "film_id": "film-04",
+      "kind": "selection",
+      "section": "Cortometraje mexicano",
+      "award_name": null,
+      "occurs_at": null,
+      "announced_at": "rel:-18d",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://moreliafilmfest.com",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "fev-08",
+      "edition_id": "ed-03",
+      "festival_id": "fest-03",
+      "film_id": "film-04",
+      "kind": "award",
+      "section": "Cortometraje",
+      "award_name": "Mejor cortometraje (demo)",
+      "occurs_at": "rel:-34d@19:00",
+      "announced_at": "rel:-70d",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://giff.mx",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "fev-09",
+      "edition_id": "ed-02",
+      "festival_id": "fest-02",
+      "film_id": "film-05",
+      "kind": "screening",
+      "section": "Documental mexicano",
+      "award_name": null,
+      "occurs_at": "rel:+15d@19:00",
+      "announced_at": "rel:-18d",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://moreliafilmfest.com",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "fev-10",
+      "edition_id": "ed-05",
+      "festival_id": "fest-05",
+      "film_id": "film-05",
+      "kind": "selection",
+      "section": "Gira 2027",
+      "award_name": null,
+      "occurs_at": null,
+      "announced_at": "rel:+40d",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://www.ambulante.org",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "fev-11",
+      "edition_id": "ed-11",
+      "festival_id": "fest-11",
+      "film_id": "film-07",
+      "kind": "premiere",
+      "section": "Horizontes Latinos",
+      "award_name": null,
+      "occurs_at": "rel:-59d@19:00",
+      "announced_at": "rel:-90d",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://www.sansebastianfestival.com",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "fev-12",
+      "edition_id": "ed-11",
+      "festival_id": "fest-11",
+      "film_id": "film-07",
+      "kind": "award",
+      "section": "Horizontes Latinos",
+      "award_name": "Mención especial (demo)",
+      "occurs_at": "rel:-52d@19:00",
+      "announced_at": "rel:-90d",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://www.sansebastianfestival.com",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "fev-13",
+      "edition_id": "ed-07",
+      "festival_id": "fest-07",
+      "film_id": "film-07",
+      "kind": "screening",
+      "section": "Competencia",
+      "award_name": null,
+      "occurs_at": "rel:+27d@19:00",
+      "announced_at": "rel:-5d",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://cabosfilmfest.com",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "fev-14",
+      "edition_id": "ed-14",
+      "festival_id": "fest-14",
+      "film_id": "film-08",
+      "kind": "screening",
+      "section": "Competencia Labo",
+      "award_name": null,
+      "occurs_at": "rel:+7d@19:00",
+      "announced_at": "rel:-27d",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://clermont-filmfest.org",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "fev-15",
+      "edition_id": "ed-08",
+      "festival_id": "fest-08",
+      "film_id": "film-08",
+      "kind": "selection",
+      "section": "Generation Kplus",
+      "award_name": null,
+      "occurs_at": null,
+      "announced_at": "rel:+50d",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://www.berlinale.de",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "fev-16",
+      "edition_id": "ed-09",
+      "festival_id": "fest-09",
+      "film_id": "film-01",
+      "kind": "premiere",
+      "section": "Selección paralela (demo)",
+      "award_name": null,
+      "occurs_at": "rel:-186d@19:00",
+      "announced_at": "rel:-220d",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://www.festival-cannes.com",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "fev-17",
+      "edition_id": "ed-12",
+      "festival_id": "fest-12",
+      "film_id": "film-01",
+      "kind": "screening",
+      "section": "Fuera de competencia",
+      "award_name": null,
+      "occurs_at": "rel:-107d@19:00",
+      "announced_at": "rel:-140d",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://www.locarnofestival.ch",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "fev-18",
+      "edition_id": "ed-01",
+      "festival_id": "fest-01",
+      "film_id": "film-01",
+      "kind": "screening",
+      "section": "Gala",
+      "award_name": null,
+      "occurs_at": "rel:-1d@19:00",
+      "announced_at": "rel:-32d",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://www.ficg.mx",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "fev-19",
+      "edition_id": "ed-04",
+      "festival_id": "fest-04",
+      "film_id": "film-03",
+      "kind": "selection",
+      "section": "Funciones especiales",
+      "award_name": null,
+      "occurs_at": null,
+      "announced_at": "rel:+15d",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://ficunam.unam.mx",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "fev-20",
+      "edition_id": "ed-13",
+      "festival_id": "fest-13",
+      "film_id": "film-09",
+      "kind": "selection",
+      "section": "Orizzonti",
+      "award_name": null,
+      "occurs_at": null,
+      "announced_at": "rel:-115d",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://www.labiennale.org/en/cinema",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "fev-21",
+      "edition_id": "ed-13",
+      "festival_id": "fest-13",
+      "film_id": "film-09",
+      "kind": "screening",
+      "section": "Orizzonti",
+      "award_name": null,
+      "occurs_at": "rel:-80d@19:00",
+      "announced_at": "rel:-115d",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://www.labiennale.org/en/cinema",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "fev-22",
+      "edition_id": "ed-10",
+      "festival_id": "fest-10",
+      "film_id": "film-10",
+      "kind": "selection",
+      "section": "Midnight",
+      "award_name": null,
+      "occurs_at": null,
+      "announced_at": "rel:+25d",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://festival.sundance.org",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    }
+  ],
+  "news": [
+    {
+      "id": "news-1",
+      "kind": "selection",
+      "title": "«Marea de papel» compite en Clermont-Ferrand (demo)",
+      "url": "https://example.com/demo/noticias/1",
+      "outlet": "Noticias demo",
+      "published_at": "rel:-4d@10:00",
+      "film_id": "film-04",
+      "festival_id": "fest-14",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://example.com/demo/noticias/1",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "news-2",
+      "kind": "award",
+      "title": "«Ruido blanco» gana el premio del público en DocsMX (demo)",
+      "url": "https://example.com/demo/noticias/2",
+      "outlet": "Noticias demo",
+      "published_at": "rel:-62d@10:00",
+      "film_id": "film-02",
+      "festival_id": "fest-06",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://example.com/demo/noticias/2",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "news-3",
+      "kind": "premiere",
+      "title": "«La sal del desierto» llega a salas mexicanas (demo)",
+      "url": "https://example.com/demo/noticias/3",
+      "outlet": "Noticias demo",
+      "published_at": "rel:-6d@10:00",
+      "film_id": "film-01",
+      "festival_id": null,
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://example.com/demo/noticias/3",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "news-4",
+      "kind": "call",
+      "title": "Abre convocatoria de cortometraje en FICM (demo)",
+      "url": "https://example.com/demo/noticias/4",
+      "outlet": "Noticias demo",
+      "published_at": "rel:-10d@10:00",
+      "film_id": null,
+      "festival_id": "fest-02",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://example.com/demo/noticias/4",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "news-5",
+      "kind": "call",
+      "title": "FICUNAM recibe largometrajes hasta fin de mes (demo)",
+      "url": "https://example.com/demo/noticias/5",
+      "outlet": "Noticias demo",
+      "published_at": "rel:-2d@10:00",
+      "film_id": null,
+      "festival_id": "fest-04",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://example.com/demo/noticias/5",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "news-6",
+      "kind": "selection",
+      "title": "«Cuarto oscuro» seleccionada en Sundance Midnight (demo)",
+      "url": "https://example.com/demo/noticias/6",
+      "outlet": "Noticias demo",
+      "published_at": "rel:-1d@10:00",
+      "film_id": "film-10",
+      "festival_id": "fest-10",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://example.com/demo/noticias/6",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "news-7",
+      "kind": "publication",
+      "title": "Lo que viene en animación mexicana (demo)",
+      "url": "https://example.com/demo/noticias/7",
+      "outlet": "Noticias demo",
+      "published_at": "rel:+0d@10:00",
+      "film_id": "film-03",
+      "festival_id": null,
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://example.com/demo/noticias/7",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    },
+    {
+      "id": "news-8",
+      "kind": "industry",
+      "title": "Coproducciones México–España en San Sebastián (demo)",
+      "url": "https://example.com/demo/noticias/8",
+      "outlet": "Noticias demo",
+      "published_at": "rel:-58d@10:00",
+      "film_id": "film-07",
+      "festival_id": "fest-11",
+      "provenance": {
+        "source": "demo",
+        "source_url": "https://example.com/demo/noticias/8",
+        "retrieved_at": "rel:+0d",
+        "published_at": null,
+        "verification": "demo",
+        "confidence": null
+      }
+    }
+  ],
+  "trends": [
+    {
+      "window": "24h",
+      "computed_at": "rel:+0d",
+      "label": "Tendencias digitales",
+      "sources_used": [
+        "youtube",
+        "media"
+      ],
+      "methodology_version": "trend_score/1.0",
+      "is_demo": true,
+      "entries": [
+        {
+          "film_id": "film-10",
+          "rank": 1,
+          "previous_rank": 1,
+          "score": 99,
+          "explanation": "YouTube: visualizaciones +59% frente al periodo anterior.",
+          "signals": [
+            {
+              "source": "youtube",
+              "metric": "visualizaciones",
+              "current": 10496,
+              "baseline": 6622,
+              "growth_pct": 59
+            },
+            {
+              "source": "media",
+              "metric": "menciones",
+              "current": 2,
+              "baseline": 1.7,
+              "growth_pct": 20
+            }
+          ]
+        },
+        {
+          "film_id": "film-06",
+          "rank": 2,
+          "previous_rank": 2,
+          "score": 93,
+          "explanation": "YouTube: visualizaciones +28% frente al periodo anterior.",
+          "signals": [
+            {
+              "source": "youtube",
+              "metric": "visualizaciones",
+              "current": 19180,
+              "baseline": 15012.3,
+              "growth_pct": 28
+            },
+            {
+              "source": "media",
+              "metric": "menciones",
+              "current": 2,
+              "baseline": 2,
+              "growth_pct": 0
+            }
+          ]
+        },
+        {
+          "film_id": "film-09",
+          "rank": 3,
+          "previous_rank": 3,
+          "score": 52,
+          "explanation": "YouTube: visualizaciones -3% frente al periodo anterior.",
+          "signals": [
+            {
+              "source": "youtube",
+              "metric": "visualizaciones",
+              "current": 9410,
+              "baseline": 9658.7,
+              "growth_pct": -3
+            },
+            {
+              "source": "media",
+              "metric": "menciones",
+              "current": 0,
+              "baseline": 0,
+              "growth_pct": null
+            }
+          ]
+        },
+        {
+          "film_id": "film-02",
+          "rank": 4,
+          "previous_rank": 6,
+          "score": 44,
+          "explanation": "YouTube: visualizaciones -1% frente al periodo anterior.",
+          "signals": [
+            {
+              "source": "youtube",
+              "metric": "visualizaciones",
+              "current": 584,
+              "baseline": 588,
+              "growth_pct": -1
+            },
+            {
+              "source": "media",
+              "metric": "menciones",
+              "current": 0,
+              "baseline": 0.3,
+              "growth_pct": -100
+            }
+          ]
+        },
+        {
+          "film_id": "film-07",
+          "rank": 5,
+          "previous_rank": 7,
+          "score": 43,
+          "explanation": "YouTube: visualizaciones +0% frente al periodo anterior.",
+          "signals": [
+            {
+              "source": "youtube",
+              "metric": "visualizaciones",
+              "current": 1445,
+              "baseline": 1445,
+              "growth_pct": 0
+            },
+            {
+              "source": "media",
+              "metric": "menciones",
+              "current": 0,
+              "baseline": 0.7,
+              "growth_pct": -100
+            }
+          ]
+        }
+      ],
+      "history": [
+        {
+          "date": "rel:-27h",
+          "film_id": "film-10",
+          "score": 89
+        },
+        {
+          "date": "rel:-27h",
+          "film_id": "film-06",
+          "score": 81
+        },
+        {
+          "date": "rel:-27h",
+          "film_id": "film-09",
+          "score": 66
+        },
+        {
+          "date": "rel:-27h",
+          "film_id": "film-02",
+          "score": 44
+        },
+        {
+          "date": "rel:-27h",
+          "film_id": "film-07",
+          "score": 41
+        },
+        {
+          "date": "rel:-24h",
+          "film_id": "film-10",
+          "score": 85
+        },
+        {
+          "date": "rel:-24h",
+          "film_id": "film-06",
+          "score": 78
+        },
+        {
+          "date": "rel:-24h",
+          "film_id": "film-09",
+          "score": 51
+        },
+        {
+          "date": "rel:-24h",
+          "film_id": "film-02",
+          "score": 30
+        },
+        {
+          "date": "rel:-24h",
+          "film_id": "film-07",
+          "score": 27
+        },
+        {
+          "date": "rel:-21h",
+          "film_id": "film-10",
+          "score": 85
+        },
+        {
+          "date": "rel:-21h",
+          "film_id": "film-06",
+          "score": 79
+        },
+        {
+          "date": "rel:-21h",
+          "film_id": "film-09",
+          "score": 56
+        },
+        {
+          "date": "rel:-21h",
+          "film_id": "film-02",
+          "score": 43
+        },
+        {
+          "date": "rel:-21h",
+          "film_id": "film-07",
+          "score": 42
+        },
+        {
+          "date": "rel:-18h",
+          "film_id": "film-10",
+          "score": 87
+        },
+        {
+          "date": "rel:-18h",
+          "film_id": "film-06",
+          "score": 81
+        },
+        {
+          "date": "rel:-18h",
+          "film_id": "film-09",
+          "score": 57
+        },
+        {
+          "date": "rel:-18h",
+          "film_id": "film-02",
+          "score": 40
+        },
+        {
+          "date": "rel:-18h",
+          "film_id": "film-07",
+          "score": 40
+        },
+        {
+          "date": "rel:-15h",
+          "film_id": "film-10",
+          "score": 92
+        },
+        {
+          "date": "rel:-15h",
+          "film_id": "film-06",
+          "score": 87
+        },
+        {
+          "date": "rel:-15h",
+          "film_id": "film-09",
+          "score": 60
+        },
+        {
+          "date": "rel:-15h",
+          "film_id": "film-02",
+          "score": 43
+        },
+        {
+          "date": "rel:-15h",
+          "film_id": "film-07",
+          "score": 43
+        },
+        {
+          "date": "rel:-12h",
+          "film_id": "film-10",
+          "score": 90
+        },
+        {
+          "date": "rel:-12h",
+          "film_id": "film-06",
+          "score": 84
+        },
+        {
+          "date": "rel:-12h",
+          "film_id": "film-09",
+          "score": 53
+        },
+        {
+          "date": "rel:-12h",
+          "film_id": "film-02",
+          "score": 39
+        },
+        {
+          "date": "rel:-12h",
+          "film_id": "film-07",
+          "score": 42
+        },
+        {
+          "date": "rel:-9h",
+          "film_id": "film-10",
+          "score": 93
+        },
+        {
+          "date": "rel:-9h",
+          "film_id": "film-06",
+          "score": 88
+        },
+        {
+          "date": "rel:-9h",
+          "film_id": "film-09",
+          "score": 55
+        },
+        {
+          "date": "rel:-9h",
+          "film_id": "film-02",
+          "score": 39
+        },
+        {
+          "date": "rel:-9h",
+          "film_id": "film-07",
+          "score": 43
+        },
+        {
+          "date": "rel:-6h",
+          "film_id": "film-10",
+          "score": 93
+        },
+        {
+          "date": "rel:-6h",
+          "film_id": "film-06",
+          "score": 87
+        },
+        {
+          "date": "rel:-6h",
+          "film_id": "film-09",
+          "score": 53
+        },
+        {
+          "date": "rel:-6h",
+          "film_id": "film-02",
+          "score": 43
+        },
+        {
+          "date": "rel:-6h",
+          "film_id": "film-07",
+          "score": 42
+        },
+        {
+          "date": "rel:-3h",
+          "film_id": "film-10",
+          "score": 98
+        },
+        {
+          "date": "rel:-3h",
+          "film_id": "film-06",
+          "score": 93
+        },
+        {
+          "date": "rel:-3h",
+          "film_id": "film-09",
+          "score": 52
+        },
+        {
+          "date": "rel:-3h",
+          "film_id": "film-02",
+          "score": 48
+        },
+        {
+          "date": "rel:-3h",
+          "film_id": "film-07",
+          "score": 45
+        },
+        {
+          "date": "rel:+0d",
+          "film_id": "film-10",
+          "score": 99
+        },
+        {
+          "date": "rel:+0d",
+          "film_id": "film-06",
+          "score": 93
+        },
+        {
+          "date": "rel:+0d",
+          "film_id": "film-09",
+          "score": 52
+        },
+        {
+          "date": "rel:+0d",
+          "film_id": "film-02",
+          "score": 44
+        },
+        {
+          "date": "rel:+0d",
+          "film_id": "film-07",
+          "score": 43
+        }
+      ]
+    },
+    {
+      "window": "7d",
+      "computed_at": "rel:+0d",
+      "label": "Tendencias digitales",
+      "sources_used": [
+        "youtube",
+        "media"
+      ],
+      "methodology_version": "trend_score/1.0",
+      "is_demo": true,
+      "entries": [
+        {
+          "film_id": "film-01",
+          "rank": 1,
+          "previous_rank": 2,
+          "score": 69,
+          "explanation": "Medios: menciones +408% frente al periodo anterior.",
+          "signals": [
+            {
+              "source": "youtube",
+              "metric": "visualizaciones",
+              "current": 91174,
+              "baseline": 15381,
+              "growth_pct": 493
+            },
+            {
+              "source": "media",
+              "metric": "menciones",
+              "current": 44,
+              "baseline": 8.7,
+              "growth_pct": 408
+            }
+          ]
+        },
+        {
+          "film_id": "film-04",
+          "rank": 2,
+          "previous_rank": 3,
+          "score": 66,
+          "explanation": "Medios: menciones +1,100% frente al periodo anterior.",
+          "signals": [
+            {
+              "source": "youtube",
+              "metric": "visualizaciones",
+              "current": 14917,
+              "baseline": 1780.7,
+              "growth_pct": 738
+            },
+            {
+              "source": "media",
+              "metric": "menciones",
+              "current": 12,
+              "baseline": 1,
+              "growth_pct": 1100
+            }
+          ]
+        },
+        {
+          "film_id": "film-10",
+          "rank": 3,
+          "previous_rank": 6,
+          "score": 64,
+          "explanation": "YouTube: visualizaciones +583% frente al periodo anterior.",
+          "signals": [
+            {
+              "source": "youtube",
+              "metric": "visualizaciones",
+              "current": 34480,
+              "baseline": 5049.3,
+              "growth_pct": 583
+            },
+            {
+              "source": "media",
+              "metric": "menciones",
+              "current": 12,
+              "baseline": 2.7,
+              "growth_pct": 350
+            }
+          ]
+        },
+        {
+          "film_id": "film-06",
+          "rank": 4,
+          "previous_rank": 7,
+          "score": 63,
+          "explanation": "YouTube: visualizaciones +288% frente al periodo anterior.",
+          "signals": [
+            {
+              "source": "youtube",
+              "metric": "visualizaciones",
+              "current": 78442,
+              "baseline": 20208.7,
+              "growth_pct": 288
+            },
+            {
+              "source": "media",
+              "metric": "menciones",
+              "current": 14,
+              "baseline": 3.3,
+              "growth_pct": 320
+            }
+          ]
+        },
+        {
+          "film_id": "film-08",
+          "rank": 5,
+          "previous_rank": null,
+          "score": 43,
+          "explanation": "Medios: 2 menciones sin actividad en el periodo anterior.",
+          "signals": [
+            {
+              "source": "youtube",
+              "metric": "visualizaciones",
+              "current": 930,
+              "baseline": 337,
+              "growth_pct": 176
+            },
+            {
+              "source": "media",
+              "metric": "menciones",
+              "current": 2,
+              "baseline": 0,
+              "growth_pct": null
+            }
+          ]
+        }
+      ],
+      "history": [
+        {
+          "date": "rel:-216h",
+          "film_id": "film-01",
+          "score": 78
+        },
+        {
+          "date": "rel:-216h",
+          "film_id": "film-04",
+          "score": 13
+        },
+        {
+          "date": "rel:-216h",
+          "film_id": "film-10",
+          "score": 51
+        },
+        {
+          "date": "rel:-216h",
+          "film_id": "film-06",
+          "score": 57
+        },
+        {
+          "date": "rel:-216h",
+          "film_id": "film-08",
+          "score": 0
+        },
+        {
+          "date": "rel:-192h",
+          "film_id": "film-01",
+          "score": 93
+        },
+        {
+          "date": "rel:-192h",
+          "film_id": "film-04",
+          "score": 40
+        },
+        {
+          "date": "rel:-192h",
+          "film_id": "film-10",
+          "score": 45
+        },
+        {
+          "date": "rel:-192h",
+          "film_id": "film-06",
+          "score": 47
+        },
+        {
+          "date": "rel:-192h",
+          "film_id": "film-08",
+          "score": 0
+        },
+        {
+          "date": "rel:-168h",
+          "film_id": "film-01",
+          "score": 100
+        },
+        {
+          "date": "rel:-168h",
+          "film_id": "film-04",
+          "score": 72
+        },
+        {
+          "date": "rel:-168h",
+          "film_id": "film-10",
+          "score": 43
+        },
+        {
+          "date": "rel:-168h",
+          "film_id": "film-06",
+          "score": 32
+        },
+        {
+          "date": "rel:-168h",
+          "film_id": "film-08",
+          "score": 0
+        },
+        {
+          "date": "rel:-144h",
+          "film_id": "film-01",
+          "score": 100
+        },
+        {
+          "date": "rel:-144h",
+          "film_id": "film-04",
+          "score": 95
+        },
+        {
+          "date": "rel:-144h",
+          "film_id": "film-10",
+          "score": 64
+        },
+        {
+          "date": "rel:-144h",
+          "film_id": "film-06",
+          "score": 62
+        },
+        {
+          "date": "rel:-144h",
+          "film_id": "film-08",
+          "score": 0
+        },
+        {
+          "date": "rel:-120h",
+          "film_id": "film-01",
+          "score": 97
+        },
+        {
+          "date": "rel:-120h",
+          "film_id": "film-04",
+          "score": 86
+        },
+        {
+          "date": "rel:-120h",
+          "film_id": "film-10",
+          "score": 56
+        },
+        {
+          "date": "rel:-120h",
+          "film_id": "film-06",
+          "score": 57
+        },
+        {
+          "date": "rel:-120h",
+          "film_id": "film-08",
+          "score": 0
+        },
+        {
+          "date": "rel:-96h",
+          "film_id": "film-01",
+          "score": 90
+        },
+        {
+          "date": "rel:-96h",
+          "film_id": "film-04",
+          "score": 78
+        },
+        {
+          "date": "rel:-96h",
+          "film_id": "film-10",
+          "score": 64
+        },
+        {
+          "date": "rel:-96h",
+          "film_id": "film-06",
+          "score": 64
+        },
+        {
+          "date": "rel:-96h",
+          "film_id": "film-08",
+          "score": 0
+        },
+        {
+          "date": "rel:-72h",
+          "film_id": "film-01",
+          "score": 81
+        },
+        {
+          "date": "rel:-72h",
+          "film_id": "film-04",
+          "score": 71
+        },
+        {
+          "date": "rel:-72h",
+          "film_id": "film-10",
+          "score": 57
+        },
+        {
+          "date": "rel:-72h",
+          "film_id": "film-06",
+          "score": 59
+        },
+        {
+          "date": "rel:-72h",
+          "film_id": "film-08",
+          "score": 36
+        },
+        {
+          "date": "rel:-48h",
+          "film_id": "film-01",
+          "score": 80
+        },
+        {
+          "date": "rel:-48h",
+          "film_id": "film-04",
+          "score": 72
+        },
+        {
+          "date": "rel:-48h",
+          "film_id": "film-10",
+          "score": 62
+        },
+        {
+          "date": "rel:-48h",
+          "film_id": "film-06",
+          "score": 61
+        },
+        {
+          "date": "rel:-48h",
+          "film_id": "film-08",
+          "score": 40
+        },
+        {
+          "date": "rel:-24h",
+          "film_id": "film-01",
+          "score": 76
+        },
+        {
+          "date": "rel:-24h",
+          "film_id": "film-04",
+          "score": 71
+        },
+        {
+          "date": "rel:-24h",
+          "film_id": "film-10",
+          "score": 65
+        },
+        {
+          "date": "rel:-24h",
+          "film_id": "film-06",
+          "score": 62
+        },
+        {
+          "date": "rel:-24h",
+          "film_id": "film-08",
+          "score": 42
+        },
+        {
+          "date": "rel:+0d",
+          "film_id": "film-01",
+          "score": 69
+        },
+        {
+          "date": "rel:+0d",
+          "film_id": "film-04",
+          "score": 66
+        },
+        {
+          "date": "rel:+0d",
+          "film_id": "film-10",
+          "score": 64
+        },
+        {
+          "date": "rel:+0d",
+          "film_id": "film-06",
+          "score": 63
+        },
+        {
+          "date": "rel:+0d",
+          "film_id": "film-08",
+          "score": 43
+        }
+      ]
+    },
+    {
+      "window": "30d",
+      "computed_at": "rel:+0d",
+      "label": "Tendencias digitales",
+      "sources_used": [
+        "youtube",
+        "media"
+      ],
+      "methodology_version": "trend_score/1.0",
+      "is_demo": true,
+      "entries": [
+        {
+          "film_id": "film-01",
+          "rank": 1,
+          "previous_rank": 5,
+          "score": 74,
+          "explanation": "Medios: menciones +107% frente al periodo anterior.",
+          "signals": [
+            {
+              "source": "youtube",
+              "metric": "visualizaciones",
+              "current": 141174,
+              "baseline": 57499.7,
+              "growth_pct": 146
+            },
+            {
+              "source": "media",
+              "metric": "menciones",
+              "current": 73,
+              "baseline": 35.3,
+              "growth_pct": 107
+            }
+          ]
+        },
+        {
+          "film_id": "film-10",
+          "rank": 2,
+          "previous_rank": 4,
+          "score": 63,
+          "explanation": "Medios: menciones +114% frente al periodo anterior.",
+          "signals": [
+            {
+              "source": "youtube",
+              "metric": "visualizaciones",
+              "current": 51088,
+              "baseline": 21618.3,
+              "growth_pct": 136
+            },
+            {
+              "source": "media",
+              "metric": "menciones",
+              "current": 20,
+              "baseline": 9.3,
+              "growth_pct": 114
+            }
+          ]
+        },
+        {
+          "film_id": "film-02",
+          "rank": 3,
+          "previous_rank": 7,
+          "score": 63,
+          "explanation": "Medios: menciones +280% frente al periodo anterior.",
+          "signals": [
+            {
+              "source": "youtube",
+              "metric": "visualizaciones",
+              "current": 32994,
+              "baseline": 17972.3,
+              "growth_pct": 84
+            },
+            {
+              "source": "media",
+              "metric": "menciones",
+              "current": 19,
+              "baseline": 5,
+              "growth_pct": 280
+            }
+          ]
+        },
+        {
+          "film_id": "film-04",
+          "rank": 4,
+          "previous_rank": 3,
+          "score": 62,
+          "explanation": "YouTube: visualizaciones +189% frente al periodo anterior.",
+          "signals": [
+            {
+              "source": "youtube",
+              "metric": "visualizaciones",
+              "current": 20744,
+              "baseline": 7183.3,
+              "growth_pct": 189
+            },
+            {
+              "source": "media",
+              "metric": "menciones",
+              "current": 16,
+              "baseline": 7.7,
+              "growth_pct": 109
+            }
+          ]
+        },
+        {
+          "film_id": "film-06",
+          "rank": 5,
+          "previous_rank": 2,
+          "score": 56,
+          "explanation": "YouTube: visualizaciones +68% frente al periodo anterior.",
+          "signals": [
+            {
+              "source": "youtube",
+              "metric": "visualizaciones",
+              "current": 144918,
+              "baseline": 86501.7,
+              "growth_pct": 68
+            },
+            {
+              "source": "media",
+              "metric": "menciones",
+              "current": 25,
+              "baseline": 17.7,
+              "growth_pct": 42
+            }
+          ]
+        }
+      ],
+      "history": [
+        {
+          "date": "rel:-648h",
+          "film_id": "film-01",
+          "score": 38
+        },
+        {
+          "date": "rel:-648h",
+          "film_id": "film-10",
+          "score": 47
+        },
+        {
+          "date": "rel:-648h",
+          "film_id": "film-02",
+          "score": 51
+        },
+        {
+          "date": "rel:-648h",
+          "film_id": "film-04",
+          "score": 43
+        },
+        {
+          "date": "rel:-648h",
+          "film_id": "film-06",
+          "score": 54
+        },
+        {
+          "date": "rel:-576h",
+          "film_id": "film-01",
+          "score": 51
+        },
+        {
+          "date": "rel:-576h",
+          "film_id": "film-10",
+          "score": 43
+        },
+        {
+          "date": "rel:-576h",
+          "film_id": "film-02",
+          "score": 79
+        },
+        {
+          "date": "rel:-576h",
+          "film_id": "film-04",
+          "score": 58
+        },
+        {
+          "date": "rel:-576h",
+          "film_id": "film-06",
+          "score": 51
+        },
+        {
+          "date": "rel:-504h",
+          "film_id": "film-01",
+          "score": 58
+        },
+        {
+          "date": "rel:-504h",
+          "film_id": "film-10",
+          "score": 45
+        },
+        {
+          "date": "rel:-504h",
+          "film_id": "film-02",
+          "score": 100
+        },
+        {
+          "date": "rel:-504h",
+          "film_id": "film-04",
+          "score": 56
+        },
+        {
+          "date": "rel:-504h",
+          "film_id": "film-06",
+          "score": 53
+        },
+        {
+          "date": "rel:-432h",
+          "film_id": "film-01",
+          "score": 57
+        },
+        {
+          "date": "rel:-432h",
+          "film_id": "film-10",
+          "score": 48
+        },
+        {
+          "date": "rel:-432h",
+          "film_id": "film-02",
+          "score": 100
+        },
+        {
+          "date": "rel:-432h",
+          "film_id": "film-04",
+          "score": 54
+        },
+        {
+          "date": "rel:-432h",
+          "film_id": "film-06",
+          "score": 58
+        },
+        {
+          "date": "rel:-360h",
+          "film_id": "film-01",
+          "score": 58
+        },
+        {
+          "date": "rel:-360h",
+          "film_id": "film-10",
+          "score": 54
+        },
+        {
+          "date": "rel:-360h",
+          "film_id": "film-02",
+          "score": 100
+        },
+        {
+          "date": "rel:-360h",
+          "film_id": "film-04",
+          "score": 51
+        },
+        {
+          "date": "rel:-360h",
+          "film_id": "film-06",
+          "score": 61
+        },
+        {
+          "date": "rel:-288h",
+          "film_id": "film-01",
+          "score": 53
+        },
+        {
+          "date": "rel:-288h",
+          "film_id": "film-10",
+          "score": 47
+        },
+        {
+          "date": "rel:-288h",
+          "film_id": "film-02",
+          "score": 100
+        },
+        {
+          "date": "rel:-288h",
+          "film_id": "film-04",
+          "score": 40
+        },
+        {
+          "date": "rel:-288h",
+          "film_id": "film-06",
+          "score": 54
+        },
+        {
+          "date": "rel:-216h",
+          "film_id": "film-01",
+          "score": 63
+        },
+        {
+          "date": "rel:-216h",
+          "film_id": "film-10",
+          "score": 50
+        },
+        {
+          "date": "rel:-216h",
+          "film_id": "film-02",
+          "score": 100
+        },
+        {
+          "date": "rel:-216h",
+          "film_id": "film-04",
+          "score": 36
+        },
+        {
+          "date": "rel:-216h",
+          "film_id": "film-06",
+          "score": 52
+        },
+        {
+          "date": "rel:-144h",
+          "film_id": "film-01",
+          "score": 69
+        },
+        {
+          "date": "rel:-144h",
+          "film_id": "film-10",
+          "score": 79
+        },
+        {
+          "date": "rel:-144h",
+          "film_id": "film-02",
+          "score": 100
+        },
+        {
+          "date": "rel:-144h",
+          "film_id": "film-04",
+          "score": 41
+        },
+        {
+          "date": "rel:-144h",
+          "film_id": "film-06",
+          "score": 55
+        },
+        {
+          "date": "rel:-72h",
+          "film_id": "film-01",
+          "score": 77
+        },
+        {
+          "date": "rel:-72h",
+          "film_id": "film-10",
+          "score": 53
+        },
+        {
+          "date": "rel:-72h",
+          "film_id": "film-02",
+          "score": 77
+        },
+        {
+          "date": "rel:-72h",
+          "film_id": "film-04",
+          "score": 54
+        },
+        {
+          "date": "rel:-72h",
+          "film_id": "film-06",
+          "score": 50
+        },
+        {
+          "date": "rel:+0d",
+          "film_id": "film-01",
+          "score": 74
+        },
+        {
+          "date": "rel:+0d",
+          "film_id": "film-10",
+          "score": 63
+        },
+        {
+          "date": "rel:+0d",
+          "film_id": "film-02",
+          "score": 63
+        },
+        {
+          "date": "rel:+0d",
+          "film_id": "film-04",
+          "score": 62
+        },
+        {
+          "date": "rel:+0d",
+          "film_id": "film-06",
+          "score": 56
+        }
+      ]
+    }
+  ]
+}

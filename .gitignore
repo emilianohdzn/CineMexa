@@ -1,0 +1,11 @@
+node_modules/
+.DS_Store
+*.xcuserstate
+xcuserdata/
+DerivedData/
+build/
+.env
+.env.*
+!.env.example
+ios/CineMexa/Resources/LiveConfig.json
+supabase/.temp/

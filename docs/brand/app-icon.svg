@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <!-- Cine Mexa · ícono de app. La X: dos tiras de película que se cruzan (amarillo proyector sobre rojo en vivo). -->
+  <rect width="1024" height="1024" fill="#0B0E13"/>
+  <g transform="translate(512 512)">
+    <g transform="rotate(-45)">
+      <rect x="-400" y="-100" width="800" height="200" rx="44" fill="#F04D3D"/>
+    </g>
+    <g transform="rotate(45)">
+      <rect x="-400" y="-100" width="800" height="200" rx="44" fill="#FFB81C"/>
+      <g fill="#0B0E13"><rect x="-312" y="-70" width="24" height="24" rx="5"/><rect x="-312" y="46" width="24" height="24" rx="5"/><rect x="-252" y="-70" width="24" height="24" rx="5"/><rect x="-252" y="46" width="24" height="24" rx="5"/><rect x="-192" y="-70" width="24" height="24" rx="5"/><rect x="-192" y="46" width="24" height="24" rx="5"/><rect x="-132" y="-70" width="24" height="24" rx="5"/><rect x="-132" y="46" width="24" height="24" rx="5"/><rect x="-72" y="-70" width="24" height="24" rx="5"/><rect x="-72" y="46" width="24" height="24" rx="5"/><rect x="-12" y="-70" width="24" height="24" rx="5"/><rect x="-12" y="46" width="24" height="24" rx="5"/><rect x="48" y="-70" width="24" height="24" rx="5"/><rect x="48" y="46" width="24" height="24" rx="5"/><rect x="108" y="-70" width="24" height="24" rx="5"/><rect x="108" y="46" width="24" height="24" rx="5"/><rect x="168" y="-70" width="24" height="24" rx="5"/><rect x="168" y="46" width="24" height="24" rx="5"/><rect x="228" y="-70" width="24" height="24" rx="5"/><rect x="228" y="46" width="24" height="24" rx="5"/><rect x="288" y="-70" width="24" height="24" rx="5"/><rect x="288" y="46" width="24" height="24" rx="5"/></g>
+      <rect x="-330" y="-30" width="660" height="60" rx="12" fill="#FFB81C" stroke="#0B0E13" stroke-opacity="0.18" stroke-width="4"/>
+    </g>
+  </g>
+</svg>

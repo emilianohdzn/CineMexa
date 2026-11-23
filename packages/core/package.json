@@ -1,0 +1,12 @@
+{
+  "name": "@cinemexa/core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Lógica compartida de Cine Mexa: contratos, normalización, deduplicación, disponibilidad y trend_score.",
+  "exports": "./src/index.ts",
+  "engines": { "node": ">=22.18" },
+  "scripts": {
+    "test": "node --test \"test/**/*.test.ts\""
+  }
+}

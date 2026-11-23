@@ -1,0 +1,48 @@
+# Bitácora por fase
+
+## Fase 1 · Auditoría y arquitectura (23 nov 2026)
+
+**Entorno**: contenedor Linux x86_64, Node 22, Python 3. Sin Xcode, sin Swift, sin servidor Postgres. Red restringida: GitHub y npm accesibles; Wikidata, TMDB y download.swift.org bloqueados desde este entorno.
+
+**Auditoría**: no existía código previo (ver `ARCHITECTURE.md`). Base nueva.
+
+**Archivos creados**
+- `packages/core/src/{types,normalize,dedupe,trendScore,availability,index}.ts` + 4 archivos de test
+- `backend/supabase/migrations/20261123000000_init.sql`, `backend/test/migrations.test.ts`, `backend/package.json`
+- `docs/*`, `README.md`, `.env.example`, `.gitignore`, `package.json`
+
+**Tests**
+- `npm run test:core`: **29/29 pasan**
+- `npm run test:db`: **12/12 pasan** (PGlite 0.4.6, Postgres embebido, con roles `anon`/`authenticated`/`service_role` y `auth.uid()` simulados)
+
+## Fase 2 · MVP visual navegable (23 nov 2026)
+
+**Archivos creados**
+- `ios/CineMexa.xcodeproj` (formato Xcode 16, carpetas sincronizadas, targets app + tests)
+- `ios/CineMexa/**`: 26 archivos Swift (App, Core, DesignSystem, Features), `Assets.xcassets` con ícono 1024, fuentes OFL, `DemoData.json`
+- `ios/CineMexaTests/CineMexaTests.swift` (Swift Testing)
+- `demo/build-demo.ts`, `demo/demo-data.test.ts`
+- `docs/brand/app-icon.svg`, `wordmark.png`
+
+**Funcionalidades implementadas (código)**
+- 5 pestañas: Radar, Películas, Mapa, Trends, Festivales. Búsqueda global, Favoritos, Fuentes y créditos, Configuración.
+- Radar: encabezado con fecha y estado de sincronización honesto, hero 2:3, en cartelera con distinción función confirmada / estreno identificado / cineteca, Top 5 con señal, vista previa del mapa, próximos festivales, crítica reciente, noticias.
+- Películas: 9 filtros + año, género, dirección, tipo de producción, streaming; grid 2 columnas; acceso destacado a Crítica.
+- Ficha: encabezado, acciones (guardar, seguir, tráiler, compartir), sinopsis, dónde verla por ciudad elegida, crítica con estado vacío, recorrido con fuentes, ficha técnica, procedencia.
+- Mapa: MapKit interactivo, agrupación, hoja inferior por festival, filtros de periodo, tipo de participación, largos/cortos y búsqueda; lista alternativa accesible.
+- Trends: 24 h / 7 d / 30 d, ranking con cambio de posición y explicación, gráfica Swift Charts, metodología.
+- Festivales: agenda (en curso, próximos, recientes), calendario mensual navegable, convocatorias con deadline, recordatorio local y “Agregar al calendario” nativo.
+- Modo demo / en vivo con caché del último dato válido y errores visibles.
+
+**Verificación**
+- `npm run test:demo`: **6/6 pasan**.
+- `project.pbxproj` parseado con `@bacons/xcode`: 26 objetos, sin referencias rotas.
+- tree-sitter-swift sobre los 27 archivos Swift: sin errores de sintaxis, excepto en las macros `#Predicate`, `#expect` y `#require`, que esa gramática no reconoce.
+- **No compilado ni ejecutado**: falta Xcode. La app **no se ha abierto en el simulador**.
+
+**Dependencias pendientes**
+- Un Mac con Xcode 16+ para compilar, corregir lo que marque el compilador y ejecutar los tests de Swift.
+- Repositorio de GitHub para versionar.
+- Proyecto Supabase y claves (TMDB, YouTube) para la Fase 3.
+
+**Próximo bloque**: compilar en Xcode y corregir; luego Fase 3 empezando por Wikidata y la Edge Function `catalog`.

@@ -1,0 +1,14 @@
+{
+  "name": "cinemexa",
+  "private": true,
+  "type": "module",
+  "description": "Cine Mexa · el radar del cine mexicano",
+  "engines": { "node": ">=22.18" },
+  "scripts": {
+    "test": "npm run test:core && npm run test:demo && npm run test:db",
+    "test:core": "node --test \"packages/core/test/**/*.test.ts\"",
+    "test:demo": "node --test demo/demo-data.test.ts",
+    "test:db": "cd backend && npm test",
+    "demo:build": "node demo/build-demo.ts"
+  }
+}

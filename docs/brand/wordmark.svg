@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="300" viewBox="0 0 1200 300">
+  <!-- Concepto de logotipo: CINE ME[X]A en Fredoka Bold; la X es el símbolo de tiras cruzadas. -->
+  <rect width="1200" height="300" fill="#0B0E13"/>
+  <text x="60" y="200" font-family="Fredoka, 'Fredoka SemiBold', sans-serif" font-weight="700" font-size="150" fill="#F4EBDD" letter-spacing="4">CINE ME</text>
+  <g transform="translate(985 147)">
+    <g transform="rotate(-45)"><rect x="-82" y="-21" width="164" height="42" rx="21" fill="#F04D3D"/></g>
+    <g transform="rotate(45)"><rect x="-82" y="-21" width="164" height="42" rx="21" fill="#FFB81C"/>
+      <g fill="#0B0E13"><rect x="-50" y="-6" width="12" height="12" rx="3"/><rect x="-24" y="-6" width="12" height="12" rx="3"/><rect x="12" y="-6" width="12" height="12" rx="3"/><rect x="38" y="-6" width="12" height="12" rx="3"/></g>
+    </g>
+  </g>
+  <text x="1065" y="200" font-family="Fredoka, sans-serif" font-weight="700" font-size="150" fill="#F4EBDD">A</text>
+</svg>
