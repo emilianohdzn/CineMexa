@@ -9,6 +9,7 @@ repositorio público. La Mac ya no es necesaria para mantener los datos al día.
 | --- | --- | --- | --- |
 | `wikidata` | Descubre películas mexicanas desde `CATALOG_FROM_YEAR` (2024) y después corre `festivales` | diario 09:10 → 04:10 | 40 min |
 | `festivales` | Vincula festivales con Wikidata por dominio oficial, agrega ediciones con fecha y premios/nominaciones con referencia (ver `docs/FESTIVALES.md`) | con `wikidata`, o a mano | 15 min |
+| `noticias` | Crítica y noticias de los feeds activados (ver `docs/CRITICA-Y-NOTICIAS.md`); sin feeds activados no hace nada | diario 13:10 → 08:10 | 10 min |
 | `tmdb` | Vincula películas sin id (sólo con evidencia fuerte) y enriquece: primero nunca consultadas, luego cambiadas en TMDB en 24 h, luego las más antiguas | diario 09:40 → 04:40 | 45 min, 300 películas, 60 búsquedas |
 | `youtube-y-tendencias` | Mide vistas de tráilers y, si la medición funciona, recalcula rankings 24 h / 7 d / 30 d | cada 6 h, minuto 20 → 19:20, 01:20, 07:20, 13:20 | 15 min, 20 unidades por corrida, 200 por día |
 

@@ -5,7 +5,7 @@
 // - Control de cuota: YouTube con presupuesto por corrida y por día (unidades registradas en ingestion_runs).
 // - Límite de duración: el proceso se corta solo a los TIMEOUT_MIN minutos.
 // - Resumen en JSON por consola y, en GitHub Actions, en el resumen del job. Código 1 sólo si la corrida falla.
-// Uso: node jobs/ejecutar.ts <wikidata|festivales|tmdb|youtube|tendencias|youtube-y-tendencias>
+// Uso: node jobs/ejecutar.ts <wikidata|festivales|tmdb|youtube|tendencias|youtube-y-tendencias|noticias>
 // "wikidata" corre también "festivales" (necesita las películas recién descubiertas).
 import { appendFileSync } from "node:fs";
 import { openPostgres, type Db } from "../collectors/lib/db.ts";
@@ -14,11 +14,12 @@ import { runTmdbEnrich } from "../collectors/tmdb/run.ts";
 import { runYoutubeViews } from "../collectors/youtube/run.ts";
 import { runTrendSnapshots } from "./trends.ts";
 import { runWikidataFestivals } from "../collectors/wikidata/festivals.ts";
+import { runFeeds } from "../collectors/feeds/run.ts";
 
-export type JobName = "wikidata" | "festivales" | "tmdb" | "youtube" | "tendencias";
+export type JobName = "wikidata" | "festivales" | "tmdb" | "youtube" | "tendencias" | "noticias";
 const JOBS: Record<string, JobName[]> = {
   wikidata: ["wikidata", "festivales"], festivales: ["festivales"], tmdb: ["tmdb"], youtube: ["youtube"], tendencias: ["tendencias"],
-  "youtube-y-tendencias": ["youtube", "tendencias"],
+  "youtube-y-tendencias": ["youtube", "tendencias"], noticias: ["noticias"],
 };
 
 export interface JobResult { job: JobName; status: "succeeded" | "partial" | "failed" | "skipped"; detail: unknown }
@@ -70,6 +71,10 @@ export async function runJob(job: JobName, { env, db, connect, now = () => new D
       case "festivales": {
         const r = await runWikidataFestivals(db, { userAgent: env.WIKIDATA_USER_AGENT ?? "", fromYear: Number(env.CATALOG_FROM_YEAR ?? 2024) });
         return { job, status: r.status, detail: { counts: r.counts, errors: r.errors.length, avisos: r.warnings } };
+      }
+      case "noticias": {
+        const r = await runFeeds(db, { userAgent: env.FEEDS_USER_AGENT ?? env.WIKIDATA_USER_AGENT ?? "", now: now() });
+        return { job, status: r.status, detail: { counts: r.counts, errors: r.errors } };
       }
       case "tmdb": {
         const r = await runTmdbEnrich(db, {

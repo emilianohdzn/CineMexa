@@ -340,8 +340,11 @@ struct NewsRow: View {
                     .font(.callout.weight(.medium))
                     .foregroundStyle(CM.paperCream)
                     .multilineTextAlignment(.leading)
-                if let outlet = item.outlet {
-                    Text(outlet).font(CMFont.mono(10)).foregroundStyle(CM.secondaryText)
+                // Medio y autoría tal como los publica la fuente; el enlace lleva al artículo original.
+                let byline = [item.outlet, item.author].compactMap { $0 }.joined(separator: " · ")
+                if !byline.isEmpty {
+                    Text(byline).font(CMFont.mono(10)).foregroundStyle(CM.secondaryText)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
             }
             Spacer(minLength: 8)

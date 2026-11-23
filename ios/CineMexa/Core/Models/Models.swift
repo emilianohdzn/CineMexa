@@ -187,6 +187,8 @@ struct NewsItem: Codable, Identifiable, Hashable, Sendable {
     var title: String
     var url: URL
     var outlet: String?
+    /// Autor o autora del artículo, si el medio lo publica en su feed.
+    var author: String?
     var publishedAt: Date
     var filmId: String?
     var festivalId: String?

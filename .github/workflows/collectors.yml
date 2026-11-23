@@ -7,6 +7,7 @@
 #   10 9 * * *        Wikidata (películas y luego festivales), diario  → 04:10 en Cancún
 #   40 9 * * *        TMDB, diario      → 04:40 en Cancún (después de Wikidata, para enriquecer lo nuevo)
 #   20 */6 * * *      YouTube + tendencias cada 6 h → 19:20, 01:20, 07:20 y 13:20 en Cancún
+#   10 13 * * *       Crítica y noticias (feeds activados), diario → 08:10 en Cancún
 # GitHub puede retrasar unos minutos las corridas programadas en horas de mucha demanda.
 # La programación está DESACTIVADA hasta autorización explícita: para activarla, quita los comentarios de `schedule`.
 #
@@ -21,12 +22,13 @@ on:
       job:
         description: "Qué ejecutar"
         type: choice
-        options: [wikidata, festivales, tmdb, youtube-y-tendencias, tendencias, todo]
+        options: [wikidata, festivales, tmdb, youtube-y-tendencias, tendencias, noticias, todo]
         default: todo
   # schedule:
   #   - cron: "10 9 * * *"
   #   - cron: "40 9 * * *"
   #   - cron: "20 */6 * * *"
+  #   - cron: "10 13 * * *"
 
 permissions:
   contents: read
@@ -41,25 +43,27 @@ jobs:
       youtube: ${{ steps.p.outputs.youtube }}
       tendencias: ${{ steps.p.outputs.tendencias }}
       festivales: ${{ steps.p.outputs.festivales }}
+      noticias: ${{ steps.p.outputs.noticias }}
     steps:
       - id: p
         env:
           JOB: ${{ inputs.job }}
           SCHEDULE: ${{ github.event.schedule }}
         run: |
-          w=false; t=false; y=false; tr=false; f=false
+          w=false; t=false; y=false; tr=false; f=false; n=false
           case "$SCHEDULE" in
             "10 9 * * *") w=true ;;
             "40 9 * * *") t=true ;;
             "20 */6 * * *") y=true ;;
+            "10 13 * * *") n=true ;;
           esac
           case "$JOB" in
-            wikidata) w=true ;; festivales) f=true ;; tmdb) t=true ;; youtube-y-tendencias) y=true ;; tendencias) tr=true ;;
-            todo) w=true; t=true; y=true ;;
+            wikidata) w=true ;; festivales) f=true ;; noticias) n=true ;; tmdb) t=true ;; youtube-y-tendencias) y=true ;; tendencias) tr=true ;;
+            todo) w=true; t=true; y=true; n=true ;;
           esac
           echo "wikidata=$w" >> "$GITHUB_OUTPUT"; echo "tmdb=$t" >> "$GITHUB_OUTPUT"
           echo "youtube=$y" >> "$GITHUB_OUTPUT"; echo "tendencias=$tr" >> "$GITHUB_OUTPUT"
-          echo "festivales=$f" >> "$GITHUB_OUTPUT"
+          echo "festivales=$f" >> "$GITHUB_OUTPUT"; echo "noticias=$n" >> "$GITHUB_OUTPUT"
 
   wikidata:
     needs: plan
@@ -73,6 +77,13 @@ jobs:
     if: needs.plan.outputs.festivales == 'true'
     uses: ./.github/workflows/collector-job.yml
     with: { job: festivales, timeout: 15 }
+    secrets: inherit
+
+  noticias:
+    needs: plan
+    if: needs.plan.outputs.noticias == 'true'
+    uses: ./.github/workflows/collector-job.yml
+    with: { job: noticias, timeout: 10 }
     secrets: inherit
 
   tmdb:
@@ -98,7 +109,7 @@ jobs:
 
   aviso:
     # Sólo en corridas programadas: si las dos últimas fallaron, abre (o comenta) un issue para que llegue una notificación.
-    needs: [wikidata, tmdb, youtube]
+    needs: [wikidata, tmdb, youtube, noticias]
     if: always() && github.event_name == 'schedule' && contains(needs.*.result, 'failure')
     runs-on: ubuntu-latest
     timeout-minutes: 5
