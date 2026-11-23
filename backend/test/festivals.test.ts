@@ -97,3 +97,18 @@ test("sin user agent identificable no consulta Wikidata", async () => {
   const db = await freshDb();
   await assert.rejects(runWikidataFestivals(db, { userAgent: "definir" }), /WIKIDATA_USER_AGENT/);
 });
+
+test("si la consulta de premios falla, la identidad y las ediciones se conservan y la corrida queda parcial", async () => {
+  const db = await freshDb();
+  await seedFestivals(db);
+  const { fetchImpl: base } = fakeWikidata();
+  const fetchImpl = (async (url: string | URL, init?: RequestInit) => {
+    if (decodeURIComponent(String(url)).includes("P1411")) return new Response("upstream request timeout", { status: 504 });
+    return base(url, init);
+  }) as typeof fetch;
+  const r = await runWikidataFestivals(db, { userAgent: UA, http: { fetchImpl, retries: 0 } });
+  assert.equal(r.status, "partial");
+  assert.equal(r.counts.linked, 1);
+  assert.equal(r.counts.editions, 2);
+  assert.match(r.warnings.join(), /Actividad no consultada: HTTP 504/);
+});

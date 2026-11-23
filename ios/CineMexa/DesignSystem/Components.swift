@@ -51,10 +51,10 @@ struct TagLabel: View {
 
     var body: some View {
         Label(text, systemImage: symbol)
-            // Con texto de accesibilidad el símbolo se queda (no sólo color) pero el texto puede partirse en dos renglones.
+            // Con texto de accesibilidad el símbolo se queda (no sólo color) y el texto ocupa los renglones que necesite.
             .font(CMFont.mono(11, weight: .semibold))
             .textCase(.uppercase)
-            .lineLimit(typeSize.isAccessibilitySize ? 2 : 1)
+            .lineLimit(typeSize.isAccessibilitySize ? nil : 1)
             .fixedSize(horizontal: false, vertical: typeSize.isAccessibilitySize)
             .padding(.horizontal, 8)
             .padding(.vertical, 4)

@@ -290,7 +290,7 @@ struct HeroCard: View {
                 .font(.footnote.weight(.bold))
                 .foregroundStyle(CM.ink)
                 .padding(.horizontal, 12)
-                .padding(.vertical, typeSize.isAccessibilitySize ? 6 : 0)
+                .padding(.vertical, typeSize.isAccessibilitySize ? 10 : 0)
                 .frame(minHeight: 34)
                 .background(Capsule().fill(CM.projectorYellow))
                 .padding(.top, 4)

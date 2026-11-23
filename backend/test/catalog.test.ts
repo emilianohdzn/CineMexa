@@ -164,3 +164,12 @@ test("incremental: reenvía sólo lo cambiado y omite lo eliminado, aun tras dí
   assert.deepEqual(delta.meta.delta.film_ids.map((id: string) => byId.get(id)), full.films);
   await db.query("update films set synopsis = null where id = $1", [filmA]);
 });
+
+test("If-None-Match con ETag débil (como lo reenvía el gateway de Supabase) también da 304", async () => {
+  const { etagMatches } = await import("../catalog/handler.ts");
+  assert.equal(etagMatches('W/"abc"', '"abc"'), true);
+  assert.equal(etagMatches('"zzz", W/"abc"', '"abc"'), true);
+  assert.equal(etagMatches("*", '"abc"'), true);
+  assert.equal(etagMatches('"abd"', '"abc"'), false);
+  assert.equal(etagMatches(null, '"abc"'), false);
+});

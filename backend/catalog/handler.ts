@@ -72,7 +72,7 @@ export async function handleCatalog(req: Request, deps: HandlerDeps): Promise<Re
     const { meta, ...content } = snapshot;
     snapshot.meta = { ...meta, film_hashes: hashes };
     const etag = `"${(await sha256(JSON.stringify({ ...content, sources: meta.sources }))).slice(0, 32)}"`;
-    if (req.headers.get("if-none-match") === etag) {
+    if (etagMatches(req.headers.get("if-none-match"), etag)) {
       return new Response(null, { status: 304, headers: { etag } });
     }
     body = JSON.stringify(snapshot);
@@ -90,4 +90,14 @@ export async function handleCatalog(req: Request, deps: HandlerDeps): Promise<Re
     console.error("catalog: fallo al armar el snapshot", error);
     return json(503, { error: "catalog_unavailable" }, { "retry-after": "60" });
   }
+}
+
+/**
+ * If-None-Match con comparación débil (RFC 9110 §13.1.2): el gateway de Supabase comprime la respuesta y entrega el
+ * ETag como débil (W/"…"), y el cliente lo reenvía así. Acepta listas separadas por comas y "*".
+ */
+export function etagMatches(header: string | null, etag: string): boolean {
+  if (!header) return false;
+  const bare = (t: string) => t.trim().replace(/^W\//, "");
+  return header.split(",").some((t) => t.trim() === "*" || bare(t) === bare(etag));
 }

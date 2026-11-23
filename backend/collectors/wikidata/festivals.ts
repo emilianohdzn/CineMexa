@@ -40,13 +40,16 @@ export function editionsQuery(festQids: string[], fromYear: number): string {
 }
 
 export function activityQuery(festQids: string[], fromYear: number): string {
+  // Parte de los premios del festival (pocos) y con el optimizador apagado: en el orden contrario (todas las películas
+  // mexicanas primero) WDQS pasa de sus 60 s y responde 504.
   return `SELECT ?st ?film ?kind ?award ?awardLabel ?fest ?time ?ref WHERE {
+  hint:Query hint:optimizer "None" .
   VALUES ?fest { ${festQids.map((q) => `wd:${q}`).join(" ")} }
-  ?film wdt:P495 wd:Q96 .
-  { ?film p:P166 ?st . ?st ps:P166 ?award . BIND("award" AS ?kind) }
-  UNION
-  { ?film p:P1411 ?st . ?st ps:P1411 ?award . BIND("nomination" AS ?kind) }
   ?award (wdt:P1027|wdt:P361) ?fest .
+  { ?st ps:P166 ?award . ?film p:P166 ?st . BIND("award" AS ?kind) }
+  UNION
+  { ?st ps:P1411 ?award . ?film p:P1411 ?st . BIND("nomination" AS ?kind) }
+  ?film wdt:P495 wd:Q96 .
   ?st pq:P585 ?time .
   FILTER(YEAR(?time) >= ${fromYear})
   ?st prov:wasDerivedFrom ?r .
@@ -141,8 +144,15 @@ export async function runWikidataFestivals(db: Db, opts: FestivalRunOptions) {
       counts.editions++;
     }
 
-    // 3) Actividad con referencia.
-    for (const a of parseActivity(await get(activityQuery([...festByQid.keys()], fromYear)))) {
+    // 3) Actividad con referencia. Si esta consulta falla, la identidad y las ediciones ya quedaron guardadas.
+    let activity: FestivalActivity[];
+    try {
+      activity = parseActivity(await get(activityQuery([...festByQid.keys()], fromYear)));
+    } catch (error) {
+      warnings.push(`Actividad no consultada: ${error instanceof Error ? error.message : String(error)}`);
+      return;
+    }
+    for (const a of activity) {
       const fest = festByQid.get(a.festQid)!;
       const { rows: [film] } = await db.query<{ film_id: string }>(
         "select film_id::text from film_external_ids where provider = 'wikidata' and external_id = $1", [a.filmQid]);
