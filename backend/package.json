@@ -12,7 +12,8 @@
     "verificar": "node scripts/verificar-conexiones.ts",
     "build:catalog": "node scripts/build-catalog.ts",
     "estado": "node scripts/estado-ingesta.ts",
-    "seed:festivals": "node --env-file-if-exists=.env.local seed/seed.ts"
+    "seed:festivals": "node --env-file-if-exists=.env.local seed/seed.ts",
+    "auditar:posters": "node scripts/auditar-posters.ts"
   },
   "devDependencies": {
     "@electric-sql/pglite": "0.4.6",
