@@ -238,7 +238,7 @@ struct HeroCard: View {
 
     var body: some View {
         NavigationLink(value: Route.film(id: film.id, transitionID: "hero-\(film.id)")) {
-            PosterView(film: film, cornerRadius: CM.Radius.card)
+            PosterView(film: film, cornerRadius: CM.Radius.card, compactPlaceholder: true)
                 .overlay(alignment: .bottomLeading) {
                     VStack(alignment: .leading, spacing: 6) {
                         StatusTag(status: film.status)

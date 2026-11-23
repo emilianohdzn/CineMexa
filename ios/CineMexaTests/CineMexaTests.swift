@@ -104,8 +104,8 @@ struct CatalogTests {
 
     @Test func filtrosDePeliculas() async throws {
         let c = try await catalog()
-        #expect(c.films(matching: .documentaries).allSatisfy(\.isDocumentary))
-        #expect(c.films(matching: .animation).allSatisfy(\.isAnimation))
+        #expect(c.films(matching: .documentaries).allSatisfy { $0.isDocumentary })
+        #expect(c.films(matching: .animation).allSatisfy { $0.isAnimation })
         #expect(c.films(matching: .criticism).allSatisfy { !(c.reviewsByFilm[$0.id] ?? []).isEmpty })
         var r = FilmRefinements(); r.participation = .coproduction
         #expect(c.films(matching: .all, refinements: r).allSatisfy { $0.mxParticipation == .coproduction })

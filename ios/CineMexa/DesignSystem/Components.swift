@@ -7,6 +7,8 @@ import SwiftUI
 struct PosterView: View {
     let film: Film
     var cornerRadius: CGFloat = CM.Radius.poster
+    /// Sin texto en el placeholder: para miniaturas o cuando el título ya va encima.
+    var compactPlaceholder = false
 
     var body: some View {
         Color.clear
@@ -18,13 +20,13 @@ struct PosterView: View {
                         case .success(let image):
                             image.resizable().scaledToFill()
                         case .failure:
-                            PosterPlaceholder(title: film.title, year: film.year)
+                            PosterPlaceholder(title: film.title, year: film.year, compact: compactPlaceholder)
                         default:
                             SkeletonBlock()
                         }
                     }
                 } else {
-                    PosterPlaceholder(title: film.title, year: film.year)
+                    PosterPlaceholder(title: film.title, year: film.year, compact: compactPlaceholder)
                 }
             }
             .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))

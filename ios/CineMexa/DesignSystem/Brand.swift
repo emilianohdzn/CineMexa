@@ -78,14 +78,30 @@ struct Wordmark: View {
 struct PosterPlaceholder: View {
     let title: String
     var year: Int?
+    var compact = false
 
     var body: some View {
         ZStack(alignment: .bottomLeading) {
             LinearGradient(colors: [CM.raisedSurface, CM.deepSurface], startPoint: .top, endPoint: .bottom)
-            XMark(size: 120, perforated: true)
-                .opacity(0.10)
-                .offset(x: 40, y: -60)
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+            if compact {
+                GeometryReader { geo in
+                    XMark(size: min(geo.size.width, geo.size.height) * 0.6, perforated: false)
+                        .opacity(0.35)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
+            } else {
+                XMark(size: 120, perforated: true)
+                    .opacity(0.10)
+                    .offset(x: 40, y: -60)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+            }
+            if !compact { details }
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("\(title). Póster no disponible")
+    }
+
+    private var details: some View {
             VStack(alignment: .leading, spacing: 6) {
                 Spacer(minLength: 0)
                 Text(title)
@@ -104,8 +120,5 @@ struct PosterPlaceholder: View {
                     .labelStyle(.titleAndIcon)
             }
             .padding(10)
-        }
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel("\(title). Póster no disponible")
     }
 }

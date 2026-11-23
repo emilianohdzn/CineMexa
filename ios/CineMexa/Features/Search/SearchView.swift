@@ -63,7 +63,7 @@ struct SearchView: View {
     private func filmRow(_ film: Film) -> some View {
         Button { open(.film(id: film.id, transitionID: nil)) } label: {
             HStack(spacing: 12) {
-                PosterView(film: film, cornerRadius: 4).frame(width: 40)
+                PosterView(film: film, cornerRadius: 4, compactPlaceholder: true).frame(width: 40)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(film.title).foregroundStyle(CM.paperCream)
                     Text([film.year.map { String($0) }, film.directors.first, film.kind == .short ? "Corto" : nil].compactMap { $0 }.joined(separator: " · "))
