@@ -55,7 +55,7 @@ struct FestivalMapView: View {
             // se vuelve a encuadrar mientras el tamaño cambie de forma apreciable.
             let changed = abs(size.width - mapSize.width) > 20 || abs(size.height - mapSize.height) > 20
             mapSize = size
-            if changed, size.width > 0, size.height > 0 { frame(groups, animated: false) }
+            if changed, size.width > 0, size.height > 0 { focusCamera(groups, animated: false) }
         }
         .overlay(alignment: .bottomLeading) {
             if groups.count > 1 { regionSwitcher(groups) }
@@ -97,7 +97,7 @@ struct FestivalMapView: View {
         .onChange(of: items.map(\.id)) { _, _ in
             // Al cambiar filtros, encuadra la región principal de las sedes resultantes.
             focusedGroup = 0
-            frame(groups, animated: true)
+            focusCamera(groups, animated: true)
         }
         .onDisappear { selected = nil; showsList = false }
         .navigationTitle("Mapa festivalero")
@@ -137,7 +137,7 @@ struct FestivalMapView: View {
 
     /// Encuadra la región enfocada. MapKit (2D) no se aleja más de ~85° de longitud por código,
     /// así que sedes en continentes distintos se muestran por región, con un selector para saltar.
-    private func frame(_ groups: [MapRegionGroup], animated: Bool) {
+    private func focusCamera(_ groups: [MapRegionGroup], animated: Bool) {
         let index = groups.indices.contains(focusedGroup) ? focusedGroup : 0
         let rect = Self.fittingRect(groups.isEmpty ? [] : groups[index].items, viewSize: mapSize)
         if animated {
@@ -153,7 +153,7 @@ struct FestivalMapView: View {
                 let isOn = index == focusedGroup
                 Button {
                     focusedGroup = index
-                    frame(groups, animated: true)
+                    focusCamera(groups, animated: true)
                 } label: {
                     Text("\(group.name) · \(group.items.count)")
                         .font(.footnote.weight(.semibold))
