@@ -13,7 +13,8 @@
     "build:catalog": "node scripts/build-catalog.ts",
     "estado": "node scripts/estado-ingesta.ts",
     "seed:festivals": "node --env-file-if-exists=.env.local seed/seed.ts",
-    "auditar:posters": "node scripts/auditar-posters.ts"
+    "auditar:posters": "node scripts/auditar-posters.ts",
+    "reparar:personas": "node scripts/reparar-personas.ts"
   },
   "devDependencies": {
     "@electric-sql/pglite": "0.4.6",

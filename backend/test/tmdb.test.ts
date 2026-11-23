@@ -173,3 +173,27 @@ test("un 404 de TMDB marca el id como obsoleto sin fallar la corrida", async () 
   const again = await runTmdbEnrich(db, { token: "t", delayMs: 0, matchLimit: 0, http: { fetchImpl } });
   assert.equal(again.seen, 0, "no se vuelve a pedir un id obsoleto");
 });
+
+test("repara personas duplicadas por el orden de enriquecimiento sin fusionar homónimos de otras películas", async () => {
+  const { findDuplicatePeople, mergeDuplicatePeople } = await import("../audit/people.ts");
+  const db = await freshDb();
+  const film = async (slug: string) => (await db.query<{ id: string }>(
+    "insert into films (slug, title, published) values ($1, $1, true) returning id::text", [slug])).rows[0].id;
+  const person = async (name: string, wd: string | null, tmdb: number | null) => (await db.query<{ id: string }>(
+    "insert into people (name, name_key, wikidata_id, tmdb_id) values ($1, lower($1), $2, $3) returning id::text", [name, wd, tmdb])).rows[0].id;
+  const credit = (f: string, p: string) => db.query("insert into film_credits (film_id, person_id, role) values ($1, $2, 'director')", [f, p]);
+  const f1 = await film("uno"), f2 = await film("dos"), f3 = await film("tres");
+  const wd = await person("ana perez", "Q1", null), tm = await person("ana perez", null, 77), other = await person("ana perez", "Q2", null);
+  await credit(f1, tm);            // TMDB la creó desde la película 1
+  await credit(f2, wd); await credit(f2, tm); // en la 2 quedó duplicada
+  await credit(f3, other);         // homónima en otra película: no se toca
+  const pairs = await findDuplicatePeople(db);
+  assert.equal(pairs.length, 1);
+  assert.equal(await mergeDuplicatePeople(db, pairs), 1);
+  const { rows } = await db.query<{ slug: string; n: number }>(`select f.slug, count(*)::int as n from film_credits c
+    join films f on f.id = c.film_id group by f.slug order by f.slug`);
+  assert.deepEqual(rows, [{ slug: "dos", n: 1 }, { slug: "tres", n: 1 }, { slug: "uno", n: 1 }]);
+  const { rows: [kept] } = await db.query<{ tmdb_id: number }>("select tmdb_id from people where id = $1", [wd]);
+  assert.equal(kept.tmdb_id, 77);
+  assert.deepEqual(await findDuplicatePeople(db), []);
+});
