@@ -38,3 +38,20 @@ test("tendencias corre sin señales y deja rankings vacíos, sin rellenar", asyn
   const { rows } = await db.query<{ entries: unknown[] }>("select entries from trend_snapshots");
   assert.ok(rows.length === 3 && rows.every((x) => Array.isArray(x.entries) && x.entries.length === 0));
 });
+
+test("la validación de tendencias cuenta mediciones, deltas, duplicados y ventanas", async () => {
+  const { trendsHealth } = await import("../audit/trends.ts");
+  const db = await freshDb();
+  const film = async (slug: string, trailer: string) => (await db.query<{ id: string }>(
+    "insert into films (slug, title, published, trailer_url) values ($1, $1, true, $2) returning id::text", [slug, trailer])).rows[0].id;
+  const a = await film("a", "https://www.youtube.com/watch?v=aaaaaaaaaaa");
+  await film("b", "https://www.youtube.com/watch?v=aaaaaaaaaaa");
+  await db.query(`insert into trend_signals (film_id, source_id, metric, bucket_start, bucket_hours, value) values
+    ($1, 'youtube', 'views_delta', '2026-11-23T06:00:00Z', 6, 1200), ($1, 'youtube', 'views_delta', '2026-11-23T12:00:00Z', 6, 900)`, [a]);
+  const h = await trendsHealth(db);
+  assert.equal(h.senales.senales, 2);
+  assert.equal(h.senales.con_dos_o_mas, 1);
+  assert.equal(h.senales.suma_delta, 2100);
+  assert.equal(h.duplicados.length, 1, "un mismo tráiler en dos películas se reporta");
+  assert.equal(h.suficiente_para_ranking, true);
+});
