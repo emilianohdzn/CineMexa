@@ -37,5 +37,19 @@ Pruebas: `test/wikidata.test.ts` con una respuesta SPARQL sintética (Q-ids fict
 Aún no se ha corrido contra el endpoint real ni contra un Supabase real: la red de la nube de desarrollo
 bloquea Wikidata.
 
+## TMDB (`tmdb/`) · listo (falta token)
+Enriquece películas que ya tienen id de TMDB (normalmente vía Wikidata, P4947). No busca por título.
+
+- `parse.ts`: sinopsis es-MX, duración, IMDb, póster/fondo, tráiler de YouTube (oficial en español primero),
+  reparto (12) y equipo clave. Estreno en México sólo de `release_dates` de MX tipo 3 (salas) o 2 (limitado).
+- `upsert.ts`: no pisa películas curadas (sólo huecos); el póster de TMDB lleva su atribución y no
+  reemplaza un póster primario oficial/editorial; las personas se vinculan por `tmdb_id` o, dentro de la
+  misma película, por nombre normalizado (no se fusionan homónimos de otras películas).
+- No se usa `popularity` de TMDB como señal de tendencia.
+
+```sh
+TMDB_API_READ_TOKEN=... DATABASE_URL=... npm run collect:tmdb -- --limit 200
+```
+
 ## Pendiente
-`tmdb` (requiere token) → `youtube` (clave y cuota) → festivales (feeds oficiales o captura editorial).
+`youtube` (clave y cuota) → festivales (feeds oficiales o captura editorial).

@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "test": "node --test \"test/**/*.test.ts\"",
-    "collect:wikidata": "node collectors/wikidata/run.ts"
+    "collect:wikidata": "node collectors/wikidata/run.ts",
+    "collect:tmdb": "node collectors/tmdb/run.ts"
   },
   "devDependencies": {
     "@electric-sql/pglite": "0.4.6"
