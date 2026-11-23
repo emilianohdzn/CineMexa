@@ -1,8 +1,18 @@
-# Collectors de Cine Mexa en GitHub Actions (entorno remoto donde corren los scripts Node).
-# Secretos necesarios (los guarda scripts/configurar.sh con gh): DATABASE_URL (Session pooler),
-# TMDB_API_READ_TOKEN, YOUTUBE_API_KEY; variable WIKIDATA_USER_AGENT.
-# Por ahora sólo se ejecuta a mano (workflow_dispatch). La programación automática se activa
-# descomentando `schedule` cuando se autorice.
+# Colectores de Cine Mexa en GitHub Actions: la ingesta sigue aunque la Mac esté apagada.
+#
+# Secretos (Settings → Secrets and variables → Actions): DATABASE_URL (Session pooler de Supabase),
+# TMDB_API_READ_TOKEN, YOUTUBE_API_KEY. Variable: WIKIDATA_USER_AGENT. Nunca se imprimen.
+#
+# Horarios: GitHub interpreta cron SIEMPRE en UTC. Cancún (America/Cancun) es UTC−5 todo el año, sin horario de verano.
+#   10 9 * * *        Wikidata, diario  → 04:10 en Cancún
+#   40 9 * * *        TMDB, diario      → 04:40 en Cancún (después de Wikidata, para enriquecer lo nuevo)
+#   20 */6 * * *      YouTube + tendencias cada 6 h → 19:20, 01:20, 07:20 y 13:20 en Cancún
+# GitHub puede retrasar unos minutos las corridas programadas en horas de mucha demanda.
+# La programación está DESACTIVADA hasta autorización explícita: para activarla, quita los comentarios de `schedule`.
+#
+# Protecciones: un grupo de concurrencia por trabajo (no se encola dos veces), candado en Postgres (excluye también
+# corridas lanzadas desde la Mac), límite de duración, presupuesto de cuota de YouTube, cierre de corridas abandonadas,
+# resumen en cada ejecución y aviso por issue tras fallas repetidas en corridas programadas.
 name: Collectors
 
 on:
@@ -11,43 +21,93 @@ on:
       job:
         description: "Qué ejecutar"
         type: choice
-        options: [wikidata, tmdb, youtube-y-tendencias, todo]
+        options: [wikidata, tmdb, youtube-y-tendencias, tendencias, todo]
         default: todo
   # schedule:
-  #   - cron: "30 3 * * *"    # Wikidata + TMDB, diario
-  #   - cron: "15 */6 * * *"  # YouTube + tendencias, cada 6 h
+  #   - cron: "10 9 * * *"
+  #   - cron: "40 9 * * *"
+  #   - cron: "20 */6 * * *"
 
-concurrency:
-  group: collectors
-  cancel-in-progress: false
+permissions:
+  contents: read
 
 jobs:
-  run:
+  plan:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
-    defaults:
-      run:
-        working-directory: backend
-    env:
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      TMDB_API_READ_TOKEN: ${{ secrets.TMDB_API_READ_TOKEN }}
-      YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
-      WIKIDATA_USER_AGENT: ${{ vars.WIKIDATA_USER_AGENT }}
+    timeout-minutes: 2
+    outputs:
+      wikidata: ${{ steps.p.outputs.wikidata }}
+      tmdb: ${{ steps.p.outputs.tmdb }}
+      youtube: ${{ steps.p.outputs.youtube }}
+      tendencias: ${{ steps.p.outputs.tendencias }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "22.18"
-      - run: npm ci
-      - name: Wikidata
-        if: inputs.job == 'wikidata' || inputs.job == 'todo' || github.event.schedule == '30 3 * * *'
-        run: npm run collect:wikidata -- --from-year 2018
-      - name: TMDB
-        if: inputs.job == 'tmdb' || inputs.job == 'todo' || github.event.schedule == '30 3 * * *'
-        run: npm run collect:tmdb -- --limit 300
-      - name: YouTube
-        if: inputs.job == 'youtube-y-tendencias' || inputs.job == 'todo' || github.event.schedule == '15 */6 * * *'
-        run: npm run collect:youtube
-      - name: Tendencias
-        if: inputs.job == 'youtube-y-tendencias' || inputs.job == 'todo' || github.event.schedule == '15 */6 * * *'
-        run: npm run job:trends
+      - id: p
+        env:
+          JOB: ${{ inputs.job }}
+          SCHEDULE: ${{ github.event.schedule }}
+        run: |
+          w=false; t=false; y=false; tr=false
+          case "$SCHEDULE" in
+            "10 9 * * *") w=true ;;
+            "40 9 * * *") t=true ;;
+            "20 */6 * * *") y=true ;;
+          esac
+          case "$JOB" in
+            wikidata) w=true ;; tmdb) t=true ;; youtube-y-tendencias) y=true ;; tendencias) tr=true ;;
+            todo) w=true; t=true; y=true ;;
+          esac
+          echo "wikidata=$w" >> "$GITHUB_OUTPUT"; echo "tmdb=$t" >> "$GITHUB_OUTPUT"
+          echo "youtube=$y" >> "$GITHUB_OUTPUT"; echo "tendencias=$tr" >> "$GITHUB_OUTPUT"
+
+  wikidata:
+    needs: plan
+    if: needs.plan.outputs.wikidata == 'true'
+    uses: ./.github/workflows/collector-job.yml
+    with: { job: wikidata, timeout: 40 }
+    secrets: inherit
+
+  tmdb:
+    needs: [plan, wikidata]
+    if: always() && needs.plan.outputs.tmdb == 'true' && needs.wikidata.result != 'failure'
+    uses: ./.github/workflows/collector-job.yml
+    with: { job: tmdb, timeout: 45 }
+    secrets: inherit
+
+  youtube:
+    needs: [plan, tmdb]
+    if: always() && needs.plan.outputs.youtube == 'true' && needs.tmdb.result != 'failure'
+    uses: ./.github/workflows/collector-job.yml
+    with: { job: youtube-y-tendencias, timeout: 15 }
+    secrets: inherit
+
+  tendencias:
+    needs: plan
+    if: needs.plan.outputs.tendencias == 'true'
+    uses: ./.github/workflows/collector-job.yml
+    with: { job: tendencias, timeout: 10 }
+    secrets: inherit
+
+  aviso:
+    # Sólo en corridas programadas: si las dos últimas fallaron, abre (o comenta) un issue para que llegue una notificación.
+    needs: [wikidata, tmdb, youtube]
+    if: always() && github.event_name == 'schedule' && contains(needs.*.result, 'failure')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      issues: write
+      actions: read
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          prev=$(gh run list -R "$REPO" --workflow collectors.yml --event schedule --limit 2 --json conclusion --jq '.[1].conclusion // ""')
+          if [ "$prev" != "failure" ]; then echo "Primera falla seguida: sin aviso todavía."; exit 0; fi
+          title="Colectores: fallas repetidas"
+          n=$(gh issue list -R "$REPO" --state open --search "\"$title\" in:title" --json number --jq '.[0].number // ""')
+          if [ -n "$n" ]; then
+            gh issue comment "$n" -R "$REPO" --body "Volvió a fallar: $RUN_URL"
+          else
+            gh issue create -R "$REPO" --title "$title" --body "Dos corridas programadas seguidas fallaron. Última: $RUN_URL"
+          fi
