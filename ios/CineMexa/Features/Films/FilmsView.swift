@@ -7,8 +7,13 @@ struct FilmsView: View {
     @State private var refinements = FilmRefinements()
     @State private var showsRefinements = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dynamicTypeSize) private var typeSize
+    @ScaledMetric(relativeTo: .title2) private var criticismBadge: CGFloat = 48
 
-    private let columns = [GridItem(.flexible(), spacing: 14, alignment: .top), GridItem(.flexible(), spacing: 14, alignment: .top)]
+    /// Dos columnas; una sola en tamaños de accesibilidad para que título y estado no se partan.
+    private var columns: [GridItem] {
+        Array(repeating: GridItem(.flexible(), spacing: 14, alignment: .top), count: typeSize.isAccessibilitySize ? 1 : 2)
+    }
 
     var body: some View {
         let films = catalog.films(matching: filter, refinements: refinementsWithStreaming)
@@ -56,12 +61,17 @@ struct FilmsView: View {
 
     private var criticismEntry: some View {
         NavigationLink(value: Route.criticism) {
-            HStack(alignment: .center, spacing: 14) {
+            // Con texto de accesibilidad el círculo se come el ancho y "Crítica" se parte: el ícono va arriba.
+            let layout = typeSize.isAccessibilitySize
+                ? AnyLayout(VStackLayout(alignment: .leading, spacing: 10))
+                : AnyLayout(HStackLayout(alignment: .center, spacing: 14))
+            layout {
                 Image(systemName: "text.quote")
                     .font(.title2.weight(.bold))
                     .foregroundStyle(CM.ink)
-                    .frame(width: 48, height: 48)
+                    .frame(width: criticismBadge, height: criticismBadge)
                     .background(Circle().fill(CM.projectorYellow))
+                    .accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Crítica")
                         .font(CMFont.display(24, relativeTo: .title2))
@@ -69,10 +79,14 @@ struct FilmsView: View {
                     Text("\(catalog.recentReviews.count) reseñas enlazadas a su publicación original")
                         .font(.footnote)
                         .foregroundStyle(CM.creamSecondary)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
-                Spacer()
-                Image(systemName: "chevron.right").foregroundStyle(CM.ink)
+                if !typeSize.isAccessibilitySize {
+                    Spacer()
+                    Image(systemName: "chevron.right").foregroundStyle(CM.ink)
+                }
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
             .padding(16)
             .ticketBackground(CM.paperCream)
         }

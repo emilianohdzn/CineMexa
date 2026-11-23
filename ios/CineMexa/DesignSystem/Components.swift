@@ -2,7 +2,7 @@ import SwiftUI
 
 // MARK: - Póster
 
-/// Póster vertical 2:3. Usa AsyncImage sobre URLCache (configurada en CineMexaApp)
+/// Póster vertical 2:3. Usa RemoteImage/ImagePipeline sobre URLCache (configurada en CineMexaApp)
 /// y nunca estira la imagen: la recorta con aspect fill dentro del marco 2:3.
 struct PosterView: View {
     let film: Film
@@ -10,32 +10,47 @@ struct PosterView: View {
     /// Sin texto en el placeholder: para miniaturas o cuando el título ya va encima.
     var compactPlaceholder = false
 
+    @Environment(\.displayScale) private var displayScale
+    @State private var width: CGFloat = 0
+
     var body: some View {
         Color.clear
             .aspectRatio(2.0 / 3.0, contentMode: .fit)
+            .onGeometryChange(for: CGFloat.self, of: { $0.size.width }) { width = $0 }
             .overlay {
-                if let url = film.poster?.url {
-                    AsyncImage(url: url, transaction: Transaction(animation: .easeOut(duration: 0.25))) { phase in
-                        switch phase {
-                        case .success(let image):
-                            image.resizable().scaledToFill()
-                        case .failure:
-                            PosterPlaceholder(title: film.title, year: film.year, compact: compactPlaceholder)
-                        default:
-                            SkeletonBlock()
-                        }
+                if let url = film.poster?.url, width > 0 {
+                    // Se pide el tamaño de TMDB que cubre el ancho real en píxeles y se decodifica a esa medida.
+                    let pixels = width * displayScale
+                    RemoteImage(url: url.tmdbResized(ImageSizing.posterSize(forPixelWidth: pixels)), maxPixel: (pixels * 1.5).rounded(.up)) {
+                        PosterPlaceholder(title: film.title, year: film.year, compact: compactPlaceholder)
+                    } loading: {
+                        // Mientras llega la imagen se ve el título (no una tarjeta vacía); sin la X para no decir "sin póster".
+                        PosterLoadingPlaceholder(title: film.title, year: film.year, compact: compactPlaceholder)
                     }
-                } else {
+                } else if film.poster == nil {
                     PosterPlaceholder(title: film.title, year: film.year, compact: compactPlaceholder)
                 }
             }
             .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
             .overlay(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous).strokeBorder(CM.hairline))
-            .accessibilityLabel(Text("Póster de \(film.title)"))
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(Text(film.poster == nil ? "Sin póster disponible: \(film.title)" : "Póster de \(film.title)"))
+            .accessibilityAddTraits(.isImage)
     }
 }
 
 // MARK: - Etiquetas
+
+private struct TagLabelStyle: LabelStyle {
+    let showIcon: Bool
+    @ViewBuilder func makeBody(configuration: Configuration) -> some View {
+        if showIcon {
+            HStack(spacing: 4) { configuration.icon; configuration.title }
+        } else {
+            configuration.title
+        }
+    }
+}
 
 /// Etiqueta impresa: texto + símbolo (el color nunca es el único indicador).
 struct TagLabel: View {
@@ -43,12 +58,19 @@ struct TagLabel: View {
     let symbol: String
     var tint: Color = CM.projectorYellow
     var filled = false
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
         Label(text, systemImage: symbol)
+            // Con texto de accesibilidad sólo el texto (el ícono le quita ancho y parte palabras como "IDENTIFICADO");
+            // hasta dos renglones y, si una palabra no cabe, se reduce antes de partirse.
+            .labelStyle(TagLabelStyle(showIcon: !typeSize.isAccessibilitySize))
             .font(CMFont.mono(11, weight: .semibold))
             .textCase(.uppercase)
-            .lineLimit(1)
+            .lineLimit(typeSize.isAccessibilitySize ? 2 : 1)
+            .minimumScaleFactor(typeSize.isAccessibilitySize ? 0.5 : 1)
+            .allowsTightening(true)
+            .fixedSize(horizontal: false, vertical: typeSize.isAccessibilitySize)
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
             .foregroundStyle(filled ? CM.ink : tint)
@@ -237,6 +259,7 @@ struct ErrorStateView: View {
             Text(message).foregroundStyle(CM.secondaryText)
         } actions: {
             Button("Reintentar") { Task { await retry() } }
+                .accessibilityIdentifier("reintentar")
                 .buttonStyle(.borderedProminent)
                 .tint(CM.projectorYellow)
                 .foregroundStyle(CM.ink)

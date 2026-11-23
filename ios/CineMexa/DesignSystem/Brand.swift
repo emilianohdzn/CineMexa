@@ -122,3 +122,44 @@ struct PosterPlaceholder: View {
             .padding(10)
     }
 }
+
+/// Lo que se ve mientras llega un póster: el mismo fondo que la ficha sin imagen, con el título (o un ícono de
+/// película en miniaturas) y un pulso suave. No lleva la X ni "Imagen no disponible": todavía no sabemos si falta.
+struct PosterLoadingPlaceholder: View {
+    let title: String
+    var year: Int?
+    var compact = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var pulse = false
+
+    var body: some View {
+        ZStack(alignment: .bottomLeading) {
+            LinearGradient(colors: [CM.raisedSurface, CM.deepSurface], startPoint: .top, endPoint: .bottom)
+                .opacity(pulse ? 0.7 : 1)
+            if compact {
+                Image(systemName: "film")
+                    .font(.title2)
+                    .foregroundStyle(CM.secondaryText.opacity(0.5))
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                VStack(alignment: .leading, spacing: 6) {
+                    Spacer(minLength: 0)
+                    Text(title)
+                        .font(CMFont.headline(17, relativeTo: .headline))
+                        .foregroundStyle(CM.paperCream.opacity(0.8))
+                        .lineLimit(4)
+                        .minimumScaleFactor(0.7)
+                    if let year {
+                        Text(String(year)).font(CMFont.mono(11)).foregroundStyle(CM.secondaryText)
+                    }
+                }
+                .padding(10)
+            }
+        }
+        .onAppear {
+            guard !reduceMotion else { return }
+            withAnimation(.easeInOut(duration: 0.9).repeatForever(autoreverses: true)) { pulse = true }
+        }
+        .accessibilityHidden(true)
+    }
+}

@@ -41,6 +41,7 @@ struct FilmDetailView: View {
         }
         .navigationTitle(film.title)
         .navigationBarTitleDisplayMode(.inline)
+        .accessibilityIdentifier("ficha-pelicula")
     }
 }
 
@@ -48,6 +49,8 @@ struct FilmDetailView: View {
 
 private struct FilmHeader: View {
     let film: Film
+    @Environment(\.displayScale) private var displayScale
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
         ZStack(alignment: .bottomLeading) {
@@ -59,9 +62,13 @@ private struct FilmHeader: View {
                 .overlay { backdrop }
                 .clipped()
                 .overlay(LinearGradient(colors: [.clear, CM.cinemaBlack], startPoint: .center, endPoint: .bottom))
-            HStack(alignment: .bottom, spacing: 16) {
+            // En tamaños de accesibilidad el título necesita todo el ancho: póster arriba y texto debajo.
+            let layout = typeSize.isAccessibilitySize
+                ? AnyLayout(VStackLayout(alignment: .leading, spacing: 16))
+                : AnyLayout(HStackLayout(alignment: .bottom, spacing: 16))
+            layout {
                 PosterView(film: film, compactPlaceholder: true)
-                    .frame(width: 130)
+                    .frame(width: typeSize.isAccessibilitySize ? 110 : 130)
                     .shadow(color: .black.opacity(0.5), radius: 18, y: 10)
                 VStack(alignment: .leading, spacing: 6) {
                     StatusTag(status: film.status)
@@ -71,10 +78,12 @@ private struct FilmHeader: View {
                         .fixedSize(horizontal: false, vertical: true)
                     if let original = film.originalTitle, original != film.title {
                         Text(original).font(.subheadline.italic()).foregroundStyle(CM.secondaryText)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                     if !film.altTitles.isEmpty {
                         Text("También: \(film.altTitles.joined(separator: ", "))")
                             .font(.caption).foregroundStyle(CM.secondaryText)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                     Text(meta)
                         .font(CMFont.mono(12))
@@ -90,9 +99,17 @@ private struct FilmHeader: View {
 
     @ViewBuilder private var backdrop: some View {
         if let url = film.backdrop?.url {
-            AsyncImage(url: url) { phase in
-                if case .success(let image) = phase { image.resizable().scaledToFill() } else { CM.deepSurface }
+            GeometryReader { proxy in
+                let pixels = proxy.size.width * displayScale
+                RemoteImage(url: url.tmdbResized(ImageSizing.backdropSize(forPixelWidth: pixels)), maxPixel: pixels.rounded(.up)) {
+                    CM.deepSurface
+                } loading: {
+                    CM.deepSurface
+                }
+                .frame(width: proxy.size.width, height: proxy.size.height)
+                .clipped()
             }
+            .accessibilityHidden(true)
         } else {
             ZStack {
                 CM.deepSurface

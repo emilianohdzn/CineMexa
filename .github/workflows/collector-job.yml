@@ -1,0 +1,41 @@
+# Un trabajo de colector (reutilizable). Lo llama collectors.yml; no se ejecuta solo.
+name: Collector job
+
+on:
+  workflow_call:
+    inputs:
+      job: { type: string, required: true }
+      timeout: { type: number, required: true }
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ inputs.timeout }}
+    concurrency:
+      group: collector-${{ inputs.job }}
+      cancel-in-progress: false
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      TMDB_API_READ_TOKEN: ${{ secrets.TMDB_API_READ_TOKEN }}
+      YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+      WIKIDATA_USER_AGENT: ${{ vars.WIKIDATA_USER_AGENT }}
+      TIMEOUT_MIN: ${{ inputs.timeout }}
+      # Alcance y límites (ver docs/OPERACION.md). YouTube: 1 unidad = 50 videos; la cuota gratuita es 10 000/día.
+      CATALOG_FROM_YEAR: "2024"
+      TMDB_LIMIT: "300"
+      TMDB_MATCH_LIMIT: "60"
+      YOUTUBE_MAX_UNITS: "20"
+      YOUTUBE_DAILY_UNITS: "200"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.18"
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+      - run: npm ci
+      - name: Ejecuta ${{ inputs.job }}
+        run: node jobs/ejecutar.ts "${{ inputs.job }}"

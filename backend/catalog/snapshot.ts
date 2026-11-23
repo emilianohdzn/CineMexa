@@ -153,7 +153,7 @@ export function buildSnapshot(rows: CatalogRows, now: Date): Json {
       provenance: provenance(e.source_id, e.source_url, e.retrieved_at, e.verification, { confidence: num(e.confidence) }),
     })),
     news: rows.news.map((n) => ({
-      id: n.id, kind: n.kind, title: n.title, url: n.url, outlet: n.outlet ?? null, published_at: iso(n.published_at),
+      id: n.id, kind: n.kind, title: n.title, url: n.url, outlet: n.outlet ?? null, author: n.author ?? null, published_at: iso(n.published_at),
       film_id: n.film_id && filmIds.has(n.film_id) ? n.film_id : null, festival_id: n.festival_id && festivals.has(n.festival_id) ? n.festival_id : null,
       provenance: provenance(n.source_id, n.url, n.retrieved_at, n.verification, { published_at: iso(n.published_at) }),
     })),

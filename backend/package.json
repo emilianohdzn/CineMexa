@@ -6,13 +6,20 @@
   "scripts": {
     "test": "node --test \"test/**/*.test.ts\"",
     "collect:wikidata": "node --env-file-if-exists=.env.local collectors/wikidata/run.ts",
+    "collect:festivals": "node --env-file-if-exists=.env.local collectors/wikidata/festivals.ts",
+    "collect:feeds": "node --env-file-if-exists=.env.local collectors/feeds/run.ts",
+    "revisar": "node --env-file-if-exists=.env.local scripts/revisar.ts",
     "collect:tmdb": "node --env-file-if-exists=.env.local collectors/tmdb/run.ts",
     "collect:youtube": "node --env-file-if-exists=.env.local collectors/youtube/run.ts",
     "job:trends": "node --env-file-if-exists=.env.local jobs/trends.ts",
     "verificar": "node scripts/verificar-conexiones.ts",
     "build:catalog": "node scripts/build-catalog.ts",
     "estado": "node scripts/estado-ingesta.ts",
-    "seed:festivals": "node --env-file-if-exists=.env.local seed/seed.ts"
+    "seed:festivals": "node --env-file-if-exists=.env.local seed/seed.ts",
+    "auditar:posters": "node scripts/auditar-posters.ts",
+    "reparar:personas": "node scripts/reparar-personas.ts",
+    "job": "node --env-file-if-exists=.env.local jobs/ejecutar.ts",
+    "auditar:tendencias": "node scripts/auditar-tendencias.ts"
   },
   "devDependencies": {
     "@electric-sql/pglite": "0.4.6",

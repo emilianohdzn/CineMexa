@@ -36,9 +36,16 @@ struct TrendsView: View {
                     rankingList(ranking)
                     chart(ranking)
                     sources(ranking)
+                    if ranking.sourcesUsed.allSatisfy({ $0 == "youtube" || $0 == "media" }) {
+                        Text("Refleja el crecimiento de visualizaciones de los tráilers disponibles en YouTube, no toda la conversación digital sobre el cine mexicano.")
+                            .font(.footnote)
+                            .foregroundStyle(CM.secondaryText)
+                            .padding(.horizontal, CM.Space.gutter)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
                 } else {
                     EmptyStateView(title: "Sin datos suficientes",
-                                   message: "No hay películas con evidencia suficiente en este periodo. No mostramos posiciones sin datos verificables.",
+                                   message: "Todavía no hay películas con evidencia suficiente en este periodo. El ranking mide el crecimiento de visualizaciones de los tráilers oficiales en YouTube entre mediciones reales; necesita varias mediciones (cada 6 horas) para comparar con días anteriores. No mostramos posiciones sin datos verificables.",
                                    symbol: "chart.line.downtrend.xyaxis")
                 }
             }

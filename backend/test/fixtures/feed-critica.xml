@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel>
+  <title>Medio de prueba</title>
+  <item>
+    <title><![CDATA[Crítica de «La sombra del mezquite»: el desierto como herida]]></title>
+    <link>https://medio.example/critica/sombra-mezquite?utm_source=rss&amp;utm_medium=feed</link>
+    <dc:creator>Ana Crítica</dc:creator>
+    <pubDate>Sun, 22 Nov 2026 15:00:00 +0000</pubDate>
+    <category>Cine mexicano</category>
+    <description><![CDATA[<p>Texto completo que NO debe guardarse.</p>]]></description>
+  </item>
+  <item>
+    <title>Reseña: Mácula, un retrato en blanco y negro</title>
+    <link>https://medio.example/critica/macula</link>
+    <dc:creator>Luis Reseñas</dc:creator>
+    <pubDate>Sat, 21 Nov 2026 10:00:00 +0000</pubDate>
+  </item>
+  <item>
+    <title>Las películas más esperadas del año</title>
+    <link>https://medio.example/notas/esperadas</link>
+    <pubDate>Fri, 20 Nov 2026 10:00:00 +0000</pubDate>
+  </item>
+  <item>
+    <title>Crítica de un clásico: «La sombra del mezquite» (1962)</title>
+    <link>https://medio.example/critica/archivo-1962</link>
+    <pubDate>Fri, 20 Nov 2015 10:00:00 +0000</pubDate>
+  </item>
+</channel>
+</rss>

@@ -235,41 +235,77 @@ struct HeroCarousel: View {
 struct HeroCard: View {
     let catalog: Catalog
     let film: Film
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
         NavigationLink(value: Route.film(id: film.id, transitionID: "hero-\(film.id)")) {
-            PosterView(film: film, cornerRadius: CM.Radius.card, compactPlaceholder: true)
-                .overlay(alignment: .bottomLeading) {
-                    VStack(alignment: .leading, spacing: 6) {
-                        StatusTag(status: film.status)
-                        Text(film.title)
-                            .font(CMFont.display(28, relativeTo: .title))
-                            .foregroundStyle(CM.paperCream)
-                            .lineLimit(3)
-                            .minimumScaleFactor(0.75)
-                        Text([film.year.map { String($0) }, film.directors.first.map { "Dir. \($0)" }].compactMap { $0 }.joined(separator: " · "))
-                            .font(CMFont.mono(12))
-                            .foregroundStyle(CM.paperCream.opacity(0.85))
-                        Label("Ver ficha", systemImage: "arrow.up.right")
-                            .font(.footnote.weight(.bold))
-                            .foregroundStyle(CM.ink)
-                            .padding(.horizontal, 12)
-                            .frame(minHeight: 34)
-                            .background(Capsule().fill(CM.projectorYellow))
-                            .padding(.top, 4)
+            Group {
+                if typeSize.isAccessibilitySize {
+                    // Con texto muy grande la información no cabe sobre el póster: va debajo, sin recortes.
+                    VStack(alignment: .leading, spacing: 0) {
+                        PosterView(film: film, cornerRadius: 0, compactPlaceholder: true)
+                        info
+                            .background(CM.deepSurface)
                     }
-                    .padding(14)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(
-                        LinearGradient(colors: [.clear, CM.cinemaBlack.opacity(0.92)], startPoint: .top, endPoint: .bottom)
-                            .clipShape(UnevenRoundedRectangle(bottomLeadingRadius: CM.Radius.card, bottomTrailingRadius: CM.Radius.card, style: .continuous))
-                    )
+                    .clipShape(RoundedRectangle(cornerRadius: CM.Radius.card, style: .continuous))
+                } else {
+                    PosterView(film: film, cornerRadius: CM.Radius.card, compactPlaceholder: true)
+                        .overlay(alignment: .bottomLeading) {
+                            info.background(
+                                LinearGradient(colors: [.clear, CM.cinemaBlack.opacity(0.92)], startPoint: .top, endPoint: .bottom)
+                                    .clipShape(UnevenRoundedRectangle(bottomLeadingRadius: CM.Radius.card, bottomTrailingRadius: CM.Radius.card, style: .continuous))
+                            )
+                        }
                 }
-                .heroSource("hero-\(film.id)")
+            }
+            .heroSource("hero-\(film.id)")
         }
         .buttonStyle(PressableStyle())
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(film.title), \(film.status.label)")
+        .accessibilityLabel(accessibilityText)
+        .accessibilityHint("Abre la ficha")
+    }
+
+    private var info: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            StatusTag(status: film.status)
+            Text(film.title)
+                .font(CMFont.display(28, relativeTo: .title))
+                .foregroundStyle(CM.paperCream)
+                .lineLimit(typeSize.isAccessibilitySize ? nil : 3)
+                .minimumScaleFactor(typeSize.isAccessibilitySize ? 1 : 0.75)
+                .fixedSize(horizontal: false, vertical: typeSize.isAccessibilitySize)
+            Text([film.year.map { String($0) }, film.directors.first.map { "Dir. \($0)" }].compactMap { $0 }.joined(separator: " · "))
+                .font(CMFont.mono(12))
+                .foregroundStyle(CM.paperCream.opacity(0.85))
+                .fixedSize(horizontal: false, vertical: true)
+            // En tamaños de accesibilidad sólo el texto, que puede ocupar dos renglones: el ícono no cabe junto a él.
+            Group {
+                if typeSize.isAccessibilitySize {
+                    Text("Ver ficha").lineLimit(2).fixedSize(horizontal: false, vertical: true)
+                } else {
+                    Label("Ver ficha", systemImage: "arrow.up.right")
+                }
+            }
+                .font(.footnote.weight(.bold))
+                .foregroundStyle(CM.ink)
+                .padding(.horizontal, 12)
+                .padding(.vertical, typeSize.isAccessibilitySize ? 10 : 0)
+                .frame(minHeight: 34)
+                .background(Capsule().fill(CM.projectorYellow))
+                // Que el carrusel no lo comprima: la cápsula crece con el texto.
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.top, 4)
+        }
+        .padding(14)
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private var accessibilityText: String {
+        var parts = [film.title, film.status.label]
+        if let year = film.year { parts.append(String(year)) }
+        if let director = film.directors.first { parts.append("dirigida por \(director)") }
+        return parts.joined(separator: ", ")
     }
 }
 
@@ -306,8 +342,11 @@ struct NewsRow: View {
                     .font(.callout.weight(.medium))
                     .foregroundStyle(CM.paperCream)
                     .multilineTextAlignment(.leading)
-                if let outlet = item.outlet {
-                    Text(outlet).font(CMFont.mono(10)).foregroundStyle(CM.secondaryText)
+                // Medio y autoría tal como los publica la fuente; el enlace lleva al artículo original.
+                let byline = [item.outlet, item.author].compactMap { $0 }.joined(separator: " · ")
+                if !byline.isEmpty {
+                    Text(byline).font(CMFont.mono(10)).foregroundStyle(CM.secondaryText)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
             }
             Spacer(minLength: 8)

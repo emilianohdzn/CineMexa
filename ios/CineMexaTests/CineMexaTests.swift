@@ -1,6 +1,7 @@
 import Testing
 import Foundation
 import MapKit
+import UIKit
 @testable import CineMexa
 
 /// Tests de la capa de datos y reglas. Se ejecutan con ⌘U en Xcode o con
@@ -63,6 +64,13 @@ struct DateLogicTests {
                         provenance: Provenance(source: "test", sourceUrl: nil, retrievedAt: .now, publishedAt: nil, verification: .verified, confidence: nil))
     }
     let now = ISO8601DateFormatter().date(from: "2026-11-23T18:00:00Z")!
+
+    @Test func tiempoRelativoNuncaDiceDentroDeCeroSegundos() {
+        #expect(CineFormat.relative(now, now: now) == "hace un momento")
+        #expect(CineFormat.relative(now.addingTimeInterval(30), now: now) == "hace un momento")
+        #expect(CineFormat.relative(now.addingTimeInterval(-20), now: now) == "hace un momento")
+        #expect(CineFormat.relative(now.addingTimeInterval(-3 * 3600), now: now).hasPrefix("hace"))
+    }
 
     @Test func estadoDeEdicionEsInclusivoYEnLaZonaDelFestival() {
         #expect(DateLogic.status(of: edition("2026-11-20", "2026-11-23"), now: now) == .active)
@@ -198,5 +206,187 @@ struct LiveCatalogContractTests {
         #expect(snapshot.festivalEvents.contains { $0.occursAt == nil }, "sin fecha confirmada se conserva como nil")
         let catalog = Catalog(snapshot)
         #expect(!catalog.films(matching: .shorts).isEmpty)
+        #expect(snapshot.meta.filmHashes?.count == 2, "el GET completo trae la huella de cada película")
     }
+
+    static func sample() throws -> CatalogSnapshot {
+        let url = try #require(Bundle(for: TestBundleMarker.self).url(forResource: "live-catalog-sample", withExtension: "json"))
+        return try CineJSON.decoder().decode(CatalogSnapshot.self, from: Data(contentsOf: url))
+    }
+
+    @Test func incrementalReconstruyeCambiosYEliminaciones() throws {
+        let previous = try Self.sample()
+        var delta = previous
+        var changed = previous.films[0]
+        changed.title = "Título corregido"
+        delta.films = [changed]
+        delta.meta.delta = SnapshotDelta(filmIds: [changed.id], changed: 1, total: 1)
+        let merged = try LiveRepository.merge(previous: previous, delta: delta)
+        #expect(merged.films.map(\.id) == [changed.id], "la película que ya no está en el orden vigente se elimina")
+        #expect(merged.films[0].title == "Título corregido")
+        #expect(merged.meta.delta == nil)
+
+        delta.meta.delta = SnapshotDelta(filmIds: [changed.id, "desconocida"], changed: 1, total: 2)
+        #expect(throws: RepositoryError.self) { try LiveRepository.merge(previous: previous, delta: delta) }
+    }
+
+    @Test func siElIncrementalFallaPideElCatalogoCompleto() async throws {
+        let sample = try Self.sample()
+        let dir = FileManager.default.temporaryDirectory.appending(path: "cache-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        let cache = SnapshotCache(directory: dir)
+        cache.save(sample)
+        let full = try CineJSON.encoder().encode(sample)
+        StubURLProtocol.responder = { request in
+            if request.httpMethod == "POST" { return (400, Data(#"{"error":"invalid_delta_request"}"#.utf8)) }
+            return (200, full)
+        }
+        StubURLProtocol.requests = []
+        let config = URLSessionConfiguration.ephemeral
+        config.protocolClasses = [StubURLProtocol.self]
+        let repo = LiveRepository(config: LiveConfig(baseUrl: URL(string: "https://ejemplo.supabase.co")!, anonKey: "publica"),
+                                  session: URLSession(configuration: config), cache: cache)
+        let snapshot = try await repo.fetchSnapshot()
+        #expect(snapshot.films.count == sample.films.count)
+        #expect(StubURLProtocol.requests == ["POST", "GET"], "primero intenta el incremental, luego el completo")
+    }
+}
+
+/// Servidor simulado para LiveRepository.
+final class StubURLProtocol: URLProtocol, @unchecked Sendable {
+    nonisolated(unsafe) static var responder: (URLRequest) -> (Int, Data) = { _ in (500, Data()) }
+    nonisolated(unsafe) static var requests: [String] = []
+    override class func canInit(with request: URLRequest) -> Bool { true }
+    override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
+    override func startLoading() {
+        Self.requests.append(request.httpMethod ?? "GET")
+        let (status, body) = Self.responder(request)
+        let response = HTTPURLResponse(url: request.url!, statusCode: status, httpVersion: "HTTP/1.1", headerFields: ["Content-Type": "application/json"])!
+        client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+        client?.urlProtocol(self, didLoad: body)
+        client?.urlProtocolDidFinishLoading(self)
+    }
+    override func stopLoading() {}
+}
+
+@Suite("Imágenes")
+struct ImageTests {
+    @Test func tamanoDeTMDBSeReescribeSoloEnSuDominio() {
+        let tmdb = URL(string: "https://image.tmdb.org/t/p/w780/abc123.jpg")!
+        #expect(tmdb.tmdbResized(.w342).absoluteString == "https://image.tmdb.org/t/p/w342/abc123.jpg")
+        #expect(tmdb.tmdbResized(.original).absoluteString == "https://image.tmdb.org/t/p/original/abc123.jpg")
+        let oficial = URL(string: "https://festival.example/t/p/w780/poster.jpg")!
+        #expect(oficial.tmdbResized(.w185) == oficial)
+        let raro = URL(string: "https://image.tmdb.org/otra/ruta.jpg")!
+        #expect(raro.tmdbResized(.w185) == raro)
+    }
+
+    @Test func elTamanoPedidoCubreElAnchoSinExcederse() {
+        #expect(ImageSizing.posterSize(forPixelWidth: 120) == .w185)   // miniatura de 40 pt a 3x
+        #expect(ImageSizing.posterSize(forPixelWidth: 330) == .w342)   // tarjeta de 165 pt a 2x
+        #expect(ImageSizing.posterSize(forPixelWidth: 390) == .w500)   // ficha de 130 pt a 3x
+        #expect(ImageSizing.posterSize(forPixelWidth: 900) == .w780)   // portada
+        #expect(ImageSizing.backdropSize(forPixelWidth: 1179) == .w1280)
+    }
+
+    @Test func laMiniaturaSeDecodificaAlTamanoPedido() throws {
+        let renderer = UIGraphicsImageRenderer(size: CGSize(width: 600, height: 900), format: {
+            let f = UIGraphicsImageRendererFormat(); f.scale = 1; return f
+        }())
+        let data = try #require(renderer.image { ctx in
+            UIColor.orange.setFill(); ctx.fill(CGRect(x: 0, y: 0, width: 600, height: 900))
+        }.jpegData(compressionQuality: 0.8))
+        let thumb = try #require(ImagePipeline.downsample(data, maxPixel: 300))
+        #expect(max(thumb.size.width * thumb.scale, thumb.size.height * thumb.scale) == 300)
+        #expect(ImagePipeline.downsample(Data("no es imagen".utf8), maxPixel: 300) == nil)
+    }
+}
+
+/// Servidor que nunca responde: sirve para comprobar que una descarga abandonada se cancela.
+final class HangingURLProtocol: URLProtocol, @unchecked Sendable {
+    nonisolated(unsafe) static var started = 0
+    nonisolated(unsafe) static var stopped = 0
+    override class func canInit(with request: URLRequest) -> Bool { true }
+    override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
+    override func startLoading() { Self.started += 1 }
+    override func stopLoading() { Self.stopped += 1 }
+}
+
+@Suite("Descargas de imágenes")
+struct ImagePipelineCancellationTests {
+    @Test func unaDescargaQueNadieEsperaSeCancela() async throws {
+        HangingURLProtocol.started = 0
+        HangingURLProtocol.stopped = 0
+        let config = URLSessionConfiguration.ephemeral
+        config.protocolClasses = [HangingURLProtocol.self]
+        let pipeline = ImagePipeline(session: URLSession(configuration: config), retries: 0)
+        let url = URL(string: "https://image.tmdb.org/t/p/w185/lenta.jpg")!
+        // Dos celdas piden la misma imagen: una sola descarga.
+        let a = Task { try await pipeline.image(for: url, maxPixel: 200) }
+        let b = Task { try await pipeline.image(for: url, maxPixel: 200) }
+        for _ in 0..<100 where HangingURLProtocol.started == 0 { try await Task.sleep(nanoseconds: 20_000_000) }
+        #expect(HangingURLProtocol.started == 1)
+        // Sale una de pantalla: la descarga sigue para la otra.
+        a.cancel()
+        try await Task.sleep(nanoseconds: 100_000_000)
+        #expect(HangingURLProtocol.stopped == 0)
+        #expect(await pipeline.inflightCount == 1)
+        // Sale la otra: ya nadie la espera y se libera la conexión.
+        b.cancel()
+        for _ in 0..<100 where HangingURLProtocol.stopped == 0 { try await Task.sleep(nanoseconds: 20_000_000) }
+        #expect(HangingURLProtocol.stopped == 1)
+        #expect(await pipeline.inflightCount == 0)
+        _ = await b.result
+    }
+}
+
+@Suite("Mexa")
+struct MexaTests {
+    static let json = #"""
+    {"api_version":"mexa-a1","generated_at":"2026-11-23T15:00:00.000Z","intent":"festival_awards",
+     "text":"Premios verificados en San Sebastián: El jockey, Horizontes Latinos (2024).",
+     "items":[{"label":"El jockey · Horizontes Latinos","film_id":"f1"}],
+     "citations":[{"type":"festival_event","id":"e1","label":"Horizontes Latinos 2024","source":"wikidata","url":"https://example.org/premio","retrieved_at":"2026-11-23T13:00:00.000Z","verification":"automatic"},
+                  {"type":"film","id":"f1","label":"El jockey (2024)","source":"cinemexa","url":null,"retrieved_at":null,"verification":"automatic"}],
+     "unanswered":null}
+    """#
+
+    @Test func decodificaLaRespuestaConSusFuentes() throws {
+        let a = try CineJSON.decoder().decode(MexaAnswer.self, from: Data(Self.json.utf8))
+        #expect(a.intent == "festival_awards")
+        #expect(a.items.first?.filmId == "f1")
+        #expect(a.citations.count == 2)
+        #expect(a.citations[0].link?.absoluteString == "https://example.org/premio")
+        #expect(a.citations[1].link == nil, "sin URL no hay enlace")
+        #expect(a.options == nil)
+    }
+
+    @Test func preguntaPorPOSTALaFuncionMexa() async throws {
+        MexaStubURLProtocol.body = Data(Self.json.utf8)
+        MexaStubURLProtocol.methods = []
+        let config = URLSessionConfiguration.ephemeral
+        config.protocolClasses = [MexaStubURLProtocol.self]
+        let client = MexaClient(config: LiveConfig(baseUrl: URL(string: "https://ejemplo.supabase.co")!, anonKey: "publica"),
+                                session: URLSession(configuration: config))
+        let a = try await client.ask("Premios en San Sebastián")
+        #expect(a.citations.first?.source == "wikidata")
+        #expect(MexaStubURLProtocol.methods == ["POST"])
+        await #expect(throws: RepositoryError.liveNotConfigured) { try await MexaClient(config: nil).ask("hola") }
+    }
+}
+
+/// Servidor simulado propio de Mexa (las suites corren en paralelo: no comparte estado con StubURLProtocol).
+final class MexaStubURLProtocol: URLProtocol, @unchecked Sendable {
+    nonisolated(unsafe) static var body = Data()
+    nonisolated(unsafe) static var methods: [String] = []
+    override class func canInit(with request: URLRequest) -> Bool { true }
+    override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
+    override func startLoading() {
+        Self.methods.append(request.httpMethod ?? "GET")
+        let response = HTTPURLResponse(url: request.url!, statusCode: 200, httpVersion: "HTTP/1.1", headerFields: ["Content-Type": "application/json"])!
+        client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+        client?.urlProtocol(self, didLoad: Self.body)
+        client?.urlProtocolDidFinishLoading(self)
+    }
+    override func stopLoading() {}
 }

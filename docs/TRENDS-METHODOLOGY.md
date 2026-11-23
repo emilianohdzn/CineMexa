@@ -43,3 +43,25 @@ Pesos y umbrales por defecto (`DEFAULT_SOURCES`): YouTube `w=0.6, α=200, mínim
 ## Datos de demostración
 
 Las señales demo son series sintéticas deterministas (`demo/build-demo.ts`) procesadas por el mismo algoritmo. Están marcadas como demo y no representan audiencias reales.
+
+## Cobertura y límites actuales (23 nov 2026)
+
+- **Única fuente activa: YouTube.** El ranking mide el crecimiento de visualizaciones de los tráilers oficiales
+  registrados (TMDB → YouTube), no toda la conversación digital sobre el cine mexicano. Google Trends no tiene un
+  acceso oficial aprobado y sigue desactivado; no se usa la "popularity" de TMDB.
+- **Mediciones**: cada 6 h (cuando se activen los horarios). La primera medición de un video sólo fija la línea base;
+  los deltas empiezan en la segunda. Un video con estadísticas ocultas no genera señal.
+- **Evidencia mínima**: 500 visualizaciones nuevas en el periodo. Con pocas mediciones el ranking puede quedar vacío
+  y la app lo dice así, sin rellenar.
+- **Ventanas**: 24 h compara contra las 3 ventanas de 24 h anteriores; 7 d y 30 d igual. El 7 d necesita al menos
+  una semana de historial para tener línea base propia; mientras tanto la línea base es 0 y el crecimiento se mide
+  contra el suavizado α.
+- **Validación**: `npm run auditar:tendencias` reporta corridas, unidades de cuota, videos medidos, películas con dos o
+  más mediciones, suma de deltas, deltas negativos (deben ser 0), tráilers repetidos entre películas y el último
+  snapshot de cada ventana.
+
+## Cómo ampliar
+
+Cada fuente nueva entra como `SourceConfig` (peso, evidencia mínima, α) y escribe en `trend_signals` con su propia
+métrica. Candidatas con acceso oficial: menciones en medios con licencia (fuente `media`, ya prevista y reportada
+aparte), Google Trends si se aprueba su API.

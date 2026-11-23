@@ -68,16 +68,33 @@ export async function applyTmdb(db: Db, filmId: string, e: TmdbEnrichment, runId
  * No se vincula por nombre fuera de la película: dos homónimos no se fusionan.
  */
 async function resolvePerson(db: Db, filmId: string, tmdbId: number, name: string): Promise<string> {
-  const { rows: byId } = await db.query<{ id: string }>("select id from people where tmdb_id = $1", [tmdbId]);
-  if (byId[0]) return byId[0].id;
+  // Primero la persona ya acreditada en esta película con el mismo nombre (de Wikidata u otra fuente): así el orden
+  // de enriquecimiento no duplica a una directora que ya existe en la ficha aunque TMDB la conozca por otra película.
   const key = normalizePersonName(name);
-  const { rows: sameFilm } = await db.query<{ id: string }>(
-    `select distinct p.id from people p join film_credits c on c.person_id = p.id
-     where c.film_id = $1 and p.name_key = $2 and p.tmdb_id is null`, [filmId, key]);
+  const { rows: sameFilm } = await db.query<{ id: string; tmdb_id: number | null }>(
+    `select distinct p.id, p.tmdb_id from people p join film_credits c on c.person_id = p.id
+     where c.film_id = $1 and p.name_key = $2 and (p.tmdb_id is null or p.tmdb_id = $3)`, [filmId, key, tmdbId]);
+  const { rows: byId } = await db.query<{ id: string }>("select id from people where tmdb_id = $1", [tmdbId]);
   if (sameFilm.length === 1) {
-    await db.query("update people set tmdb_id = $2 where id = $1", [sameFilm[0].id, tmdbId]);
-    return sameFilm[0].id;
+    const keep = sameFilm[0].id;
+    if (sameFilm[0].tmdb_id == null && byId[0] && byId[0].id !== keep) {
+      // TMDB ya había creado a esta persona desde otra película. Si ese registro sólo viene de TMDB (sin Wikidata) y
+      // tiene el mismo nombre, es la misma persona: se pasan sus créditos al registro de la ficha y se elimina el duplicado.
+      const { rows: [dup] } = await db.query<{ wikidata_id: string | null; name_key: string }>(
+        "select wikidata_id, name_key from people where id = $1", [byId[0].id]);
+      if (dup.wikidata_id == null && dup.name_key === key) {
+        await db.query(`insert into film_credits (film_id, person_id, role, character, ord, source_id)
+          select film_id, $2, role, character, ord, source_id from film_credits where person_id = $1 on conflict do nothing`, [byId[0].id, keep]);
+        await db.query("delete from film_credits where person_id = $1", [byId[0].id]);
+        await db.query("delete from people where id = $1", [byId[0].id]);
+        await db.query("update people set tmdb_id = $2 where id = $1", [keep, tmdbId]);
+      }
+    } else if (sameFilm[0].tmdb_id == null) {
+      await db.query("update people set tmdb_id = $2 where id = $1", [keep, tmdbId]);
+    }
+    return keep;
   }
+  if (byId[0]) return byId[0].id;
   const { rows: [created] } = await db.query<{ id: string }>(
     "insert into people (name, name_key, tmdb_id) values ($1, $2, $3) returning id", [name, key, tmdbId]);
   return created.id;

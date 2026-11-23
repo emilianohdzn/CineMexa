@@ -23,7 +23,7 @@
         "id": "wikidata",
         "name": "Wikidata",
         "attribution": "Datos de Wikidata (CC0)",
-        "last_sync_at": "2026-11-23T06:09:00.566Z",
+        "last_sync_at": "2026-11-23T08:30:38.926Z",
         "status": "ok"
       },
       {
@@ -32,6 +32,16 @@
         "attribution": "Datos de YouTube",
         "last_sync_at": null,
         "status": "not_configured"
+      }
+    ],
+    "film_hashes": [
+      {
+        "id": "film-2",
+        "hash": "8ce56c36906d3596"
+      },
+      {
+        "id": "film-1",
+        "hash": "016688e08d7e7ac2"
       }
     ]
   },
@@ -65,7 +75,7 @@
       "provenance": {
         "source": "wikidata",
         "source_url": "https://www.wikidata.org/wiki/Q900000002",
-        "retrieved_at": "2026-11-23T06:09:00.558Z",
+        "retrieved_at": "2026-11-23T08:30:38.919Z",
         "published_at": null,
         "verification": "automatic",
         "confidence": null
@@ -108,7 +118,7 @@
       "provenance": {
         "source": "wikidata",
         "source_url": "https://www.wikidata.org/wiki/Q900000001",
-        "retrieved_at": "2026-11-23T06:09:00.536Z",
+        "retrieved_at": "2026-11-23T08:30:38.899Z",
         "published_at": null,
         "verification": "automatic",
         "confidence": null
@@ -120,7 +130,7 @@
   "reviews": [],
   "timeline": [
     {
-      "id": "ev-id-deb7d325",
+      "id": "ev-id-c25e7029",
       "film_id": "film-1",
       "kind": "festival_screening",
       "date": "2026-11-25T02:00:00.000Z",
@@ -129,7 +139,7 @@
       "provenance": {
         "source": "editorial",
         "source_url": null,
-        "retrieved_at": "2026-11-23T06:09:00.571Z",
+        "retrieved_at": "2026-11-23T08:30:38.933Z",
         "published_at": null,
         "verification": "editorial",
         "confidence": null
@@ -138,7 +148,7 @@
   ],
   "festivals": [
     {
-      "id": "id-9315b30f",
+      "id": "id-05473f7d",
       "slug": "fest-prueba",
       "name": "Festival de Prueba",
       "short_name": "FP",
@@ -156,7 +166,7 @@
       },
       "editions": [
         {
-          "id": "id-ee43ec08",
+          "id": "id-6507b49f",
           "label": "2026",
           "year": 2026,
           "starts_on": "2026-11-20",
@@ -169,7 +179,7 @@
           "provenance": {
             "source": "editorial",
             "source_url": null,
-            "retrieved_at": "2026-11-23T06:09:00.570Z",
+            "retrieved_at": "2026-11-23T08:30:38.931Z",
             "published_at": null,
             "verification": "editorial",
             "confidence": null
@@ -179,7 +189,7 @@
       "provenance": {
         "source": "editorial",
         "source_url": null,
-        "retrieved_at": "2026-11-23T06:09:00.568Z",
+        "retrieved_at": "2026-11-23T08:30:38.929Z",
         "published_at": null,
         "verification": "editorial",
         "confidence": null
@@ -188,9 +198,9 @@
   ],
   "festival_events": [
     {
-      "id": "id-deb7d325",
-      "edition_id": "id-ee43ec08",
-      "festival_id": "id-9315b30f",
+      "id": "id-c25e7029",
+      "edition_id": "id-6507b49f",
+      "festival_id": "id-05473f7d",
       "film_id": "film-1",
       "kind": "screening",
       "section": "Competencia",
@@ -200,16 +210,16 @@
       "provenance": {
         "source": "editorial",
         "source_url": null,
-        "retrieved_at": "2026-11-23T06:09:00.571Z",
+        "retrieved_at": "2026-11-23T08:30:38.933Z",
         "published_at": null,
         "verification": "editorial",
         "confidence": null
       }
     },
     {
-      "id": "id-c4ddfc84",
-      "edition_id": "id-ee43ec08",
-      "festival_id": "id-9315b30f",
+      "id": "id-40d30eba",
+      "edition_id": "id-6507b49f",
+      "festival_id": "id-05473f7d",
       "film_id": "film-2",
       "kind": "selection",
       "section": "Cortometraje",
@@ -219,7 +229,7 @@
       "provenance": {
         "source": "editorial",
         "source_url": null,
-        "retrieved_at": "2026-11-23T06:09:00.571Z",
+        "retrieved_at": "2026-11-23T08:30:38.933Z",
         "published_at": null,
         "verification": "editorial",
         "confidence": null

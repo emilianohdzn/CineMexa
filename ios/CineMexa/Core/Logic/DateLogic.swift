@@ -126,7 +126,9 @@ enum CineFormat {
         f.locale = locale
         f.unitsStyle = .full
         // Un instante del servidor unos segundos "en el futuro" (desfase de reloj) se muestra como ahora.
-        if date > now, date.timeIntervalSince(now) < 120 { return "hace un momento" }
+        // También el último minuto: con un intervalo de 0 s el formateador dice "dentro de 0 segundos".
+        let interval = date.timeIntervalSince(now)
+        if interval > -60, interval < 120 { return "hace un momento" }
         return f.localizedString(for: date, relativeTo: now)
     }
     static func dayRange(_ start: String?, _ end: String?) -> String {

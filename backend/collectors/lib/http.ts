@@ -22,6 +22,15 @@ export class HttpError extends Error {
 const defaultSleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 
 export async function fetchJson<T>(url: string, opts: FetchOptions = {}): Promise<T> {
+  return request(url, opts, async (res) => (await res.json()) as T);
+}
+
+/** Igual que fetchJson pero devuelve el cuerpo como texto (feeds RSS/Atom). */
+export async function fetchText(url: string, opts: FetchOptions = {}): Promise<string> {
+  return request(url, opts, (res) => res.text());
+}
+
+async function request<T>(url: string, opts: FetchOptions, read: (res: Response) => Promise<T>): Promise<T> {
   const { headers = {}, timeoutMs = 60_000, retries = 3, fetchImpl = fetch, sleep = defaultSleep } = opts;
   let attempt = 0;
   for (;;) {
@@ -29,7 +38,7 @@ export async function fetchJson<T>(url: string, opts: FetchOptions = {}): Promis
     const timer = setTimeout(() => controller.abort(), timeoutMs);
     try {
       const res = await fetchImpl(url, { headers, signal: controller.signal });
-      if (res.ok) return (await res.json()) as T;
+      if (res.ok) return await read(res);
       const body = await res.text();
       const retriable = res.status === 429 || res.status >= 500;
       if (!retriable || attempt >= retries) throw new HttpError(res.status, url, body);

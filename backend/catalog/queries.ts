@@ -67,7 +67,7 @@ export async function loadCatalogRows(db: Db, opts: LoadOptions): Promise<Catalo
           e.occurs_at, e.announced_at, e.source_id, e.source_url, e.verification::text, e.confidence, e.retrieved_at
         from festival_events e join festival_editions ed on ed.id = e.edition_id where not e.is_cancelled
         order by coalesce(e.occurs_at, e.announced_at) desc nulls last`),
-      news: await q(`select id::text, kind::text, title, url, outlet, published_at, film_id::text, festival_id::text, source_id,
+      news: await q(`select id::text, kind::text, title, url, outlet, author, published_at, film_id::text, festival_id::text, source_id,
           verification::text, retrieved_at
         from news_items where published_at <= $1 order by published_at desc limit $2`, [at, newsLimit]),
       trends: await q(`select window_key, computed_at, methodology_version, label, sources_used, entries from (

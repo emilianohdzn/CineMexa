@@ -48,7 +48,7 @@ struct TabRoot<Content: View>: View {
     @Namespace private var heroNamespace
 
     enum GlobalSheet: String, Identifiable {
-        case search, favorites, settings
+        case search, favorites, settings, mexa
         var id: String { rawValue }
     }
 
@@ -79,6 +79,7 @@ struct TabRoot<Content: View>: View {
                     Button { sheet = .search } label: { Image(systemName: "magnifyingglass") }
                         .accessibilityLabel("Buscar")
                     Menu {
+                        Button { sheet = .mexa } label: { Label("Pregúntale a Mexa", systemImage: "questionmark.bubble") }
                         Button { sheet = .favorites } label: { Label("Favoritos", systemImage: "heart") }
                         Button { path.append(Route.sources) } label: { Label("Fuentes y créditos", systemImage: "books.vertical") }
                         Button { sheet = .settings } label: { Label("Configuración", systemImage: "gearshape") }
@@ -97,6 +98,7 @@ struct TabRoot<Content: View>: View {
                     case .search: SearchView(catalog: model.catalog) { route in open(route) }
                     case .favorites: FavoritesView(catalog: model.catalog) { route in open(route) }
                     case .settings: SettingsView()
+                    case .mexa: MexaView { route in open(route) }
                     }
                 }
                 .toolbar {

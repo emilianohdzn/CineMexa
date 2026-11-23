@@ -187,6 +187,8 @@ struct NewsItem: Codable, Identifiable, Hashable, Sendable {
     var title: String
     var url: URL
     var outlet: String?
+    /// Autor o autora del artículo, si el medio lo publica en su feed.
+    var author: String?
     var publishedAt: Date
     var filmId: String?
     var festivalId: String?
@@ -247,6 +249,21 @@ struct SnapshotMeta: Codable, Hashable, Sendable {
     var generatedAt: Date
     var notice: String?
     var sources: [SourceStatus]
+    /// Huella de cada película (sincronización incremental). Ausente en datos de demostración o servidores viejos.
+    var filmHashes: [FilmHash]?
+    /// Presente sólo en respuestas incrementales: orden completo vigente de películas.
+    var delta: SnapshotDelta?
+}
+
+struct FilmHash: Codable, Hashable, Sendable {
+    var id: String
+    var hash: String
+}
+
+struct SnapshotDelta: Codable, Hashable, Sendable {
+    var filmIds: [String]
+    var changed: Int
+    var total: Int
 }
 
 struct CatalogSnapshot: Codable, Sendable {
