@@ -9,3 +9,6 @@ build/
 !.env.example
 ios/CineMexa/Resources/LiveConfig.json
 supabase/.temp/
+
+# Empaquetado generado de la Edge Function
+backend/supabase/functions/catalog/_bundle/

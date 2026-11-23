@@ -9,10 +9,12 @@
     "collect:tmdb": "node --env-file-if-exists=.env.local collectors/tmdb/run.ts",
     "collect:youtube": "node --env-file-if-exists=.env.local collectors/youtube/run.ts",
     "job:trends": "node --env-file-if-exists=.env.local jobs/trends.ts",
-    "verificar": "node scripts/verificar-conexiones.ts"
+    "verificar": "node scripts/verificar-conexiones.ts",
+    "build:catalog": "node scripts/build-catalog.ts"
   },
   "devDependencies": {
-    "@electric-sql/pglite": "0.4.6"
+    "@electric-sql/pglite": "0.4.6",
+    "esbuild": "0.24.2"
   },
   "dependencies": {
     "postgres": "3.4.5"
