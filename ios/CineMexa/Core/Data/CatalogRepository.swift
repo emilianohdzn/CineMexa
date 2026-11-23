@@ -144,29 +144,75 @@ struct LiveConfig: Codable, Equatable, Sendable {
 }
 
 /// Lee el catálogo desde la Edge Function `catalog` del backend (Fase 3/4).
+/// Si hay un catálogo anterior en caché con huellas, pide sólo las películas nuevas o cambiadas (POST ?delta=1) y lo
+/// reconstruye; ante cualquier inconsistencia vuelve a pedir el catálogo completo. El GET completo usa URLCache con ETag.
 struct LiveRepository: CatalogRepository {
     let mode: DataMode = .live
     var config: LiveConfig?
     var session: URLSession = .shared
+    var cache: SnapshotCache? = SnapshotCache()
 
     func fetchSnapshot() async throws -> CatalogSnapshot {
         guard let config else { throw RepositoryError.liveNotConfigured }
-        var request = URLRequest(url: config.baseUrl.appending(path: "functions/v1/catalog"))
+        if let previous = cache?.load(), let known = previous.meta.filmHashes, !known.isEmpty {
+            do {
+                return try await fetchDelta(config: config, previous: previous, known: known)
+            } catch RepositoryError.network(let detail) {
+                throw RepositoryError.network(detail) // sin red, el completo tampoco llegaría
+            } catch {
+                // Respuesta incompleta o servidor sin soporte: catálogo completo.
+            }
+        }
+        return try await fetchFull(config: config)
+    }
+
+    private func request(_ config: LiveConfig, query: String) -> URLRequest {
+        var components = URLComponents(url: config.baseUrl.appending(path: "functions/v1/catalog"), resolvingAgainstBaseURL: false)!
+        components.query = query
+        var request = URLRequest(url: components.url!)
         request.setValue(config.anonKey, forHTTPHeaderField: "apikey")
         request.setValue("Bearer \(config.anonKey)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.timeoutInterval = 20
+        return request
+    }
 
-        let data: Data
-        let response: URLResponse
+    private func fetchDelta(config: LiveConfig, previous: CatalogSnapshot, known: [FilmHash]) async throws -> CatalogSnapshot {
+        var request = request(config, query: "v=1&delta=1")
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = try JSONEncoder().encode(["known_films": known.map { ["id": $0.id, "hash": $0.hash] }])
+        let data = try await send(request)
+        let delta: CatalogSnapshot
         do {
-            (data, response) = try await session.data(for: request)
+            delta = try CineJSON.decoder().decode(CatalogSnapshot.self, from: data)
         } catch {
-            throw RepositoryError.network(error.localizedDescription)
+            throw RepositoryError.decoding(String(describing: error))
         }
-        if let http = response as? HTTPURLResponse, !(200..<300).contains(http.statusCode) {
-            throw RepositoryError.badStatus(http.statusCode)
+        return try Self.merge(previous: previous, delta: delta)
+    }
+
+    /// Reconstruye el catálogo: películas cambiadas del delta + las conocidas, en el orden vigente del servidor.
+    static func merge(previous: CatalogSnapshot, delta: CatalogSnapshot) throws -> CatalogSnapshot {
+        guard let order = delta.meta.delta?.filmIds, delta.meta.mode == .live else {
+            throw RepositoryError.decoding("Respuesta incremental sin orden de películas.")
         }
+        var byID = Dictionary(previous.films.map { ($0.id, $0) }, uniquingKeysWith: { a, _ in a })
+        for film in delta.films { byID[film.id] = film }
+        var films: [Film] = []
+        films.reserveCapacity(order.count)
+        for id in order {
+            guard let film = byID[id] else { throw RepositoryError.decoding("Falta la película \(id) en la reconstrucción.") }
+            films.append(film)
+        }
+        var merged = delta
+        merged.films = films
+        merged.meta.delta = nil
+        return merged
+    }
+
+    private func fetchFull(config: LiveConfig) async throws -> CatalogSnapshot {
+        let data = try await send(request(config, query: "v=1"))
         do {
             let snapshot = try CineJSON.decoder().decode(CatalogSnapshot.self, from: data)
             guard snapshot.meta.mode == .live else {
@@ -179,6 +225,21 @@ struct LiveRepository: CatalogRepository {
             throw RepositoryError.decoding(String(describing: error))
         }
     }
+
+    private func send(_ request: URLRequest) async throws -> Data {
+        let data: Data
+        let response: URLResponse
+        do {
+            (data, response) = try await session.data(for: request)
+        } catch {
+            throw RepositoryError.network(error.localizedDescription)
+        }
+        if let http = response as? HTTPURLResponse, !(200..<300).contains(http.statusCode) {
+            throw RepositoryError.badStatus(http.statusCode)
+        }
+        return data
+    }
+
 }
 
 // MARK: - Caché del último catálogo válido

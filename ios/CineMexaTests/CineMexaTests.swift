@@ -206,7 +206,67 @@ struct LiveCatalogContractTests {
         #expect(snapshot.festivalEvents.contains { $0.occursAt == nil }, "sin fecha confirmada se conserva como nil")
         let catalog = Catalog(snapshot)
         #expect(!catalog.films(matching: .shorts).isEmpty)
+        #expect(snapshot.meta.filmHashes?.count == 2, "el GET completo trae la huella de cada película")
     }
+
+    static func sample() throws -> CatalogSnapshot {
+        let url = try #require(Bundle(for: TestBundleMarker.self).url(forResource: "live-catalog-sample", withExtension: "json"))
+        return try CineJSON.decoder().decode(CatalogSnapshot.self, from: Data(contentsOf: url))
+    }
+
+    @Test func incrementalReconstruyeCambiosYEliminaciones() throws {
+        let previous = try Self.sample()
+        var delta = previous
+        var changed = previous.films[0]
+        changed.title = "Título corregido"
+        delta.films = [changed]
+        delta.meta.delta = SnapshotDelta(filmIds: [changed.id], changed: 1, total: 1)
+        let merged = try LiveRepository.merge(previous: previous, delta: delta)
+        #expect(merged.films.map(\.id) == [changed.id], "la película que ya no está en el orden vigente se elimina")
+        #expect(merged.films[0].title == "Título corregido")
+        #expect(merged.meta.delta == nil)
+
+        delta.meta.delta = SnapshotDelta(filmIds: [changed.id, "desconocida"], changed: 1, total: 2)
+        #expect(throws: RepositoryError.self) { try LiveRepository.merge(previous: previous, delta: delta) }
+    }
+
+    @Test func siElIncrementalFallaPideElCatalogoCompleto() async throws {
+        let sample = try Self.sample()
+        let dir = FileManager.default.temporaryDirectory.appending(path: "cache-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        let cache = SnapshotCache(directory: dir)
+        cache.save(sample)
+        let full = try CineJSON.encoder().encode(sample)
+        StubURLProtocol.responder = { request in
+            if request.httpMethod == "POST" { return (400, Data(#"{"error":"invalid_delta_request"}"#.utf8)) }
+            return (200, full)
+        }
+        StubURLProtocol.requests = []
+        let config = URLSessionConfiguration.ephemeral
+        config.protocolClasses = [StubURLProtocol.self]
+        let repo = LiveRepository(config: LiveConfig(baseUrl: URL(string: "https://ejemplo.supabase.co")!, anonKey: "publica"),
+                                  session: URLSession(configuration: config), cache: cache)
+        let snapshot = try await repo.fetchSnapshot()
+        #expect(snapshot.films.count == sample.films.count)
+        #expect(StubURLProtocol.requests == ["POST", "GET"], "primero intenta el incremental, luego el completo")
+    }
+}
+
+/// Servidor simulado para LiveRepository.
+final class StubURLProtocol: URLProtocol, @unchecked Sendable {
+    nonisolated(unsafe) static var responder: (URLRequest) -> (Int, Data) = { _ in (500, Data()) }
+    nonisolated(unsafe) static var requests: [String] = []
+    override class func canInit(with request: URLRequest) -> Bool { true }
+    override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
+    override func startLoading() {
+        Self.requests.append(request.httpMethod ?? "GET")
+        let (status, body) = Self.responder(request)
+        let response = HTTPURLResponse(url: request.url!, statusCode: status, httpVersion: "HTTP/1.1", headerFields: ["Content-Type": "application/json"])!
+        client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+        client?.urlProtocol(self, didLoad: body)
+        client?.urlProtocolDidFinishLoading(self)
+    }
+    override func stopLoading() {}
 }
 
 @Suite("Imágenes")

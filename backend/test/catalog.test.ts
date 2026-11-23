@@ -95,6 +95,7 @@ test("ETag estable: el mismo contenido responde 304 aunque cambie la hora", asyn
 
 test("rechaza métodos y versiones no soportados; un fallo de base es 503", async () => {
   assert.equal((await handleCatalog(new Request("https://x.test/catalog", { method: "POST" }), { db })).status, 405);
+  assert.equal((await handleCatalog(new Request("https://x.test/catalog?delta=1", { method: "POST", body: "no es json" }), { db })).status, 400);
   assert.equal((await handleCatalog(new Request("https://x.test/catalog?v=2"), { db })).status, 400);
   const broken = { query: async () => { throw new Error("sin conexión"); } };
   const origError = console.error; console.error = () => {};
@@ -120,4 +121,46 @@ test("muestra del catálogo para la prueba de decodificación en Swift", async (
   }
   const sample = JSON.parse(readFileSync(path, "utf8"));
   assert.deepEqual(Object.keys(sample).sort(), Object.keys(body).sort(), "la muestra está al día con el contrato");
+});
+
+async function postDelta(known: Array<{ id: string; hash: string }>) {
+  return handleCatalog(new Request("https://x.test/catalog?v=1&delta=1", {
+    method: "POST", body: JSON.stringify({ known_films: known }), headers: { "content-type": "application/json" },
+  }), { db, now: () => NOW });
+}
+
+test("incremental: sin cambios no reenvía películas y conserva el orden completo", async () => {
+  const full = await (await getCatalog()).json();
+  assert.equal(full.meta.film_hashes.length, full.films.length);
+  const res = await postDelta(full.meta.film_hashes);
+  assert.equal(res.status, 200);
+  assert.equal(res.headers.get("cache-control"), "no-store");
+  const delta = await res.json();
+  assert.deepEqual(delta.films, []);
+  assert.deepEqual(delta.meta.delta.film_ids, full.films.map((f: any) => f.id));
+  assert.equal(delta.festivals.length, full.festivals.length, "las demás secciones van completas");
+});
+
+test("incremental: reenvía sólo lo cambiado y omite lo eliminado, aun tras días sin conexión", async () => {
+  const before = await (await getCatalog()).json();
+  // Cache vieja: conoce una película que ya no existe y tiene una huella vieja de otra.
+  const known = [
+    { id: "pelicula-borrada", hash: "0000000000000000" },
+    { id: filmA, hash: "huella-vieja" },
+    ...before.meta.film_hashes.filter((h: any) => h.id !== filmA),
+  ];
+  await db.query("update films set synopsis = 'Sinopsis corregida' where id = $1", [filmA]);
+  const later = new Date(NOW.getTime() + 5 * 86_400_000);
+  const delta = await (await handleCatalog(new Request("https://x.test/catalog?v=1&delta=1", {
+    method: "POST", body: JSON.stringify({ known_films: known }),
+  }), { db, now: () => later })).json();
+  assert.deepEqual(delta.films.map((f: any) => f.id), [filmA]);
+  assert.equal(delta.films[0].synopsis, "Sinopsis corregida");
+  assert.ok(!delta.meta.delta.film_ids.includes("pelicula-borrada"));
+  // Reconstruir: lo cambiado + lo conocido en el orden vigente = catálogo completo.
+  const full = await (await handleCatalog(new Request("https://x.test/catalog?v=1"), { db, now: () => later })).json();
+  const byId = new Map(before.films.map((f: any) => [f.id, f]));
+  for (const f of delta.films) byId.set(f.id, f);
+  assert.deepEqual(delta.meta.delta.film_ids.map((id: string) => byId.get(id)), full.films);
+  await db.query("update films set synopsis = null where id = $1", [filmA]);
 });

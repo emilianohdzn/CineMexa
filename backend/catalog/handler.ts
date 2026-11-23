@@ -18,19 +18,59 @@ async function sha256(text: string): Promise<string> {
 const json = (status: number, body: unknown, headers: Record<string, string> = {}) =>
   new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json; charset=utf-8", ...headers } });
 
-export async function handleCatalog(req: Request, deps: HandlerDeps): Promise<Response> {
-  if (req.method !== "GET" && req.method !== "HEAD") {
-    return json(405, { error: "method_not_allowed" }, { allow: "GET, HEAD" });
+/** Huella corta y estable del contenido de una película (la usa la sincronización incremental). */
+export async function filmHash(film: unknown): Promise<string> {
+  return (await sha256(JSON.stringify(film))).slice(0, 16);
+}
+
+/**
+ * Sincronización incremental (contrato v1, aditivo):
+ * - GET devuelve el snapshot completo y, en `meta.film_hashes`, la huella de cada película.
+ * - POST ?delta=1 con `{"known_films": [{"id", "hash"}]}` devuelve el mismo snapshot, pero `films` sólo trae las
+ *   películas nuevas o cambiadas; `meta.delta.film_ids` es el orden completo vigente (lo que no aparece ahí se
+ *   eliminó). Las demás secciones van completas: son pequeñas y así se eliminan sin listas aparte.
+ * Por huellas de contenido y no por fecha: funciona igual tras días sin conexión y detecta cambios de pósters o créditos
+ * aunque la película no cambie su updated_at. Si algo falla, la app vuelve a pedir el catálogo completo.
+ */
+async function readKnownFilms(req: Request): Promise<Map<string, string> | null> {
+  try {
+    const body = (await req.json()) as { known_films?: Array<{ id?: unknown; hash?: unknown }> };
+    if (!Array.isArray(body.known_films) || body.known_films.length > 20_000) return null;
+    const known = new Map<string, string>();
+    for (const k of body.known_films) if (typeof k.id === "string" && typeof k.hash === "string") known.set(k.id, k.hash);
+    return known;
+  } catch {
+    return null;
   }
-  const version = new URL(req.url).searchParams.get("v") ?? "1";
+}
+
+export async function handleCatalog(req: Request, deps: HandlerDeps): Promise<Response> {
+  const url = new URL(req.url);
+  const isDelta = req.method === "POST" && url.searchParams.get("delta") === "1";
+  if (req.method !== "GET" && req.method !== "HEAD" && !isDelta) {
+    return json(405, { error: "method_not_allowed" }, { allow: "GET, HEAD, POST ?delta=1" });
+  }
+  const version = url.searchParams.get("v") ?? "1";
   if (version !== "1") return json(400, { error: "unsupported_api_version", supported: ["1"] });
+  const known = isDelta ? await readKnownFilms(req) : null;
+  if (isDelta && !known) return json(400, { error: "invalid_delta_request" });
 
   const now = (deps.now ?? (() => new Date()))();
   let body: string;
   try {
-    const snapshot = buildSnapshot(await loadCatalogRows(deps.db, { now }), now);
+    const snapshot = buildSnapshot(await loadCatalogRows(deps.db, { now }), now) as { meta: Record<string, unknown>; films: Array<{ id: string }> };
+    const hashes = await Promise.all(snapshot.films.map(async (f) => ({ id: f.id, hash: await filmHash(f) })));
+    if (isDelta) {
+      const changed = snapshot.films.filter((_, i) => known!.get(hashes[i].id) !== hashes[i].hash);
+      const delta = {
+        ...snapshot, films: changed,
+        meta: { ...snapshot.meta, film_hashes: hashes, delta: { film_ids: hashes.map((h) => h.id), changed: changed.length, total: hashes.length } },
+      };
+      return json(200, delta, { "cache-control": "no-store" });
+    }
     // El ETag ignora generated_at para que el mismo contenido dé 304.
-    const { meta, ...content } = snapshot as { meta: Record<string, unknown> };
+    const { meta, ...content } = snapshot;
+    snapshot.meta = { ...meta, film_hashes: hashes };
     const etag = `"${(await sha256(JSON.stringify({ ...content, sources: meta.sources }))).slice(0, 32)}"`;
     if (req.headers.get("if-none-match") === etag) {
       return new Response(null, { status: 304, headers: { etag } });
