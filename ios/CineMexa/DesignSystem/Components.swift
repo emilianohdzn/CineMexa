@@ -240,6 +240,7 @@ struct ErrorStateView: View {
             Text(message).foregroundStyle(CM.secondaryText)
         } actions: {
             Button("Reintentar") { Task { await retry() } }
+                .accessibilityIdentifier("reintentar")
                 .buttonStyle(.borderedProminent)
                 .tint(CM.projectorYellow)
                 .foregroundStyle(CM.ink)

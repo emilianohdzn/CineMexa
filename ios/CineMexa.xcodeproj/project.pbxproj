@@ -14,11 +14,19 @@
 			remoteGlobalIDString = F01C2E624E08A72BC055B46F;
 			remoteInfo = CineMexa;
 		};
+		67A0F118EDD07DFF44D1481A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 46F86FAA6BBF9AC94A7E4595 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F01C2E624E08A72BC055B46F;
+			remoteInfo = CineMexa;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		D116B4EECC28EA0ABC228880 /* CineMexa.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CineMexa.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		71DC9EA9411AC77E8B54C0D2 /* CineMexaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CineMexaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		26CA7661A16EF074F66DA417 /* CineMexaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CineMexaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -30,6 +38,11 @@
 		0732AD9542E854597A903FA5 /* CineMexaTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = CineMexaTests;
+			sourceTree = "<group>";
+		};
+		E64DFF2D80B8B4ED1D8B6B39 /* CineMexaUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = CineMexaUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -49,6 +62,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FC07A89E185BD866D022D185 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -57,6 +77,7 @@
 			children = (
 				C77E3C2BD92658F710989DA6 /* CineMexa */,
 				0732AD9542E854597A903FA5 /* CineMexaTests */,
+				E64DFF2D80B8B4ED1D8B6B39 /* CineMexaUITests */,
 				86024CAD1E83101D97359D73 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -66,6 +87,7 @@
 			children = (
 				D116B4EECC28EA0ABC228880 /* CineMexa.app */,
 				71DC9EA9411AC77E8B54C0D2 /* CineMexaTests.xctest */,
+				26CA7661A16EF074F66DA417 /* CineMexaUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -118,6 +140,29 @@
 			productReference = 71DC9EA9411AC77E8B54C0D2 /* CineMexaTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		FA4A8DF5B4156CD3B22565F2 /* CineMexaUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FAE3F768083F44A2A93CC586 /* Build configuration list for PBXNativeTarget "CineMexaUITests" */;
+			buildPhases = (
+				63A545A1490A22C50C56F398 /* Sources */,
+				FC07A89E185BD866D022D185 /* Frameworks */,
+				1C13E0BD77BDFBD04B5EB44A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9D12E11CE8AF86C9991AEC33 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				E64DFF2D80B8B4ED1D8B6B39 /* CineMexaUITests */,
+			);
+			name = CineMexaUITests;
+			packageProductDependencies = (
+			);
+			productName = CineMexaUITests;
+			productReference = 26CA7661A16EF074F66DA417 /* CineMexaUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -132,6 +177,10 @@
 						CreatedOnToolsVersion = 16.0;
 					};
 					BF7A7D35C945289B6BFD3C14 = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = F01C2E624E08A72BC055B46F;
+					};
+					FA4A8DF5B4156CD3B22565F2 = {
 						CreatedOnToolsVersion = 16.0;
 						TestTargetID = F01C2E624E08A72BC055B46F;
 					};
@@ -154,6 +203,7 @@
 			targets = (
 				F01C2E624E08A72BC055B46F /* CineMexa */,
 				BF7A7D35C945289B6BFD3C14 /* CineMexaTests */,
+				FA4A8DF5B4156CD3B22565F2 /* CineMexaUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -167,6 +217,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		255C8C572FEC32EC79DCD8A8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1C13E0BD77BDFBD04B5EB44A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -190,6 +247,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		63A545A1490A22C50C56F398 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -197,6 +261,11 @@
 			isa = PBXTargetDependency;
 			target = F01C2E624E08A72BC055B46F /* CineMexa */;
 			targetProxy = 431387EB7262E1CFC79B125E /* PBXContainerItemProxy */;
+		};
+		9D12E11CE8AF86C9991AEC33 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F01C2E624E08A72BC055B46F /* CineMexa */;
+			targetProxy = 67A0F118EDD07DFF44D1481A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -358,6 +427,38 @@
 			};
 			name = Release;
 		};
+		A2E2C154038E5DE8B482395C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = mx.cinemexa.appUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_TARGET_NAME = CineMexa;
+			};
+			name = Debug;
+		};
+		ED1F7C394C6E6ECB9447696B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = mx.cinemexa.appUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_TARGET_NAME = CineMexa;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -384,6 +485,15 @@
 			buildConfigurations = (
 				626726E60BD1215F36719A30 /* Debug */,
 				E7D707A26E7F7B6FF52C489C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FAE3F768083F44A2A93CC586 /* Build configuration list for PBXNativeTarget "CineMexaUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A2E2C154038E5DE8B482395C /* Debug */,
+				ED1F7C394C6E6ECB9447696B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

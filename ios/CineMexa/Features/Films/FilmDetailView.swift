@@ -41,6 +41,7 @@ struct FilmDetailView: View {
         }
         .navigationTitle(film.title)
         .navigationBarTitleDisplayMode(.inline)
+        .accessibilityIdentifier("ficha-pelicula")
     }
 }
 

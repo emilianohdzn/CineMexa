@@ -38,6 +38,7 @@ struct FilmCard: View {
             }
             .contentShape(Rectangle())
         }
+        .accessibilityIdentifier("tarjeta-pelicula")
         .buttonStyle(PressableStyle())
         .accessibilityElement(children: .combine)
         .accessibilityHint("Abre la ficha de la película")
