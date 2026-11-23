@@ -19,7 +19,7 @@ struct FilmCard: View {
                     Text(film.title)
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(CM.paperCream)
-                        .lineLimit(2, reservesSpace: true)
+                        .lineLimit(2)
                         .multilineTextAlignment(.leading)
                     HStack(spacing: 6) {
                         if let year = film.year { Text(String(year)) }

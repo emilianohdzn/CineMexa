@@ -7,7 +7,8 @@ struct FestivalMapView: View {
     let catalog: Catalog
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-    @State private var position: MapCameraPosition = .automatic
+    @State private var position: MapCameraPosition = .region(Self.worldRegion)
+    @State private var didFrameInitially = false
     @State private var visibleRegion: MKCoordinateRegion = Self.worldRegion
     @State private var period: MapPeriod = .month
     @State private var kinds: Set<FestivalEventKind> = Set(FestivalEventKind.allCases)
@@ -81,11 +82,31 @@ struct FestivalMapView: View {
         }
         .onChange(of: items.map(\.id)) { _, _ in
             // Al cambiar filtros, encuadra las sedes resultantes.
-            withAnimation(.cm(reduceMotion)) { position = .automatic }
+            withAnimation(.cm(reduceMotion)) { position = .region(Self.fittingRegion(items)) }
         }
+        .onAppear {
+            if !didFrameInitially {
+                didFrameInitially = true
+                position = .region(Self.fittingRegion(items))
+            }
+        }
+        .onDisappear { selected = nil; showsList = false }
         .navigationTitle("Mapa festivalero")
         .navigationBarTitleDisplayMode(.inline)
         .animation(.cm(reduceMotion), value: clusters.map(\.id))
+    }
+
+    /// Región que contiene todas las sedes con margen, y espacio extra arriba para la franja de filtros.
+    static func fittingRegion(_ items: [Catalog.MapItem]) -> MKCoordinateRegion {
+        guard !items.isEmpty else { return worldRegion }
+        let lats = items.map(\.coordinate.latitude)
+        let lons = items.map(\.coordinate.longitude)
+        let minLat = lats.min()!, maxLat = lats.max()!, minLon = lons.min()!, maxLon = lons.max()!
+        let lonDelta = min(max((maxLon - minLon) * 1.5, 6), 300)
+        let latDelta = min(max((maxLat - minLat) * 1.6, 6) + 8, 150)
+        let center = CLLocationCoordinate2D(latitude: min((minLat + maxLat) / 2 + latDelta * 0.12, 80),
+                                            longitude: (minLon + maxLon) / 2)
+        return MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: latDelta, longitudeDelta: lonDelta))
     }
 
     private func zoom(into cluster: MapCluster) {
