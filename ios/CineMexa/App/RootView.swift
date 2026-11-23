@@ -65,6 +65,7 @@ struct TabRoot<Content: View>: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(CM.cinemaBlack.ignoresSafeArea())
+            .toolbarColorScheme(.dark, for: .navigationBar)
             .navigationDestination(for: Route.self) { route in
                 Group {
                     if let catalog = model.catalog {

@@ -33,15 +33,18 @@ enum Appearance {
         UITabBar.appearance().standardAppearance = tab
         UITabBar.appearance().scrollEdgeAppearance = tab
 
-        let nav = UINavigationBarAppearance()
-        nav.configureWithTransparentBackground()
-        nav.backgroundColor = UIColor(CM.cinemaBlack.opacity(0.92))
-        let titleFont = UIFont(name: "Fredoka-SemiBold", size: 18) ?? .systemFont(ofSize: 18, weight: .semibold)
-        let largeFont = UIFont(name: "Fredoka-Bold", size: 34) ?? .systemFont(ofSize: 34, weight: .bold)
-        nav.titleTextAttributes = [.foregroundColor: UIColor(CM.paperCream), .font: UIFontMetrics(forTextStyle: .headline).scaledFont(for: titleFont)]
-        nav.largeTitleTextAttributes = [.foregroundColor: UIColor(CM.paperCream), .font: UIFontMetrics(forTextStyle: .largeTitle).scaledFont(for: largeFont)]
-        UINavigationBar.appearance().standardAppearance = nav
-        UINavigationBar.appearance().scrollEdgeAppearance = nav
-        UINavigationBar.appearance().compactAppearance = nav
+        // Títulos de navegación: los dibuja el sistema (claros en modo oscuro); sólo cambiamos la tipografía.
+        if let large = UIFont(name: "Fredoka-Bold", size: 34) {
+            UINavigationBar.appearance().largeTitleTextAttributes = [
+                .font: UIFontMetrics(forTextStyle: .largeTitle).scaledFont(for: large),
+                .foregroundColor: UIColor(CM.paperCream),
+            ]
+        }
+        if let title = UIFont(name: "Fredoka-SemiBold", size: 18) {
+            UINavigationBar.appearance().titleTextAttributes = [
+                .font: UIFontMetrics(forTextStyle: .headline).scaledFont(for: title),
+                .foregroundColor: UIColor(CM.paperCream),
+            ]
+        }
     }
 }

@@ -116,6 +116,11 @@ enum CineFormat {
     static func dateTime(_ date: Date) -> String {
         date.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated).hour().minute().locale(locale))
     }
+    /// "lunes, 23 de noviembre" → "Lunes, 23 de noviembre" (sólo la primera letra).
+    static func sentenceCase(_ s: String) -> String {
+        guard let first = s.first else { return s }
+        return first.uppercased() + s.dropFirst()
+    }
     static func relative(_ date: Date, now: Date = Date()) -> String {
         let f = RelativeDateTimeFormatter()
         f.locale = locale

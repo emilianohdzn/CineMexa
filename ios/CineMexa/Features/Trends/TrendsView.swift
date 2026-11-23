@@ -133,7 +133,7 @@ struct RankRow: View {
                 .foregroundStyle(entry.rank == 1 ? CM.projectorYellow : CM.paperCream)
                 .frame(width: compact ? 34 : 46)
                 .minimumScaleFactor(0.6)
-            PosterView(film: film, cornerRadius: 6)
+            PosterView(film: film, cornerRadius: 6, compactPlaceholder: true)
                 .frame(width: compact ? 48 : 64)
             VStack(alignment: .leading, spacing: 4) {
                 Text(film.title)

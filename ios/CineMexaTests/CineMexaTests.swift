@@ -1,5 +1,6 @@
 import Testing
 import Foundation
+import MapKit
 @testable import CineMexa
 
 /// Tests de la capa de datos y reglas. Se ejecutan con ⌘U en Xcode o con
@@ -104,8 +105,8 @@ struct CatalogTests {
 
     @Test func filtrosDePeliculas() async throws {
         let c = try await catalog()
-        #expect(c.films(matching: .documentaries).allSatisfy(\.isDocumentary))
-        #expect(c.films(matching: .animation).allSatisfy(\.isAnimation))
+        #expect(c.films(matching: .documentaries).allSatisfy { $0.isDocumentary })
+        #expect(c.films(matching: .animation).allSatisfy { $0.isAnimation })
         #expect(c.films(matching: .criticism).allSatisfy { !(c.reviewsByFilm[$0.id] ?? []).isEmpty })
         var r = FilmRefinements(); r.participation = .coproduction
         #expect(c.films(matching: .all, refinements: r).allSatisfy { $0.mxParticipation == .coproduction })
@@ -145,6 +146,39 @@ struct LiveRepositoryTests {
             #expect(model.state == .failed("No hay conexión con el servidor. sin red"))
         } else {
             #expect(model.isShowingCachedData)
+        }
+    }
+}
+
+@Suite("Encuadre del mapa")
+struct MapFramingTests {
+    let now = ISO8601DateFormatter().date(from: "2026-11-23T18:00:00Z")!
+
+    func historicItems() async throws -> [Catalog.MapItem] {
+        let catalog = Catalog(try await DemoRepository(bundle: Bundle(for: AppModel.self), now: { [now] in now }).fetchSnapshot())
+        return catalog.mapItems(period: .historic, kinds: Set(FestivalEventKind.allCases), filmKind: nil, query: "", now: now)
+    }
+
+    @Test func separaAmericaDeEuropa() async throws {
+        let items = try await historicItems()
+        let groups = MapRegionGroup.groups(items)
+        #expect(groups.map(\.items.count).reduce(0, +) == items.count)
+        for group in groups {
+            let lons = group.items.map(\.coordinate.longitude)
+            #expect(lons.max()! - lons.min()! < 85, "Cada región cabe en lo que MapKit deja alejar")
+        }
+        let all = MapRegionGroup.groups(try await historicItems().filter { $0.festival.country == "MX" })
+        #expect(all.count == 1 && all[0].name == "México")
+    }
+
+    @Test func elEncuadreContieneLaRegionYRespetaLaProporcion() async throws {
+        let size = CGSize(width: 402, height: 675)
+        for group in MapRegionGroup.groups(try await historicItems()) {
+            let rect = FestivalMapView.fittingRect(group.items, viewSize: size)
+            for item in group.items {
+                #expect(rect.contains(MKMapPoint(item.coordinate)), "Falta \(item.festival.name)")
+            }
+            #expect(abs(rect.height / rect.width - Double(size.height / size.width)) < 0.01)
         }
     }
 }

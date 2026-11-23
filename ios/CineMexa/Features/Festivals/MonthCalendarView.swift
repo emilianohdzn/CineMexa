@@ -35,7 +35,7 @@ struct MonthCalendarView: View {
             Button { shift(-1) } label: { Image(systemName: "chevron.left").frame(width: CM.minTap, height: CM.minTap) }
                 .accessibilityLabel("Mes anterior")
             Spacer()
-            Text(month.formatted(.dateTime.month(.wide).year().locale(CineFormat.locale)).capitalized(with: CineFormat.locale))
+            Text(CineFormat.sentenceCase(month.formatted(.dateTime.month(.wide).year().locale(CineFormat.locale))))
                 .font(CMFont.display(22, relativeTo: .title3))
                 .foregroundStyle(CM.ink)
                 .contentTransition(.numericText())
@@ -102,7 +102,7 @@ struct MonthCalendarView: View {
         let refs = catalog.editions(activeOn: selectedDay)
         let date = DateLogic.parseDay(selectedDay) ?? Date()
         return VStack(alignment: .leading, spacing: CM.Space.m) {
-            SectionHeader(title: CineFormat.longDate(date).capitalized(with: CineFormat.locale), kicker: "Festivales este día")
+            SectionHeader(title: CineFormat.sentenceCase(CineFormat.longDate(date)), kicker: "Festivales este día")
             if refs.isEmpty {
                 Text("No hay festivales con fechas confirmadas este día.")
                     .font(.callout).foregroundStyle(CM.secondaryText).padding(.horizontal, CM.Space.gutter)

@@ -8,6 +8,10 @@ struct FestivalMapView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     @State private var position: MapCameraPosition = .region(Self.worldRegion)
+    @State private var didFrameInitially = false
+    @State private var mapSize: CGSize = .zero
+    /// Región geográfica encuadrada (índice en `MapRegionGroup.groups`).
+    @State private var focusedGroup = 0
     @State private var visibleRegion: MKCoordinateRegion = Self.worldRegion
     @State private var period: MapPeriod = .month
     @State private var kinds: Set<FestivalEventKind> = Set(FestivalEventKind.allCases)
@@ -22,6 +26,7 @@ struct FestivalMapView: View {
     var body: some View {
         let items = catalog.mapItems(period: period, kinds: kinds, filmKind: filmKind, query: query)
         let clusters = MapClusterer.cluster(items, region: visibleRegion)
+        let groups = MapRegionGroup.groups(items)
 
         Map(position: $position) {
             ForEach(clusters) { cluster in
@@ -45,6 +50,16 @@ struct FestivalMapView: View {
             visibleRegion = context.region
         }
         .safeAreaInset(edge: .top) { filters(count: items.count) }
+        .onGeometryChange(for: CGSize.self) { $0.size } action: { size in
+            // La primera medición llega a mitad de la transición de pestaña (tamaño diminuto):
+            // se vuelve a encuadrar mientras el tamaño cambie de forma apreciable.
+            let changed = abs(size.width - mapSize.width) > 20 || abs(size.height - mapSize.height) > 20
+            mapSize = size
+            if changed, size.width > 0, size.height > 0 { focusCamera(groups, animated: false) }
+        }
+        .overlay(alignment: .bottomLeading) {
+            if groups.count > 1 { regionSwitcher(groups) }
+        }
         .overlay(alignment: .bottomTrailing) {
             Button { showsList = true } label: {
                 Label("Lista", systemImage: "list.bullet")
@@ -54,7 +69,10 @@ struct FestivalMapView: View {
                     .frame(minHeight: CM.minTap)
                     .background(Capsule().fill(CM.projectorYellow))
             }
-            .padding(16)
+            .padding(.horizontal, 16)
+            .padding(.top, 16)
+            // Deja libre la atribución de Apple Mapas (logo y «Aviso legal»).
+            .padding(.bottom, 44)
             .accessibilityLabel("Ver festivales del mapa en lista")
         }
         .sheet(item: $selected) { item in
@@ -79,9 +97,83 @@ struct FestivalMapView: View {
             }
             .presentationDetents([.medium, .large])
         }
+        .onChange(of: items.map(\.id)) { _, _ in
+            // Al cambiar filtros, encuadra la región principal de las sedes resultantes.
+            focusedGroup = 0
+            focusCamera(groups, animated: true)
+        }
+        .onDisappear { selected = nil; showsList = false }
         .navigationTitle("Mapa festivalero")
         .navigationBarTitleDisplayMode(.inline)
         .animation(.cm(reduceMotion), value: clusters.map(\.id))
+    }
+
+    /// Rectángulo (en puntos Mercator, lineales en pantalla) que contiene todas las sedes con margen,
+    /// ajustado a la proporción de la vista y con espacio extra arriba para la franja de filtros.
+    static func fittingRect(_ items: [Catalog.MapItem], viewSize: CGSize) -> MKMapRect {
+        let world = MKMapRect.world
+        guard !items.isEmpty else {
+            // Sin sedes: de América a Europa.
+            let a = MKMapPoint(CLLocationCoordinate2D(latitude: 65, longitude: -120))
+            let b = MKMapPoint(CLLocationCoordinate2D(latitude: -10, longitude: 30))
+            return MKMapRect(x: a.x, y: a.y, width: b.x - a.x, height: b.y - a.y)
+        }
+        let points = items.map { MKMapPoint($0.coordinate) }
+        let minX = points.map(\.x).min()!, maxX = points.map(\.x).max()!
+        let minY = points.map(\.y).min()!, maxY = points.map(\.y).max()!
+        let minSide = world.width * 12 / 360   // nunca más cerca que ~12°
+        var w = max((maxX - minX) * 1.3, minSide)
+        var h = max((maxY - minY) * 1.3, minSide)
+        // La franja de filtros tapa la parte superior y los controles la inferior: se añade ese espacio.
+        let topExtra = h * 0.45
+        let bottomExtra = h * 0.3
+        h += topExtra + bottomExtra
+        // Respeta la proporción alto/ancho de la vista: crece la dimensión que falta.
+        let aspect = viewSize.width > 0 && viewSize.height > 0 ? Double(viewSize.height / viewSize.width) : 2.0
+        if h / w < aspect { h = w * aspect } else { w = h / aspect }
+        if h > world.height { w *= world.height / h; h = world.height }
+        w = min(w, world.width)
+        let midX = (minX + maxX) / 2
+        let midY = (minY + maxY) / 2 - (topExtra - bottomExtra) / 2
+        let originY = min(max(midY - h / 2, 0), world.height - h)
+        return MKMapRect(x: midX - w / 2, y: originY, width: w, height: h)
+    }
+
+    /// Encuadra la región enfocada. MapKit (2D) no se aleja más de ~85° de longitud por código,
+    /// así que sedes en continentes distintos se muestran por región, con un selector para saltar.
+    private func focusCamera(_ groups: [MapRegionGroup], animated: Bool) {
+        let index = groups.indices.contains(focusedGroup) ? focusedGroup : 0
+        let rect = Self.fittingRect(groups.isEmpty ? [] : groups[index].items, viewSize: mapSize)
+        if animated {
+            withAnimation(.cm(reduceMotion)) { position = .rect(rect) }
+        } else {
+            position = .rect(rect)
+        }
+    }
+
+    private func regionSwitcher(_ groups: [MapRegionGroup]) -> some View {
+        HStack(spacing: 8) {
+            ForEach(Array(groups.enumerated()), id: \.element.id) { index, group in
+                let isOn = index == focusedGroup
+                Button {
+                    focusedGroup = index
+                    focusCamera(groups, animated: true)
+                } label: {
+                    Text("\(group.name) · \(group.items.count)")
+                        .font(.footnote.weight(.semibold))
+                        .foregroundStyle(isOn ? CM.ink : CM.paperCream)
+                        .padding(.horizontal, 12)
+                        .frame(minHeight: CM.minTap)
+                        .background(Capsule().fill(isOn ? CM.paperCream : CM.cinemaBlack.opacity(0.85)))
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Ver \(group.name), \(group.items.count) sedes")
+                .accessibilityAddTraits(isOn ? .isSelected : [])
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.top, 16)
+        .padding(.bottom, 44)
     }
 
     private func zoom(into cluster: MapCluster) {
@@ -110,12 +202,17 @@ struct FestivalMapView: View {
             .frame(minHeight: CM.minTap)
             .background(RoundedRectangle(cornerRadius: 12).fill(CM.deepSurface))
 
+            // Fila 1: periodo (selección única). Fila 2: tipo de actividad y de película (interruptores).
             ScrollView(.horizontal) {
                 HStack(spacing: 8) {
                     ForEach(MapPeriod.allCases) { p in
                         FilterChip(title: p.label, isSelected: period == p) { period = p }
                     }
-                    Divider().frame(height: 24)
+                }
+            }
+            .scrollIndicators(.hidden)
+            ScrollView(.horizontal) {
+                HStack(spacing: 8) {
                     ForEach([FestivalEventKind.selection, .screening, .award], id: \.self) { k in
                         FilterChip(title: k.label, symbol: k.symbol, isSelected: kinds.contains(k)) {
                             if kinds.contains(k) { kinds.remove(k) } else { kinds.insert(k) }
@@ -209,17 +306,26 @@ struct MapCluster: Identifiable {
     }
 }
 
-/// Agrupación por cuadrícula según el área visible: evita marcadores encimados sin consultas extra.
+/// Agrupación por distancia según el área visible: une sedes a menos de ~1/12 del ancho
+/// visible para evitar marcadores encimados, sin consultas extra a la red.
 enum MapClusterer {
-    static func cluster(_ items: [Catalog.MapItem], region: MKCoordinateRegion, cellsAcross: Double = 9) -> [MapCluster] {
-        let cellLon = max(region.span.longitudeDelta / cellsAcross, 0.0001)
-        let cellLat = max(region.span.latitudeDelta / (cellsAcross * 1.6), 0.0001)
-        var buckets: [String: [Catalog.MapItem]] = [:]
-        for item in items {
-            let key = "\(Int(floor(item.coordinate.latitude / cellLat)))|\(Int(floor(item.coordinate.longitude / cellLon)))"
-            buckets[key, default: []].append(item)
+    static func cluster(_ items: [Catalog.MapItem], region: MKCoordinateRegion, fraction: Double = 1.0 / 12.0) -> [MapCluster] {
+        let thresholdLon = max(region.span.longitudeDelta * fraction, 0.0001)
+        let thresholdLat = max(region.span.latitudeDelta * fraction, 0.0001)
+        var groups: [[Catalog.MapItem]] = []
+        for item in items.sorted(by: { $0.id < $1.id }) {
+            if let index = groups.firstIndex(where: { group in
+                group.contains { other in
+                    abs(other.coordinate.latitude - item.coordinate.latitude) < thresholdLat &&
+                    abs(other.coordinate.longitude - item.coordinate.longitude) < thresholdLon
+                }
+            }) {
+                groups[index].append(item)
+            } else {
+                groups.append([item])
+            }
         }
-        return buckets.values.map { MapCluster(items: $0) }.sorted { $0.id < $1.id }
+        return groups.map { MapCluster(items: $0) }.sorted { $0.id < $1.id }
     }
 }
 
@@ -303,4 +409,36 @@ struct FestivalMapSheet: View {
     }
 
     private var groupedByFilm: [Catalog.FilmEvents] { catalog.groupByFilm(item.events) }
+}
+
+/// Sedes agrupadas por región: se separan donde hay un hueco grande de longitud
+/// (p. ej. el Atlántico entre México y Europa). La primera es la que tiene más sedes.
+struct MapRegionGroup: Identifiable {
+    let items: [Catalog.MapItem]
+    var id: String { items.map(\.id).joined(separator: ",") }
+
+    var name: String {
+        let lon = items.map(\.coordinate.longitude).reduce(0, +) / Double(max(items.count, 1))
+        if items.allSatisfy({ $0.festival.country == "MX" }) { return "México" }
+        switch lon {
+        case ..<(-30): return "América"
+        case ..<60: return "Europa"
+        default: return "Asia y Oceanía"
+        }
+    }
+
+    static func groups(_ items: [Catalog.MapItem], gap: Double = 40) -> [MapRegionGroup] {
+        let sorted = items.sorted { $0.coordinate.longitude < $1.coordinate.longitude }
+        var result: [[Catalog.MapItem]] = []
+        for item in sorted {
+            if let last = result.last?.last, item.coordinate.longitude - last.coordinate.longitude <= gap {
+                result[result.count - 1].append(item)
+            } else {
+                result.append([item])
+            }
+        }
+        return result
+            .map(MapRegionGroup.init(items:))
+            .sorted { $0.items.count > $1.items.count }
+    }
 }
