@@ -4,9 +4,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test \"test/**/*.test.ts\""
+    "test": "node --test \"test/**/*.test.ts\"",
+    "collect:wikidata": "node collectors/wikidata/run.ts"
   },
   "devDependencies": {
     "@electric-sql/pglite": "0.4.6"
+  },
+  "dependencies": {
+    "postgres": "3.4.5"
   }
 }
