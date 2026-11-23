@@ -5,17 +5,19 @@
 // - Control de cuota: YouTube con presupuesto por corrida y por día (unidades registradas en ingestion_runs).
 // - Límite de duración: el proceso se corta solo a los TIMEOUT_MIN minutos.
 // - Resumen en JSON por consola y, en GitHub Actions, en el resumen del job. Código 1 sólo si la corrida falla.
-// Uso: node jobs/ejecutar.ts <wikidata|tmdb|youtube|tendencias|youtube-y-tendencias>
+// Uso: node jobs/ejecutar.ts <wikidata|festivales|tmdb|youtube|tendencias|youtube-y-tendencias>
+// "wikidata" corre también "festivales" (necesita las películas recién descubiertas).
 import { appendFileSync } from "node:fs";
 import { openPostgres, type Db } from "../collectors/lib/db.ts";
 import { runWikidataDiscover } from "../collectors/wikidata/run.ts";
 import { runTmdbEnrich } from "../collectors/tmdb/run.ts";
 import { runYoutubeViews } from "../collectors/youtube/run.ts";
 import { runTrendSnapshots } from "./trends.ts";
+import { runWikidataFestivals } from "../collectors/wikidata/festivals.ts";
 
-export type JobName = "wikidata" | "tmdb" | "youtube" | "tendencias";
+export type JobName = "wikidata" | "festivales" | "tmdb" | "youtube" | "tendencias";
 const JOBS: Record<string, JobName[]> = {
-  wikidata: ["wikidata"], tmdb: ["tmdb"], youtube: ["youtube"], tendencias: ["tendencias"],
+  wikidata: ["wikidata", "festivales"], festivales: ["festivales"], tmdb: ["tmdb"], youtube: ["youtube"], tendencias: ["tendencias"],
   "youtube-y-tendencias": ["youtube", "tendencias"],
 };
 
@@ -64,6 +66,10 @@ export async function runJob(job: JobName, { env, db, connect, now = () => new D
           connect, concurrency: Number(env.WIKIDATA_CONCURRENCY ?? 4),
         });
         return { job, status: r.status, detail: { seen: r.seen, counts: r.counts, errors: r.errors.length } };
+      }
+      case "festivales": {
+        const r = await runWikidataFestivals(db, { userAgent: env.WIKIDATA_USER_AGENT ?? "", fromYear: Number(env.CATALOG_FROM_YEAR ?? 2024) });
+        return { job, status: r.status, detail: { counts: r.counts, errors: r.errors.length, avisos: r.warnings } };
       }
       case "tmdb": {
         const r = await runTmdbEnrich(db, {

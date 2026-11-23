@@ -6,6 +6,7 @@
   "scripts": {
     "test": "node --test \"test/**/*.test.ts\"",
     "collect:wikidata": "node --env-file-if-exists=.env.local collectors/wikidata/run.ts",
+    "collect:festivals": "node --env-file-if-exists=.env.local collectors/wikidata/festivals.ts",
     "collect:tmdb": "node --env-file-if-exists=.env.local collectors/tmdb/run.ts",
     "collect:youtube": "node --env-file-if-exists=.env.local collectors/youtube/run.ts",
     "job:trends": "node --env-file-if-exists=.env.local jobs/trends.ts",

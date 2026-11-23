@@ -1,0 +1,24 @@
+{
+  "_comment": "Ediciones con fechas publicadas, cada una con su fuente. verified = página oficial del festival; editorial = medio que cita al festival. Revisadas el 2026-11-23. No incluye selecciones ni proyecciones: esas sólo entran con evidencia por película.",
+  "retrieved_at": "2026-11-23T08:45:00Z",
+  "editions": [
+    { "festival": "ficm", "label": "24ª edición", "year": 2026, "starts_on": "2026-10-16", "ends_on": "2026-10-25", "timezone": "America/Mexico_City",
+      "source_url": "https://www.chilango.com/cine-y-tv/peliculas/ficm-2026-fechas-del-festival-internacional-de-cine-de-morelia/", "verification": "editorial" },
+    { "festival": "ficunam", "label": "16ª edición", "year": 2026, "starts_on": "2026-11-05", "ends_on": "2026-11-15", "timezone": "America/Mexico_City",
+      "source_url": "https://www.chilango.com/que-hacer/estrenos-250-funciones-ficunam-2026-fechas-y-sedes/", "verification": "editorial" },
+    { "festival": "los-cabos", "label": "14ª edición", "year": 2026, "starts_on": "2026-12-09", "ends_on": "2026-12-13", "timezone": "America/Mazatlan",
+      "source_url": "https://palomaynacho.com/blog/ficccloscabos-2026-seleccion-oficial-fechas-actividades/", "verification": "editorial" },
+    { "festival": "sundance", "label": "2027", "year": 2027, "starts_on": "2027-01-21", "ends_on": "2027-01-31", "timezone": "America/Denver",
+      "source_url": "https://www.sundance.org/blogs/2027-sundance-film-festival-to-take-place-january-21-31-in-boulder-colorado/", "verification": "verified" },
+    { "festival": "clermont-ferrand", "label": "49ª edición", "year": 2027, "starts_on": "2027-01-29", "ends_on": "2027-02-06", "timezone": "Europe/Paris",
+      "source_url": "https://www.lecourt-clermont.org/wp-content/uploads/2026/06/EN-Reglement-international-2027.pdf", "verification": "verified" },
+    { "festival": "berlinale", "label": "77ª edición", "year": 2027, "starts_on": "2027-02-10", "ends_on": "2027-02-21", "timezone": "Europe/Berlin",
+      "source_url": "https://www.berlinale.de/en/2027/news-press-releases/278428.html", "verification": "verified" },
+    { "festival": "cannes", "label": "80ª edición", "year": 2027, "starts_on": "2027-05-11", "ends_on": "2027-05-22", "timezone": "Europe/Paris",
+      "source_url": "https://www.screendaily.com/news/cannes-film-festival-confirms-2027-dates-for-80th-edition/5217448.article", "verification": "editorial" }
+  ],
+  "relocations": [
+    { "festival": "sundance", "city": "Boulder", "country": "US", "lat": 40.0150, "lon": -105.2705, "from_year": 2027,
+      "source_url": "https://www.sundance.org/blogs/2027-sundance-film-festival-to-take-place-january-21-31-in-boulder-colorado/" }
+  ]
+}
