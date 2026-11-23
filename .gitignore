@@ -13,3 +13,4 @@ backend/supabase/.temp/
 
 # Empaquetado generado de la Edge Function
 backend/supabase/functions/catalog/_bundle/
+backend/supabase/functions/mexa/_bundle/
