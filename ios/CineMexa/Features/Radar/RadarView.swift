@@ -33,7 +33,7 @@ struct RadarView: View {
     // A. Encabezado
     private var header: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(CineFormat.longDate(Date()).capitalized(with: CineFormat.locale))
+            Text(CineFormat.sentenceCase(CineFormat.longDate(Date())))
                 .font(CMFont.mono(12, weight: .semibold))
                 .foregroundStyle(CM.secondaryText)
             Text("El cine mexicano\nestá pasando.")
