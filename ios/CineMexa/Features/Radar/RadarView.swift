@@ -10,7 +10,7 @@ struct RadarView: View {
         ScrollView {
             LazyVStack(alignment: .leading, spacing: CM.Space.xxl) {
                 header
-                HeroCarousel(catalog: catalog, films: catalog.heroFilms)
+                if !catalog.heroFilms.isEmpty { HeroCarousel(catalog: catalog, films: catalog.heroFilms) }
                 billboard
                 topFive
                 worldPreview
