@@ -51,5 +51,24 @@ Enriquece películas que ya tienen id de TMDB (normalmente vía Wikidata, P4947)
 TMDB_API_READ_TOKEN=... DATABASE_URL=... npm run collect:tmdb -- --limit 200
 ```
 
+## YouTube (`youtube/`) · listo (falta clave)
+Visualizaciones de los tráilers registrados en `films.trailer_url` (videos.list, 1 unidad de cuota por
+cada 50 videos; `maxUnits` limita la corrida). La primera consulta sólo fija la línea base; después se
+guarda en `trend_signals` la diferencia de visualizaciones (`views_delta`) por intervalo. Estadísticas
+ocultas no generan dato. La clave nunca se escribe en errores ni en `ingestion_runs`.
+
+## Job de tendencias (`../jobs/trends.ts`)
+Lee `trend_signals`, reparte intervalos en horas, aplica `trend_score` de `packages/core` y guarda un
+`trend_snapshot` por ventana (24 h, 7 días, 30 días). Sin evidencia el ranking queda vacío.
+
+```sh
+YOUTUBE_API_KEY=... DATABASE_URL=... npm run collect:youtube
+DATABASE_URL=... npm run job:trends
+```
+
+## Frecuencias sugeridas (ver `.env.example`)
+Wikidata diario, TMDB diario, YouTube cada 4–6 h seguido del job de tendencias. Se pueden programar con
+Supabase Cron + una función que dispare el collector, o con un runner externo (GitHub Actions programado).
+
 ## Pendiente
-`youtube` (clave y cuota) → festivales (feeds oficiales o captura editorial).
+Festivales: adaptadores de feeds/ICS oficiales y captura editorial; noticias.

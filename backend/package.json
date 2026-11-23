@@ -6,7 +6,9 @@
   "scripts": {
     "test": "node --test \"test/**/*.test.ts\"",
     "collect:wikidata": "node collectors/wikidata/run.ts",
-    "collect:tmdb": "node collectors/tmdb/run.ts"
+    "collect:tmdb": "node collectors/tmdb/run.ts",
+    "collect:youtube": "node collectors/youtube/run.ts",
+    "job:trends": "node jobs/trends.ts"
   },
   "devDependencies": {
     "@electric-sql/pglite": "0.4.6"
