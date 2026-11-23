@@ -8,7 +8,8 @@ Dos capas, con reglas distintas.
   (`coordinate_precision = 'city'`) hasta tener la dirección de la sede oficial.
 - Ediciones con fecha en `backend/seed/festival-editions.json`, cada una con `source_url` y estado:
   - `verified`: fecha leída en el sitio oficial del festival (Sundance 2027, Clermont-Ferrand 2027, Berlinale 2027).
-  - `editorial`: fecha publicada por prensa que cita al festival (FICM 2026, FICUNAM 2026, Los Cabos 2026, Cannes 2027).
+  - `editorial`: fecha publicada por prensa o por la oficina de turismo que cita al festival (FICM 2026, FICUNAM 2026,
+    Los Cabos 2026, Cannes 2027, Berlinale 2025, que permite ligar el Oso de Plata 2025 hallado en Wikidata).
   - Sin fuente no hay edición. FICG, GIFF, Ambulante, DocsMX, Venecia, San Sebastián y Locarno quedan sin fecha
     hasta que su sitio oficial la publique.
 - Cambios de sede con fuente: Sundance se muda a Boulder (EE. UU.) desde 2027.

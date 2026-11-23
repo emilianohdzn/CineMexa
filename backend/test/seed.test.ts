@@ -17,7 +17,7 @@ test("las ediciones sembradas llevan fuente, son idempotentes y aplican el cambi
   const db = await freshDb();
   await seedFestivals(db);
   const first = await seedFestivalEditions(db);
-  assert.equal(first.upserted, 7);
+  assert.equal(first.upserted, 8);
   assert.deepEqual(first.missingFestivals, []);
   assert.equal(first.relocated, 1);
   const again = await seedFestivalEditions(db);
@@ -25,9 +25,9 @@ test("las ediciones sembradas llevan fuente, son idempotentes y aplican el cambi
   const { rows } = await db.query<{ slug: string; starts_on: string; source_url: string; verification: string }>(`
     select f.slug, e.starts_on::text, e.source_url, e.verification::text from festival_editions e join festivals f on f.id = e.festival_id
     order by e.starts_on`);
-  assert.equal(rows.length, 7);
+  assert.equal(rows.length, 8);
   assert.ok(rows.every((r) => r.source_url.startsWith("https://")), "toda edición cita su fuente");
-  assert.equal(rows.find((r) => r.slug === "berlinale")!.verification, "verified");
+  assert.equal(rows.find((r) => r.slug === "berlinale" && r.starts_on.startsWith("2027"))!.verification, "verified");
   const { rows: [s] } = await db.query<{ city: string; venue_city: string }>(
     "select f.city, v.city as venue_city from festivals f join venues v on v.id = f.default_venue_id where f.slug = 'sundance'");
   assert.deepEqual(s, { city: "Boulder", venue_city: "Boulder" });

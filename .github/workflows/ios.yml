@@ -1,0 +1,53 @@
+# Compila la app y corre las pruebas de Swift (unitarias + interfaz) en un simulador de iPhone.
+# Repositorio público: los runners estándar de macOS de GitHub no tienen costo. Sin firma ni secretos:
+# la app arranca en modo demo (LiveConfig.json no está en git) y las pruebas en vivo usan servidores simulados.
+name: iOS
+
+on:
+  push:
+    branches: [main]
+    paths: ["ios/**", ".github/workflows/ios.yml"]
+  pull_request:
+    paths: ["ios/**", ".github/workflows/ios.yml"]
+  workflow_dispatch:
+
+concurrency:
+  group: ios-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: macos-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Xcode y simulador
+        id: sim
+        run: |
+          xcodebuild -version
+          # El iPhone más reciente disponible en la imagen del runner (los nombres cambian con cada Xcode).
+          udid=$(xcrun simctl list devices available -j | python3 -c '
+          import json, sys
+          devs = json.load(sys.stdin)["devices"]
+          runtimes = sorted((k for k in devs if "iOS" in k), key=lambda k: [int(x) for x in k.rsplit("iOS-", 1)[1].split("-")])
+          phones = [d for d in devs[runtimes[-1]] if d["name"].startswith("iPhone")]
+          print(phones[-1]["udid"])')
+          echo "udid=$udid" >> "$GITHUB_OUTPUT"
+      - name: Compilar y probar
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project ios/CineMexa.xcodeproj -scheme CineMexa \
+            -destination "id=${{ steps.sim.outputs.udid }}" \
+            -resultBundlePath build/CineMexa.xcresult \
+            CODE_SIGNING_ALLOWED=NO | tail -n 200
+      - name: Resultados
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: CineMexa-xcresult
+          path: build/CineMexa.xcresult
+          retention-days: 7

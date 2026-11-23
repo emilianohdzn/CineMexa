@@ -29,9 +29,9 @@ function fakeWikidata() {
       // Premio con referencia, película conocida, edición 2026 (creada desde Wikidata).
       { st: v(`${WD}statement/Q700001-AAA`), film: v(`${WD}Q700001`), kind: v("award"), award: v(`${WD}Q1`), awardLabel: v("Oso de Plata"),
         fest: v(`${WD}Q130871`), time: v("2026-02-21T00:00:00Z"), ref: v("https://www.berlinale.de/en/archive/prizes.html") },
-      // Nominación en 2025: no hay edición 2025 → no se crea nada.
+      // Nominación en 2023: no hay edición 2023 → no se crea nada.
       { st: v(`${WD}statement/Q700001-BBB`), film: v(`${WD}Q700001`), kind: v("nomination"), award: v(`${WD}Q2`), awardLabel: v("Oso de Oro"),
-        fest: v(`${WD}Q130871`), time: v("2025-02-20T00:00:00Z") },
+        fest: v(`${WD}Q130871`), time: v("2023-02-20T00:00:00Z") },
       // Película que no está en el catálogo.
       { st: v(`${WD}statement/Q799999-CCC`), film: v(`${WD}Q799999`), kind: v("award"), award: v(`${WD}Q1`), awardLabel: v("Oso de Plata"),
         fest: v(`${WD}Q130871`), time: v("2026-02-21T00:00:00Z") },
@@ -76,6 +76,7 @@ test("vincula sólo con dominio único, crea ediciones sin pisar las editoriales
     select e.year, e.source_id, e.edition_label, e.starts_on::text from festival_editions e join festivals f on f.id = e.festival_id
     where f.slug = 'berlinale' order by e.year`);
   assert.deepEqual(eds, [
+    { year: 2025, source_id: "editorial", edition_label: "75ª edición", starts_on: "2025-02-13" },
     { year: 2026, source_id: "wikidata", edition_label: "76ª edición", starts_on: "2026-02-12" },
     { year: 2027, source_id: "editorial", edition_label: "77ª edición", starts_on: "2027-02-10" },
   ], "la edición 2027 ya tenía fuente editorial y no se toca");
