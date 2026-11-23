@@ -9,18 +9,31 @@ export interface Db {
  * PGlite en las pruebas). Con sentencias preparadas postgres.js conoce el tipo del parámetro y lo
  * volvería a serializar, guardando un string JSON en vez del objeto: por eso el texto pasa tal cual.
  */
-export async function openPostgres(url: string): Promise<{ db: Db; end: () => Promise<void> }> {
+export interface PostgresHandle {
+  db: Db;
+  /** Presta una conexión propia (para transacciones en paralelo). */
+  withConnection: <T>(fn: (db: Db) => Promise<T>) => Promise<T>;
+  end: () => Promise<void>;
+}
+
+export async function openPostgres(url: string, { max = 1 }: { max?: number } = {}): Promise<PostgresHandle> {
   const { default: postgres } = await import("postgres");
   const passthrough = (value: unknown) => (typeof value === "string" ? value : JSON.stringify(value));
   const sql = postgres(url, {
-    max: 1,
+    max,
     types: {
       json: { to: 114, from: [114], serialize: passthrough, parse: JSON.parse },
       jsonb: { to: 3802, from: [3802], serialize: passthrough, parse: JSON.parse },
     },
   });
+  const wrap = (conn: { unsafe: (q: string, p: never[]) => Promise<unknown> }): Db =>
+    ({ query: async (q, params = []) => ({ rows: (await conn.unsafe(q, params as never[])) as never[] }) });
   return {
-    db: { query: async (q, params = []) => ({ rows: (await sql.unsafe(q, params as never[])) as never[] }) },
+    db: wrap(sql),
+    withConnection: async (fn) => {
+      const conn = await sql.reserve();
+      try { return await fn(wrap(conn)); } finally { conn.release(); }
+    },
     end: () => sql.end(),
   };
 }

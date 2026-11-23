@@ -15,6 +15,9 @@ export interface DiscoverOptions {
   userAgent: string;
   http?: Omit<FetchOptions, "headers">;
   now?: () => Date;
+  /** Conexiones propias para procesar en paralelo (producción). Sin esto, todo va en serie sobre `db`. */
+  connect?: <T>(fn: (db: Db) => Promise<T>) => Promise<T>;
+  concurrency?: number;
 }
 
 /** Descarga todas las páginas. Se detiene en la primera página incompleta. */
@@ -55,13 +58,28 @@ export async function runWikidataDiscover(db: Db, opts: DiscoverOptions): Promis
     await finishRun(db, runId, { status: "failed", seen: 0, upserted: 0, error: message });
     return { status: "failed", seen: 0, counts, errors: [message] };
   }
-  for (const film of films) {
-    try {
-      counts[(await upsertWikidataFilm(db, film, runId)).outcome]++;
-    } catch (error) {
-      errors.push(`${film.wikidataId}: ${error instanceof Error ? error.message : String(error)}`);
+  // Varias películas en paralelo, cada una en su propia conexión y transacción. La latencia de red
+  // por consulta domina (≈20 consultas por película nueva), así que el paralelismo acelera la carga.
+  const connect = opts.connect ?? (<T,>(fn: (d: Db) => Promise<T>) => fn(db));
+  const concurrency = opts.connect ? Math.max(1, opts.concurrency ?? 4) : 1;
+  const upsertOne = async (film: WikidataFilm) => {
+    for (let attempt = 0; ; attempt++) {
+      try {
+        counts[(await connect((d) => upsertWikidataFilm(d, film, runId))).outcome]++;
+        return;
+      } catch (error) {
+        // Choque de unicidad con otra película procesada al mismo tiempo (slug, persona): se reintenta una vez.
+        const code = (error as { code?: string }).code;
+        if (code === "23505" && attempt === 0) continue;
+        errors.push(`${film.wikidataId}: ${error instanceof Error ? error.message : String(error)}`);
+        return;
+      }
     }
-  }
+  };
+  let next = 0;
+  await Promise.all(Array.from({ length: concurrency }, async () => {
+    while (next < films.length) await upsertOne(films[next++]);
+  }));
   const status: RunStatus = errors.length === 0 ? "succeeded" : errors.length < films.length ? "partial" : "failed";
   await finishRun(db, runId, {
     status, seen: films.length, upserted: counts.created + counts.updated + counts.flagged,
@@ -82,8 +100,9 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   } else {
     const url = process.env.DATABASE_URL;
     if (!url) throw new Error("Falta DATABASE_URL (conexión del rol de servicio).");
-    const { db, end } = await openPostgres(url);
-    console.log(JSON.stringify(await runWikidataDiscover(db, { fromYear, userAgent }), null, 2));
+    const concurrency = Number(process.env.WIKIDATA_CONCURRENCY ?? 4);
+    const { db, end, withConnection } = await openPostgres(url, { max: concurrency + 1 });
+    console.log(JSON.stringify(await runWikidataDiscover(db, { fromYear, userAgent, connect: withConnection, concurrency }), null, 2));
     await end();
   }
 }
